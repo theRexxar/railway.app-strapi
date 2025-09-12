@@ -58,11 +58,13 @@ Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/
 
 ---
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+`<sub>`🤫 Psst! [Strapi is hiring](https://strapi.io/careers).`</sub>`
 
 # build docker
 
 docker build -t zokypesch/railway .
 docker build --build-arg URL=http://localhost:1337 -t zokypesch/railway .
+
+# How to run
 
 docker run -p 1337:1337 -e URL=http://localhost:1337 zokypesch/railway
