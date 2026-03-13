@@ -21,7 +21,7 @@ ENV HOST=$HOST
 ENV PORT=$PORT
 ENV STRAPI_ADMIN_BACKEND_URL=https://cms.jaripmi.info
 
-RUN npm run develop
+RUN yarn build
 
 EXPOSE 8080
 
