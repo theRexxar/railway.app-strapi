@@ -15,7 +15,6 @@
     "@_sh/strapi-plugin-ckeditor": "^4.0.11",
     "@strapi/plugin-cloud": "5.1.0",
     "@strapi/plugin-users-permissions": "5.1.0",
-    "@strapi/plugin-documentation": "^5.42.1",
     "@strapi/provider-upload-cloudinary": "5.1.0",
     "@strapi/strapi": "5.1.0",
     "ioredis": "^5.4.1",
