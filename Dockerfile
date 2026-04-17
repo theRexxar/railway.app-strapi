@@ -23,6 +23,8 @@ ENV STRAPI_ADMIN_BACKEND_URL=https://cms.jaripmi.info
 
 RUN yarn build
 
+RUN echo "Build at $(date)"
+
 EXPOSE 8080
 
 CMD ["yarn", "develop"]
