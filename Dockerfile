@@ -5,6 +5,7 @@ WORKDIR /app
 # Copy package files for better Docker layer caching
 RUN rm -rf node_modules
 RUN rm -rf package-lock.json yarn.lock
+RUN yarn cache clean --force
 COPY package.json yarn.lock* ./
 RUN yarn install
 
@@ -29,4 +30,4 @@ RUN echo "Build at $(date)"
 
 EXPOSE 8080
 
-CMD ["yarn", "develop"]
+CMD ["yarn", "start"]
