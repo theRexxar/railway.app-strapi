@@ -5,7 +5,6 @@ WORKDIR /app
 # Copy package files for better Docker layer caching
 COPY package.json yarn.lock* ./
 RUN yarn install
-# RUN npm run build
 
 COPY . .
 
