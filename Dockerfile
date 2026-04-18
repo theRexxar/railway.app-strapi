@@ -30,4 +30,4 @@ RUN echo "Build at $(date)"
 
 EXPOSE 8080
 
-CMD ["yarn", "start"]
+CMD ["yarn", "develop"]
