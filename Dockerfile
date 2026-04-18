@@ -5,6 +5,7 @@ WORKDIR /app
 # Copy package files for better Docker layer caching
 COPY package.json yarn.lock* ./
 RUN yarn install
+# RUN npm run build
 
 COPY . .
 
@@ -16,7 +17,7 @@ ARG PORT=8080
 
 ENV URL=$URL
 ENV ADMIN_URL=$ADMIN_URL  
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 ENV HOST=$HOST
 ENV PORT=$PORT
 ENV STRAPI_ADMIN_BACKEND_URL=https://cms.jaripmi.info
