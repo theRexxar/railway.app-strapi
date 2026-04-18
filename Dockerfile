@@ -3,6 +3,8 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package files for better Docker layer caching
+RUN rm -rf node_modules
+RUN rm -rf package-lock.json yarn.lock
 COPY package.json yarn.lock* ./
 RUN yarn install
 
