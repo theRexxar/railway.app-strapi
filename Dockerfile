@@ -12,6 +12,7 @@ RUN npm ci --ignore-scripts && npm cache clean --force
 FROM deps AS build
 
 COPY . .
+RUN npm run generate:docs
 RUN npm run build
 
 # Prune dev dependencies after build
@@ -33,9 +34,6 @@ USER strapi
 ENV NODE_ENV=production
 
 EXPOSE 1337
-
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
-  CMD wget -qO- http://localhost:1337/health || exit 1
 
 ENTRYPOINT ["tini", "--"]
 CMD ["npm", "run", "start"]

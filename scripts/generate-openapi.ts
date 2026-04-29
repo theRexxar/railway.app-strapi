@@ -4,6 +4,7 @@ import path from 'path';
 const API_DIR = path.resolve(__dirname, '../src/api');
 const COMPONENTS_DIR = path.resolve(__dirname, '../src/components');
 const OUTPUT_PATH = path.resolve(__dirname, '../public/docs/openapi.yaml');
+const BASE_URL = (process.env.URL || 'http://localhost:1337').replace(/\/+$/, '');
 
 function loadSchemas(): { apiSchemas: any[] } {
   const apiSchemas: any[] = [];
@@ -59,11 +60,11 @@ function generateOpenApi() {
   w('  version: "1.0.0"');
   w('  contact:');
   w('    name: JARI PMI Team');
-  w('servers:');
-  w('  - url: "https://jari-pmi.example.com/api"');
-  w('    description: Production');
-  w('  - url: "http://localhost:1337/api"');
-  w('    description: Development');
+w('servers:');
+w(`  - url: "${BASE_URL}/api"`);
+w('    description: Current environment');
+w('  - url: "http://localhost:1337/api"');
+w('    description: Development');
   w('security:');
   w('  - bearerAuth: []');
   w('tags:');

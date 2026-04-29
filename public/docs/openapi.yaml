@@ -22,8 +22,8 @@ info:
   contact:
     name: JARI PMI Team
 servers:
-  - url: "https://jari-pmi.example.com/api"
-    description: Production
+  - url: "http://localhost:1337/api"
+    description: Current environment
   - url: "http://localhost:1337/api"
     description: Development
 security:
