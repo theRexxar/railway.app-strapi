@@ -1,5 +1,4 @@
 import type { Core } from '@strapi/strapi';
-import { cacheMiddleware } from '../src/cache/middleware';
 
 const config: Core.Config.Middlewares = [
   'strapi::logger',
@@ -9,7 +8,7 @@ const config: Core.Config.Middlewares = [
     config: {
       contentSecurityPolicy: {
         useDefaults: true,
-directives: {
+        directives: {
           'script-src': ["'self'", "'unsafe-inline'", 'cdn.redoc.ly', 'unpkg.com'],
           'style-src': ["'self'", "'unsafe-inline'", 'unpkg.com'],
           'img-src': ["'self'", 'data:', 'res.cloudinary.com'],
@@ -23,7 +22,10 @@ directives: {
   'strapi::query',
   'strapi::body',
   'strapi::session',
-  cacheMiddleware(),
+  {
+    resolve: './src/cache/middleware',
+    config: {},
+  },
   'strapi::favicon',
   'strapi::public',
 ];

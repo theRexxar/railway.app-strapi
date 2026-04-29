@@ -40,6 +40,64 @@ Strapi gives you many possible deployment options for your project including [St
 yarn strapi deploy
 ```
 
+### Deploy with Railway CLI
+
+1. **Install Railway CLI**
+
+```bash
+npm install -g @railway/cli
+```
+
+2. **Login to Railway**
+
+```bash
+railway login
+```
+
+3. **Initialize and link project**
+
+```bash
+railway init
+# or link to existing project
+railway link
+```
+
+4. **Set environment variables**
+
+```bash
+railway variables set NODE_ENV=production
+railway variables set HOST=0.0.0.0
+railway variables set PORT=1337
+railway variables set APP_KEYS="key1,key2"
+railway variables set ADMIN_JWT_SECRET=your-secret
+railway variables set API_TOKEN_SALT=your-salt
+railway variables set TRANSFER_TOKEN_SALT=your-salt
+railway variables set JWT_SECRET=your-secret
+railway variables set DATABASE_URL=postgresql://user:pass@host:5432/db
+railway variables set URL=https://your-app.railway.app
+railway variables set ADMIN_URL=https://your-app.railway.app/admin
+```
+
+5. **Deploy**
+
+```bash
+railway up
+```
+
+6. **View logs**
+
+```bash
+railway logs
+```
+
+7. **Open dashboard**
+
+```bash
+railway open
+```
+
+For more details, see the [Railway CLI documentation](https://docs.railway.app/).
+
 ## 📚 Learn more
 
 - [Resource center](https://strapi.io/resource-center) - Strapi resource center.

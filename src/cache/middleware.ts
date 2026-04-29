@@ -5,7 +5,7 @@ import { buildCacheKey } from './keys';
 
 const SKIP_PATHS = ['/api/search', '/admin', '/content-type-builder', '/users-permissions'];
 
-export function cacheMiddleware() {
+export default function cacheMiddleware() {
   return async (ctx: Context, next: () => Promise<any>) => {
     if (!isCacheEnabled()) {
       return next();
