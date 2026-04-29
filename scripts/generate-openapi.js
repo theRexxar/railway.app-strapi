@@ -61,6 +61,8 @@ function generateOpenApi() {
   w('security:');
   w('  - bearerAuth: []');
   w('tags:');
+  w('  - name: Search');
+  w('    description: "Full-text search powered by Algolia"');
 
   const readOnlyPaths = ['/global', '/homepage'];
 
@@ -76,6 +78,46 @@ function generateOpenApi() {
   }
 
   w('paths:');
+
+  w('  /search:');
+  w('    get:');
+  w('      tags: [Search]');
+  w('      summary: "Full-text search powered by Algolia"');
+  w('      operationId: search');
+  w('      parameters:');
+  w('        - name: q');
+  w('          in: query');
+  w('          required: true');
+  w('          schema:');
+  w('            type: string');
+  w('          description: "Search query"');
+  w('        - name: type');
+  w('          in: query');
+  w('          schema:');
+  w('            type: string');
+  w('          description: "Content type filter, e.g. article,course"');
+  w('        - name: page');
+  w('          in: query');
+  w('          schema:');
+  w('            type: integer');
+  w('            minimum: 0');
+  w('            default: 0');
+  w('          description: "Page number (0-indexed)"');
+  w('        - name: hitsPerPage');
+  w('          in: query');
+  w('          schema:');
+  w('            type: integer');
+  w('            minimum: 1');
+  w('            maximum: 100');
+  w('            default: 20');
+  w('          description: "Number of results per page"');
+  w('      responses:');
+  w('        "200":');
+  w('          description: OK');
+  w('        "400":');
+  w('          description: "Missing required query parameter q"');
+  w('        "503":');
+  w('          description: "Search service not configured"');
 
   for (const schema of sortedSchemas) {
     const singularName = schema.info.singularName;
