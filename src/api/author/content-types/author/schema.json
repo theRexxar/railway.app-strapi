@@ -1,33 +1,13 @@
 {
   "kind": "collectionType",
   "collectionName": "authors",
-  "info": {
-    "singularName": "author",
-    "pluralName": "authors",
-    "displayName": "author"
-  },
-  "options": {
-    "draftAndPublish": false
-  },
-  "pluginOptions": {},
+  "info": { "singularName": "author", "pluralName": "authors", "displayName": "Author", "description": "Article authors" },
+  "options": { "draftAndPublish": false },
   "attributes": {
-    "name": {
-      "type": "string",
-      "required": true,
-      "unique": true
-    },
-    "slug": {
-      "type": "uid",
-      "targetField": "name",
-      "required": true
-    },
-    "image": {
-      "allowedTypes": [
-        "images",
-        "files"
-      ],
-      "type": "media",
-      "multiple": false
-    }
+    "name": { "type": "string", "required": true, "unique": true },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
+    "avatar": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "bio": { "type": "text" },
+    "articles": { "type": "relation", "relation": "oneToMany", "target": "api::article.article", "mappedBy": "author" }
   }
 }

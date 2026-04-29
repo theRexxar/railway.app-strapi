@@ -1,40 +1,13 @@
 {
   "kind": "collectionType",
   "collectionName": "learning_platforms",
-  "info": {
-    "singularName": "learning-platform",
-    "pluralName": "learning-platforms",
-    "displayName": "learning_platform"
-  },
-  "options": {
-    "draftAndPublish": false
-  },
-  "pluginOptions": {},
+  "info": { "singularName": "learning-platform", "pluralName": "learning-platforms", "displayName": "Learning Platform", "description": "Training provider platforms" },
+  "options": { "draftAndPublish": false },
   "attributes": {
-    "name": {
-      "type": "string",
-      "required": true,
-      "unique": true
-    },
-    "slug": {
-      "type": "uid",
-      "targetField": "name",
-      "required": true
-    },
-    "image": {
-      "allowedTypes": [
-        "images",
-        "files"
-      ],
-      "type": "media",
-      "multiple": true
-    },
-    "description": {
-      "type": "customField",
-      "options": {
-        "preset": "default"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
-    }
+    "name": { "type": "string", "required": true, "unique": true },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
+    "logo": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "url": { "type": "string" },
+    "courses": { "type": "relation", "relation": "oneToMany", "target": "api::course.course", "mappedBy": "learning_platform" }
   }
 }

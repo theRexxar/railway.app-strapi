@@ -1,35 +1,31 @@
-export default [
+import type { Core } from '@strapi/strapi';
+import { cacheMiddleware } from '../src/cache/middleware';
+
+const config: Core.Config.Middlewares = [
   'strapi::logger',
   'strapi::errors',
-  'strapi::security',
-  {
-    name: 'strapi::cors',
-    config: {
-      origin: ['https://cms.jaripmi.info', 'https://jaripmi.info', 'http://localhost:1337', 'http://127.0.0.1:1337', , 'http://localhost:8080', 'http://127.0.0.1:8080'],
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
-      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
-      keepHeaderOnError: true,
-    },
-  },
-  'strapi::poweredBy',
-  'strapi::query',
-  'strapi::body',
-  'strapi::session',
-  'strapi::favicon',
-  'strapi::public',
-  'global::cache-middleware',
   {
     name: 'strapi::security',
     config: {
       contentSecurityPolicy: {
         useDefaults: true,
-        directives: {
-          'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
-          'media-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
-          upgradeInsecureRequests: null,
+directives: {
+          'script-src': ["'self'", "'unsafe-inline'", 'cdn.redoc.ly', 'unpkg.com'],
+          'style-src': ["'self'", "'unsafe-inline'", 'unpkg.com'],
+          'img-src': ["'self'", 'data:', 'res.cloudinary.com'],
+          'media-src': ["'self'", 'res.cloudinary.com'],
         },
       },
     },
   },
+  'strapi::cors',
+  'strapi::poweredBy',
+  'strapi::query',
+  'strapi::body',
+  'strapi::session',
+  cacheMiddleware(),
+  'strapi::favicon',
+  'strapi::public',
 ];
+
+export default config;

@@ -79,7 +79,6 @@ $RECYCLE.BIN/
 *#
 ssl
 .idea
-.vscode
 nbproject
 public/uploads/*
 !public/uploads/.gitkeep
@@ -130,5 +129,3 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
-
-docker-compose.yml

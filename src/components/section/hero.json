@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_section_heroes",
+  "info": {
+    "displayName": "Hero",
+    "icon": "star",
+    "description": "Hero section for pages"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true
+    },
+    "highlighted_text": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "search_placeholder": {
+      "type": "string"
+    },
+    "illustration": {
+      "type": "media",
+      "media": "image",
+      "allowedTypes": ["images"]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "collectionType",
+  "collectionName": "protection_infos",
+  "info": { "singularName": "protection-info", "pluralName": "protection-infos", "displayName": "Protection Info", "description": "Protection info entries for Penting Diketahui section" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "description": { "type": "text" },
+    "content": { "type": "richtext", "required": true },
+    "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "category": { "type": "enumeration", "enum": ["perlindungan", "hak-pmi", "jaminan-sosial", "klaim", "reasuransi"] },
+    "order": { "type": "integer", "default": 0 }
+  }
+}

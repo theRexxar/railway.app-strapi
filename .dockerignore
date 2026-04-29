@@ -1,0 +1,12 @@
+node_modules
+.tmp
+.cache
+.dist
+.git
+.gitignore
+.env
+.env.*
+*.md
+.tool-versions
+.vscode
+.idea

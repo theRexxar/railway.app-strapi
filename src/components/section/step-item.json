@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_section_step_items",
+  "info": {
+    "displayName": "Step Item",
+    "icon": "number",
+    "description": "One step in a numbered guide"
+  },
+  "options": {},
+  "attributes": {
+    "step_number": {
+      "type": "integer",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "media",
+      "media": "image",
+      "allowedTypes": ["images"]
+    }
+  }
+}

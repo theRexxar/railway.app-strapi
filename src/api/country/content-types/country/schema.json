@@ -1,45 +1,20 @@
 {
   "kind": "collectionType",
   "collectionName": "countries",
-  "info": {
-    "singularName": "country",
-    "pluralName": "countries",
-    "displayName": "country",
-    "description": ""
-  },
-  "options": {
-    "draftAndPublish": false
-  },
-  "pluginOptions": {},
+  "info": { "singularName": "country", "pluralName": "countries", "displayName": "Country", "description": "Destination countries for migrant workers" },
+  "options": { "draftAndPublish": false },
   "attributes": {
-    "name": {
-      "type": "string",
-      "required": true,
-      "unique": true
-    },
-    "flag": {
-      "type": "media",
-      "multiple": false,
-      "required": true,
-      "allowedTypes": [
-        "images",
-        "files"
-      ]
-    },
-    "description": {
-      "type": "customField",
-      "options": {
-        "preset": "default"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
-    },
-    "image": {
-      "allowedTypes": [
-        "images",
-        "files"
-      ],
-      "type": "media",
-      "multiple": false
-    }
+    "name": { "type": "string", "required": true, "unique": true },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
+    "flag": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
+    "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "description": { "type": "richtext" },
+    "region": { "type": "enumeration", "enum": ["asia", "middle-east", "europe", "africa", "americas", "oceania"] },
+    "is_featured": { "type": "boolean", "default": false },
+    "order": { "type": "integer", "default": 0 },
+    "vacancy_count": { "type": "integer" },
+    "salary_avg": { "type": "text" },
+    "pmi_count": { "type": "integer" },
+    "meta_seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
   }
 }

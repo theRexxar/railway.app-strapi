@@ -1,42 +1,51 @@
 {
-  "name": "strapi",
+  "name": "jari-pmi-strapi",
   "version": "0.1.0",
   "private": true,
   "description": "A Strapi application",
   "scripts": {
-    "prebuild": "node -v",
     "build": "strapi build",
+    "console": "strapi console",
     "deploy": "strapi deploy",
+    "dev": "strapi develop",
     "develop": "strapi develop",
     "start": "strapi start",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "upgrade": "npx @strapi/upgrade latest",
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "generate:docs": "npx tsx scripts/generate-openapi.ts",
+    "seed": "SEED=true strapi develop",
+    "reindex": "REINDEX=true strapi develop"
   },
   "dependencies": {
-    "@_sh/strapi-plugin-ckeditor": "^4.0.11",
-    "@strapi/plugin-cloud": "5.1.0",
-    "@strapi/plugin-documentation": "^5.42.1",
-    "@strapi/plugin-users-permissions": "5.1.0",
-    "@strapi/provider-upload-cloudinary": "5.1.0",
-    "@strapi/strapi": "5.1.0",
-    "ioredis": "^5.4.1",
-    "minimatch": "^9.0.5",
-    "pg": "8.8.0",
+    "@ckeditor/strapi-plugin-ckeditor": "^1.1.2",
+    "@strapi/plugin-cloud": "5.43.0",
+    "@strapi/plugin-users-permissions": "5.43.0",
+    "@strapi/provider-upload-cloudinary": "^5.43.0",
+    "@strapi/strapi": "5.43.0",
+    "algoliasearch": "^5.51.0",
+    "ioredis": "^5.10.1",
+    "pg": "^8.20.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
-    "strapi-health-plugin": "^1.1.0",
+    "strapi-health-plugin": "^1.2.2",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "better-sqlite3": "12.8.0",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   },
   "engines": {
-    "node": "20"
+    "node": ">=20.0.0 <=24.x.x",
+    "npm": ">=6.0.0"
   },
   "strapi": {
-    "uuid": "fbaf61cd-dcdc-45ae-bf43-8781f5861c55"
+    "uuid": "73100682-85b5-4dae-a5ce-9a00690e068d",
+    "installId": "d7cb3d494f36974520bfb43b396b9b541d271fb996094eb92ebfe8cffa30ee8e"
   }
 }

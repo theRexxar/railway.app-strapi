@@ -1,0 +1,16 @@
+{
+  "kind": "collectionType",
+  "collectionName": "service_infos",
+  "info": { "singularName": "service-info", "pluralName": "service-infos", "displayName": "Service Info", "description": "Service/layanan entries" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "excerpt": { "type": "text" },
+    "content": { "type": "richtext", "required": true },
+    "cover_image": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
+    "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
+    "category": { "type": "string" },
+    "is_featured": { "type": "boolean", "default": false }
+  }
+}

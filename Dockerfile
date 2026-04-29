@@ -1,33 +1,38 @@
-FROM node:20-alpine
+# Stage 1: Install dependencies
+FROM node:22-alpine AS deps
+
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
-# Copy package files for better Docker layer caching
-RUN rm -rf node_modules
-RUN rm -rf package-lock.json yarn.lock
-RUN yarn cache clean --force
-COPY package.json yarn.lock* ./
-RUN yarn install
+COPY package.json package-lock.json* ./
+RUN npm ci --ignore-scripts && npm cache clean --force
+
+# Stage 2: Build
+FROM deps AS build
 
 COPY . .
+RUN npm run build
 
-# Set ALL required build-time environment variables
-ARG URL=https://cms.jaripmi.info
-ARG ADMIN_URL=https://cms.jaripmi.info/admin
-ARG HOST=0.0.0.0
-ARG PORT=8080
+# Prune dev dependencies after build
+RUN rm -rf node_modules && npm ci --omit=dev --ignore-scripts && npm cache clean --force
 
-ENV URL=$URL
-ENV ADMIN_URL=$ADMIN_URL  
+# Stage 3: Production
+FROM node:22-alpine AS production
+
+RUN apk add --no-cache tini
+
+WORKDIR /app
+
+RUN addgroup -g 1001 -S strapi && adduser -S -u 1001 -G strapi strapi
+
+COPY --from=build --chown=strapi:strapi /app ./
+
+USER strapi
+
 ENV NODE_ENV=production
-ENV HOST=$HOST
-ENV PORT=$PORT
-ENV STRAPI_ADMIN_BACKEND_URL=https://cms.jaripmi.info
 
-RUN yarn build
+EXPOSE 1337
 
-RUN echo "Build at $(date)"
-
-EXPOSE 8080
-
-CMD ["yarn", "develop"]
+ENTRYPOINT ["tini", "--"]
+CMD ["npm", "run", "start"]

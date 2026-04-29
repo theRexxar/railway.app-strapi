@@ -1,0 +1,511 @@
+openapi: "3.0.3"
+info:
+  title: JARI PMI CMS API
+  description: |
+    Strapi v5 CMS API for JARI PMI — a landing page providing information for Indonesian migrant workers (PMI).
+
+    ## Authentication
+    `/api/global` and `/api/homepage` are publicly accessible without authentication (auth: false).
+    All other endpoints require a Strapi API token. Create one in **Settings → API Tokens** in the admin panel.
+    Paste your token in the Swagger UI "API Token" bar above.
+
+    ## Pagination
+    List endpoints support `pagination[page]` and `pagination[pageSize]` query parameters.
+    Default page size is 25. Response includes `pagination` object with `page`, `pageSize`, `pageCount`, `total`.
+
+    ## Filtering
+    Use `filters` query parameter. Example: `?filters[is_featured][$eq]=true`
+
+    ## Population
+    Use `populate` query parameter to include relations. Example: `?populate=article_category,author`
+  version: "1.0.0"
+  contact:
+    name: JARI PMI Team
+servers:
+  - url: "https://jari-pmi.example.com/api"
+    description: Production
+  - url: "http://localhost:1337/api"
+    description: Development
+security:
+  - bearerAuth: []
+tags:
+  - name: Alert
+    description: Site-wide alert banners
+  - name: Article
+    description: News and informational articles
+  - name: Article Category
+    description: Article categories for organizing and filtering
+  - name: Article Tag
+    description: Article tags for filtering
+  - name: Author
+    description: Article authors
+  - name: Content
+    description: Individual content entries within a content group
+  - name: Content Group
+    description: Groups content under a themed section
+  - name: Country
+    description: Destination countries for migrant workers
+  - name: Course
+    description: Training/pelatihan entries
+  - name: Course Category
+    description: Course categories for filtering
+  - name: Course Tag
+    description: Course tags for filtering
+  - name: Global
+    description: "Site-wide configuration: navbar, footer, social links, default SEO"
+  - name: Homepage
+    description: Homepage editorial content
+  - name: Learning Platform
+    description: Training provider platforms
+  - name: Persona
+    description: "One entry per persona (calon-pmi, pmi-aktif, keluarga-pmi, purna-pmi)"
+  - name: Protection Info
+    description: Protection info entries for Penting Diketahui section
+  - name: Service Info
+    description: Service/layanan entries
+paths:
+  "/alerts":
+    get:
+      tags: [Alert]
+      summary: "List all alert entries"
+      operationId: getAlerts
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+        - name: "filters[type][$eq]"
+          in: query
+          schema:
+            type: string
+            enum: [info, warning, success, error]
+          description: "Filter by type"
+        - name: "filters[active][$eq]"
+          in: query
+          schema:
+            type: boolean
+          description: "Filter by active"
+      responses:
+        "200":
+          description: OK
+  "/alerts/{id}":
+    get:
+      tags: [Alert]
+      summary: "Get a alert by documentId"
+      operationId: getAlert
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/articles":
+    get:
+      tags: [Article]
+      summary: "List all article entries"
+      operationId: getArticles
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/articles/{id}":
+    get:
+      tags: [Article]
+      summary: "Get a article by documentId"
+      operationId: getArticle
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/article-categories":
+    get:
+      tags: [Article Category]
+      summary: "List all article category entries"
+      operationId: getArticle-categorys
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/article-categories/{id}":
+    get:
+      tags: [Article Category]
+      summary: "Get a article category by documentId"
+      operationId: getArticle-category
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/article-tags":
+    get:
+      tags: [Article Tag]
+      summary: "List all article tag entries"
+      operationId: getArticle-tags
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/article-tags/{id}":
+    get:
+      tags: [Article Tag]
+      summary: "Get a article tag by documentId"
+      operationId: getArticle-tag
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/authors":
+    get:
+      tags: [Author]
+      summary: "List all author entries"
+      operationId: getAuthors
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/authors/{id}":
+    get:
+      tags: [Author]
+      summary: "Get a author by documentId"
+      operationId: getAuthor
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/contents":
+    get:
+      tags: [Content]
+      summary: "List all content entries"
+      operationId: getContents
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/contents/{id}":
+    get:
+      tags: [Content]
+      summary: "Get a content by documentId"
+      operationId: getContent
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/content-groups":
+    get:
+      tags: [Content Group]
+      summary: "List all content group entries"
+      operationId: getContent-groups
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+        - name: "filters[content_type][$eq]"
+          in: query
+          schema:
+            type: string
+            enum: [content, country, service-info, protection-info, course]
+          description: "Filter by content_type"
+      responses:
+        "200":
+          description: OK
+  "/content-groups/{id}":
+    get:
+      tags: [Content Group]
+      summary: "Get a content group by documentId"
+      operationId: getContent-group
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/countries":
+    get:
+      tags: [Country]
+      summary: "List all country entries"
+      operationId: getCountrys
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+        - name: "filters[region][$eq]"
+          in: query
+          schema:
+            type: string
+            enum: [asia, middle-east, europe, africa, americas, oceania]
+          description: "Filter by region"
+        - name: "filters[is_featured][$eq]"
+          in: query
+          schema:
+            type: boolean
+          description: "Filter by is_featured"
+      responses:
+        "200":
+          description: OK
+  "/countries/{id}":
+    get:
+      tags: [Country]
+      summary: "Get a country by documentId"
+      operationId: getCountry
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/courses":
+    get:
+      tags: [Course]
+      summary: "List all course entries"
+      operationId: getCourses
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+        - name: "filters[is_featured][$eq]"
+          in: query
+          schema:
+            type: boolean
+          description: "Filter by is_featured"
+      responses:
+        "200":
+          description: OK
+  "/courses/{id}":
+    get:
+      tags: [Course]
+      summary: "Get a course by documentId"
+      operationId: getCourse
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/course-categories":
+    get:
+      tags: [Course Category]
+      summary: "List all course category entries"
+      operationId: getCourse-categorys
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/course-categories/{id}":
+    get:
+      tags: [Course Category]
+      summary: "Get a course category by documentId"
+      operationId: getCourse-category
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/course-tags":
+    get:
+      tags: [Course Tag]
+      summary: "List all course tag entries"
+      operationId: getCourse-tags
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/course-tags/{id}":
+    get:
+      tags: [Course Tag]
+      summary: "Get a course tag by documentId"
+      operationId: getCourse-tag
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/global":
+    get:
+      tags: [Global]
+      summary: "Get global (read-only, auth not required)"
+      operationId: getGlobal
+      responses:
+        "200":
+          description: OK
+  "/homepage":
+    get:
+      tags: [Homepage]
+      summary: "Get homepage (read-only, auth not required)"
+      operationId: getHomepage
+      responses:
+        "200":
+          description: OK
+  "/learning-platforms":
+    get:
+      tags: [Learning Platform]
+      summary: "List all learning platform entries"
+      operationId: getLearning-platforms
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/learning-platforms/{id}":
+    get:
+      tags: [Learning Platform]
+      summary: "Get a learning platform by documentId"
+      operationId: getLearning-platform
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/personas":
+    get:
+      tags: [Persona]
+      summary: "List all persona entries"
+      operationId: getPersonas
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/personas/{id}":
+    get:
+      tags: [Persona]
+      summary: "Get a persona by documentId"
+      operationId: getPersona
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/protection-infos":
+    get:
+      tags: [Protection Info]
+      summary: "List all protection info entries"
+      operationId: getProtection-infos
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+        - name: "filters[category][$eq]"
+          in: query
+          schema:
+            type: string
+            enum: [perlindungan, hak-pmi, jaminan-sosial, klaim, reasuransi]
+          description: "Filter by category"
+      responses:
+        "200":
+          description: OK
+  "/protection-infos/{id}":
+    get:
+      tags: [Protection Info]
+      summary: "Get a protection info by documentId"
+      operationId: getProtection-info
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/service-infos":
+    get:
+      tags: [Service Info]
+      summary: "List all service info entries"
+      operationId: getService-infos
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+        - name: "filters[is_featured][$eq]"
+          in: query
+          schema:
+            type: boolean
+          description: "Filter by is_featured"
+      responses:
+        "200":
+          description: OK
+  "/service-infos/{id}":
+    get:
+      tags: [Service Info]
+      summary: "Get a service info by documentId"
+      operationId: getService-info
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Strapi API Token. Generate one in Settings → API Tokens."
+  parameters:
+    paginationPage:
+      name: "pagination[page]"
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: "Page number"
+    paginationPageSize:
+      name: "pagination[pageSize]"
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+      description: "Number of results per page"
+    populate:
+      name: populate
+      in: query
+      schema:
+        type: string
+      description: "Relations to populate, e.g. * or article_category,author"
+    documentId:
+      name: id
+      in: path
+      required: true
+      schema:
+        oneOf:
+          - type: integer
+          - type: string
+      description: "Document ID or slug"

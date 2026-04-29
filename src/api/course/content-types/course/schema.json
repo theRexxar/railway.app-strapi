@@ -1,77 +1,22 @@
 {
   "kind": "collectionType",
   "collectionName": "courses",
-  "info": {
-    "singularName": "course",
-    "pluralName": "courses",
-    "displayName": "course",
-    "description": ""
-  },
-  "options": {
-    "draftAndPublish": true
-  },
-  "pluginOptions": {},
+  "info": { "singularName": "course", "pluralName": "courses", "displayName": "Course", "description": "Training/pelatihan entries" },
+  "options": { "draftAndPublish": true },
   "attributes": {
-    "name": {
-      "type": "string",
-      "required": true,
-      "unique": true
-    },
-    "slug": {
-      "type": "uid",
-      "targetField": "name",
-      "required": true
-    },
-    "image": {
-      "type": "media",
-      "multiple": true,
-      "required": true,
-      "allowedTypes": [
-        "images",
-        "files"
-      ]
-    },
-    "meta_seo": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.seo"
-    },
-    "price": {
-      "type": "decimal"
-    },
-    "price_final": {
-      "type": "decimal"
-    },
-    "course_tags": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::course-tag.course-tag"
-    },
-    "link": {
-      "type": "string",
-      "required": true
-    },
-    "course_category": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::sub-category.sub-category"
-    },
-    "learning_platform": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::learning-platform.learning-platform"
-    },
-    "description": {
-      "type": "customField",
-      "options": {
-        "preset": "default"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
-    },
-    "course_learning_method": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::course-learning-method.course-learning-method"
-    }
+    "name": { "type": "string", "required": true, "unique": true },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
+    "excerpt": { "type": "text" },
+    "description": { "type": "richtext" },
+    "image": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
+    "price": { "type": "decimal" },
+    "link": { "type": "string", "required": true },
+    "course_category": { "type": "relation", "relation": "manyToOne", "target": "api::course-category.course-category", "inversedBy": "courses" },
+    "course_tags": { "type": "relation", "relation": "manyToMany", "target": "api::course-tag.course-tag", "inversedBy": "courses" },
+    "learning_platform": { "type": "relation", "relation": "manyToOne", "target": "api::learning-platform.learning-platform", "inversedBy": "courses" },
+    "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
+    "target_personas": { "type": "json" },
+    "is_featured": { "type": "boolean", "default": false },
+    "meta_seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
   }
 }

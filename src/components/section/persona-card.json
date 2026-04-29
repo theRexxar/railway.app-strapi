@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_section_persona_cards",
+  "info": {
+    "displayName": "Persona Card",
+    "icon": "user",
+    "description": "One persona option in the selector"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "icon": {
+      "type": "media",
+      "media": "image",
+      "allowedTypes": ["images"]
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

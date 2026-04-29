@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "alerts",
+  "info": { "singularName": "alert", "pluralName": "alerts", "displayName": "Alert", "description": "Site-wide alert banners" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "type": { "type": "enumeration", "enum": ["info", "warning", "success", "error"], "required": true },
+    "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "message": { "type": "text", "required": true },
+    "link": { "type": "string" },
+    "pages": { "type": "string", "required": true },
+    "active": { "type": "boolean", "default": true }
+  }
+}

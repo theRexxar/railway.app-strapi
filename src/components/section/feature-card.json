@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_section_feature_cards",
+  "info": {
+    "displayName": "Feature Card",
+    "icon": "grid",
+    "description": "Icon + title + description card for feature highlights"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "media",
+      "media": "image",
+      "allowedTypes": ["images"]
+    },
+    "image": {
+      "type": "media",
+      "media": "image",
+      "allowedTypes": ["images"]
+    },
+    "link": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.link"
+    }
+  }
+}

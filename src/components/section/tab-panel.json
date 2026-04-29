@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_section_tab_panels",
+  "info": {
+    "displayName": "Tab Panel",
+    "icon": "tabs",
+    "description": "A tab within tabbed content"
+  },
+  "options": {},
+  "attributes": {
+    "tab_label": {
+      "type": "string",
+      "required": true
+    },
+    "tab_slug": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "accordions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "section.accordion-item"
+    },
+    "steps": {
+      "type": "component",
+      "repeatable": true,
+      "component": "section.step-item"
+    }
+  }
+}

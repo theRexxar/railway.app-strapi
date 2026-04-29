@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_section_accordion_items",
+  "info": {
+    "displayName": "Accordion Item",
+    "icon": "layer",
+    "description": "Collapsible content block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

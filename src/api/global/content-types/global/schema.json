@@ -1,0 +1,56 @@
+{
+  "kind": "singleType",
+  "collectionName": "global",
+  "info": {
+    "singularName": "global",
+    "pluralName": "globals",
+    "displayName": "Global",
+    "description": "Site-wide configuration: navbar, footer, social links, default SEO"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "site_name": {
+      "type": "string",
+      "required": true
+    },
+    "site_description": {
+      "type": "text"
+    },
+    "logo": {
+      "type": "media",
+      "media": true,
+      "allowedTypes": ["images"],
+      "required": true
+    },
+    "nav_links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "external_links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "footer_columns": {
+      "type": "component",
+      "repeatable": true,
+      "component": "layout.footer-column"
+    },
+    "social_links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "layout.social-link"
+    },
+    "copyright_text": {
+      "type": "string"
+    },
+    "default_seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}
