@@ -556,7 +556,12 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
     content: Schema.Attribute.RichText &
       Schema.Attribute.Required &
-      Schema.Attribute.CustomField<'plugin::ckeditor.CKEditor'>;
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     cover_image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -682,7 +687,12 @@ export interface ApiContentContent extends Struct.CollectionTypeSchema {
   attributes: {
     body: Schema.Attribute.RichText &
       Schema.Attribute.Required &
-      Schema.Attribute.CustomField<'plugin::ckeditor.CKEditor'>;
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     content_group: Schema.Attribute.Relation<
       'manyToOne',
       'api::content-group.content-group'

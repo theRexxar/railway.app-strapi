@@ -18,7 +18,7 @@
     "reindex": "REINDEX=true strapi develop"
   },
   "dependencies": {
-    "@ckeditor/strapi-plugin-ckeditor": "^1.1.2",
+    "@_sh/strapi-plugin-ckeditor": "^7.1.1",
     "@strapi/plugin-cloud": "5.43.0",
     "@strapi/plugin-users-permissions": "5.43.0",
     "@strapi/provider-upload-cloudinary": "^5.43.0",

@@ -16,7 +16,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
     },
   },
-  ckeditor: {
+  ckeditor5: {
     enabled: true,
   },
   health: {
