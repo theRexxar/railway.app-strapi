@@ -12,7 +12,6 @@ RUN npm ci --ignore-scripts && npm cache clean --force
 FROM deps AS build
 
 COPY . .
-RUN npm run generate:docs
 RUN npm run build
 
 # Prune dev dependencies after build
