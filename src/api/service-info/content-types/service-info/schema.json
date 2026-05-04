@@ -11,6 +11,7 @@
     "cover_image": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
     "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
     "category": { "type": "string" },
+    "link": { "type": "string" },
     "is_featured": { "type": "boolean", "default": false }
   }
 }

@@ -65,6 +65,8 @@ tags:
     description: Protection info entries for Penting Diketahui section
   - name: Service Info
     description: Service/layanan entries
+  - name: Tool
+    description: Store tools / helpful resources
 paths:
   /search:
     get:
@@ -504,6 +506,29 @@ paths:
       tags: [Service Info]
       summary: "Get a service info by documentId"
       operationId: getService-info
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/tools":
+    get:
+      tags: [Tool]
+      summary: "List all tool entries"
+      operationId: getTools
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/tools/{id}":
+    get:
+      tags: [Tool]
+      summary: "Get a tool by documentId"
+      operationId: getTool
       parameters:
         - $ref: "#/components/parameters/documentId"
         - $ref: "#/components/parameters/populate"

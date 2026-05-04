@@ -1,0 +1,13 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tools",
+  "info": { "singularName": "tool", "pluralName": "tools", "displayName": "Tool", "description": "Store tools / helpful resources" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "description": { "type": "text" },
+    "link": { "type": "string" },
+    "logo": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "personas": { "type": "relation", "relation": "manyToMany", "target": "api::persona.persona" }
+  }
+}

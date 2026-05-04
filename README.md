@@ -1,60 +1,93 @@
-# 🚀 Getting started with Strapi
+# JARI PMI — Strapi CMS
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Strapi v5 CMS for JARI PMI — a landing page providing information for Indonesian migrant workers (PMI).
+
+## Getting Started
 
 ### `develop`
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+Start with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
 
-```
+```bash
 npm run develop
-# or
-yarn develop
 ```
 
 ### `start`
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+Start with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
 
-```
+```bash
 npm run start
-# or
-yarn start
 ```
 
 ### `build`
 
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
+Build the admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
 
-```
+```bash
 npm run build
-# or
-yarn build
 ```
 
-## ⚙️ Deployment
+### `generate:docs`
 
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+Generate the OpenAPI/Swagger spec. Reads the `URL` env var for the server URL.
 
+```bash
+npm run generate:docs
 ```
-yarn strapi deploy
+
+## Data Seeding
+
+Seed the database with sample data (article categories, articles, courses, countries, etc.):
+
+```bash
+SEED=true npm run develop
 ```
 
-### Deploy with Railway CLI
+This runs the seeder on bootstrap and then starts Strapi normally. The seed script is in `scripts/seed.ts` and creates:
 
-1. **Install Railway CLI**
+- Article categories & tags
+- Course categories & tags
+- Learning platforms
+- Authors
+- Countries, protection info, service info
+- Articles & courses
+- Alerts
+- Content groups & contents
+- Global settings
+
+## Algolia Reindex
+
+Reindex all content to Algolia search:
+
+```bash
+# Option 1: Via env variable (runs on bootstrap then exits)
+REINDEX=true npm run develop
+
+# Option 2: Standalone script (starts Strapi, reindexes, then exits)
+npx tsx scripts/reindex.ts
+```
+
+Requires `ALGOLIA_APPLICATION_ID`, `ALGOLIA_ADMIN_API_KEY`, `ALGOLIA_SEARCH_API_KEY`, and `ALGOLIA_INDEX_NAME` env vars to be set.
+
+## CKEditor
+
+The project uses [CKEditor 5](https://ckeditor.com/ckeditor-5/) as the rich text editor for `content` (Article) and `body` (Content) fields, configured with a full toolbar including source editing (HTML mode).
+
+Configuration is in `src/admin/app.tsx`. Available presets: `defaultHtml`.
+
+## Deployment
+
+### Railway CLI
+
+1. **Install & login**
 
 ```bash
 npm install -g @railway/cli
-```
-
-2. **Login to Railway**
-
-```bash
 railway login
 ```
 
-3. **Initialize and link project**
+2. **Initialize & link project**
 
 ```bash
 railway init
@@ -62,7 +95,7 @@ railway init
 railway link
 ```
 
-4. **Set environment variables**
+3. **Set environment variables**
 
 ```bash
 railway variables set NODE_ENV=production
@@ -73,47 +106,83 @@ railway variables set ADMIN_JWT_SECRET=your-secret
 railway variables set API_TOKEN_SALT=your-salt
 railway variables set TRANSFER_TOKEN_SALT=your-salt
 railway variables set JWT_SECRET=your-secret
-railway variables set DATABASE_URL=postgresql://user:pass@host:5432/db
+railway variables set DATABASE_URL=postgresql://user:pass@host:5432/jari_pmi
+railway variables set DATABASE_SSL=true
 railway variables set URL=https://your-app.railway.app
 railway variables set ADMIN_URL=https://your-app.railway.app/admin
+railway variables set REDIS_URL=redis://default:pass@host:6379
+railway variables set ALGOLIA_APPLICATION_ID=your-app-id
+railway variables set ALGOLIA_ADMIN_API_KEY=your-admin-key
+railway variables set ALGOLIA_SEARCH_API_KEY=your-search-key
+railway variables set ALGOLIA_INDEX_NAME=jari_pmi_staging
+railway variables set CLOUDINARY_NAME=your-cloudinary-name
+railway variables set CLOUDINARY_KEY=your-cloudinary-key
+railway variables set CLOUDINARY_SECRET=your-cloudinary-secret
 ```
 
-5. **Deploy**
+4. **Deploy**
 
 ```bash
 railway up
 ```
 
-6. **View logs**
+5. **View logs & dashboard**
 
 ```bash
 railway logs
-```
-
-7. **Open dashboard**
-
-```bash
 railway open
 ```
 
 For more details, see the [Railway CLI documentation](https://docs.railway.app/).
 
-## 📚 Learn more
+## Environment Variables
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+See `.env.example` for all available variables. Key variables:
 
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
+| Variable | Description |
+|----------|-------------|
+| `NODE_ENV` | Environment: `development`, `staging`, `production` |
+| `URL` | Public URL of the app (used for API docs server URL) |
+| `ADMIN_URL` | Admin panel URL |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `DATABASE_SSL` | Enable SSL for database (`true`/`false`) |
+| `DATABASE_NAME` | Override database name from `DATABASE_URL` |
+| `REDIS_URL` | Redis connection string (falls back to `REDIS_HOST`/`PORT`/`PASSWORD`) |
+| `ALGOLIA_*` | Algolia search configuration |
+| `CLOUDINARY_*` | Cloudinary media upload configuration |
 
-## ✨ Community
+## Project Structure
 
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+- `src/api/` — Content types (article, course, country, search, etc.)
+- `src/algolia/` — Algolia search integration (indexer, config, hooks)
+- `src/cache/` — Redis cache middleware and invalidation
+- `scripts/` — Seed, reindex, and OpenAPI generation scripts
+- `config/env/production/` — Production-specific config (URL, proxy, admin URL)
+- `config/env/staging/` — Staging-specific config
+- `public/docs/openapi.yaml` — Auto-generated API docs
 
----
+## API Documentation
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+Swagger UI is served at `/api/docs` when the documentation plugin is enabled. The OpenAPI spec is generated from content type schemas and includes:
+
+- All CRUD endpoints for each content type
+- `/search` endpoint (Algolia-powered full-text search)
+- Pagination, filtering, and population parameters
+- Bearer token authentication
+
+Regenerate after schema changes:
+
+```bash
+npm run generate:docs
+```
+
+## Health Check
+
+The app provides a health check endpoint at `GET /health` that checks memory, disk, and database connectivity. Used by Railway for deployment health checks.
+
+## Learn More
+
+- [Strapi documentation](https://docs.strapi.io)
+- [Strapi tutorials](https://strapi.io/tutorials)
+- [Strapi blog](https://strapi.io/blog)
+- [Changelog](https://strapi.io/changelog)
