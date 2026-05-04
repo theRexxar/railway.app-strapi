@@ -138,6 +138,10 @@ async function run() {
     check("GET /api/personas", "Modal Persona Selector", r.ok, r.status);
   }
   {
+    const r = await fetchAPI("/api/search/popular");
+    check("GET /api/search/popular", "Popular Searches", r.ok, r.status);
+  }
+  {
     const r = await fetchAPI("/api/search?q=test");
     check("GET /api/search", "Section Search", r.ok, r.status);
   }

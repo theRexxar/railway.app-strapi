@@ -7,6 +7,7 @@
 | Section | API | Endpoint |
 |---------|-----|----------|
 | Modal Persona Selector | `GET /api/personas` | `?populate=*&sort=order:asc` |
+| Popular Searches | `GET /api/search/popular` | — |
 | Section Search | `GET /api/search` | `?q={query}` |
 | Section Informasi Layanan | `GET /api/service-infos` | `?filters[link][$notNull]=true&populate=*&status=published` |
 | Section Negara Tujuan | `GET /api/countries` | `?populate=*&sort=order:asc` |

@@ -63,6 +63,8 @@ function generateOpenApi() {
   w('tags:');
   w('  - name: Search');
   w('    description: "Full-text search powered by Algolia"');
+  w('  - name: Popular Searches');
+  w('    description: "Top search keywords tracked via Redis"');
 
   const readOnlyPaths = ['/global', '/homepage'];
 
@@ -118,6 +120,15 @@ function generateOpenApi() {
   w('          description: "Missing required query parameter q"');
   w('        "503":');
   w('          description: "Search service not configured"');
+
+  w('  /search/popular:');
+  w('    get:');
+  w('      tags: [Popular Searches]');
+  w('      summary: "Get top 5 popular search keywords"');
+  w('      operationId: popularSearches');
+  w('      responses:');
+  w('        "200":');
+  w('          description: "Array of popular search keywords with counts"');
 
   for (const schema of sortedSchemas) {
     const singularName = schema.info.singularName;

@@ -31,6 +31,8 @@ security:
 tags:
   - name: Search
     description: "Full-text search powered by Algolia"
+  - name: Popular Searches
+    description: "Top search keywords tracked via Redis"
   - name: Alert
     description: Site-wide alert banners
   - name: Article
@@ -107,6 +109,14 @@ paths:
           description: "Missing required query parameter q"
         "503":
           description: "Search service not configured"
+  /search/popular:
+    get:
+      tags: [Popular Searches]
+      summary: "Get top 5 popular search keywords"
+      operationId: popularSearches
+      responses:
+        "200":
+          description: "Array of popular search keywords with counts"
   "/alerts":
     get:
       tags: [Alert]

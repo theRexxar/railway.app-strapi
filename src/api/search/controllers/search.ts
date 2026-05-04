@@ -1,11 +1,20 @@
 import { Context } from 'koa';
 import { getSearchableTypes } from '../../../algolia/config';
+import { getRedisClient } from '../../../cache/client';
 
 function isAlgoliaConfigured(): boolean {
   return !!(
     process.env.ALGOLIA_APPLICATION_ID &&
     process.env.ALGOLIA_SEARCH_API_KEY
   );
+}
+
+function trackSearchQuery(query: string) {
+  const redis = getRedisClient();
+  if (!redis) return;
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return;
+  redis.zincrby('popular_searches', 1, normalized).catch(() => {});
 }
 
 export default {
@@ -46,6 +55,8 @@ export default {
         hitsPerPage: hitsPerPageNum,
         facetFilters: Object.keys(facetFilters).length > 0 ? facetFilters : undefined,
       });
+
+      trackSearchQuery(query);
 
       ctx.body = {
         data: {
