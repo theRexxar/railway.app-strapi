@@ -452,7 +452,7 @@ export interface ApiAlertAlert extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<"oneToMany", "api::alert.alert"> &
       Schema.Attribute.Private;
     message: Schema.Attribute.Text & Schema.Attribute.Required;
-    pages: Schema.Attribute.String & Schema.Attribute.Required;
+    pages: Schema.Attribute.Relation<'manyToMany', 'api::page.page'>;
     publishedAt: Schema.Attribute.DateTime;
     type: Schema.Attribute.Enumeration<
       ["info", "warning", "success", "error"]
@@ -1038,6 +1038,30 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPagePage extends Struct.CollectionTypeSchema {
+  collectionName: 'pages';
+  info: {
+    description: 'Page references for alert targeting';
+    displayName: 'Page';
+    pluralName: 'pages';
+    singularName: 'page';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'> & Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required & Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
   };
 }
 
@@ -1752,6 +1776,7 @@ declare module "@strapi/strapi" {
       "api::course.course": ApiCourseCourse;
       "api::global.global": ApiGlobalGlobal;
       "api::homepage.homepage": ApiHomepageHomepage;
+      "api::page.page": ApiPagePage;
       "api::learning-platform.learning-platform": ApiLearningPlatformLearningPlatform;
       "api::persona.persona": ApiPersonaPersona;
       "api::protection-info.protection-info": ApiProtectionInfoProtectionInfo;

@@ -65,6 +65,8 @@ tags:
     description: Homepage editorial content
   - name: Learning Platform
     description: Training provider platforms
+  - name: Page
+    description: Page references for alert targeting
   - name: Persona
     description: "One entry per persona (calon-pmi, pmi-aktif, keluarga-pmi, purna-pmi)"
   - name: Protection Info
@@ -480,6 +482,29 @@ paths:
       tags: [Learning Platform]
       summary: "Get a learning platform by documentId"
       operationId: getLearning-platform
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/pages":
+    get:
+      tags: [Page]
+      summary: "List all page entries"
+      operationId: getPages
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/pages/{id}":
+    get:
+      tags: [Page]
+      summary: "Get a page by documentId"
+      operationId: getPage
       parameters:
         - $ref: "#/components/parameters/documentId"
         - $ref: "#/components/parameters/populate"

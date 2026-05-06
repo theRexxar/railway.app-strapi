@@ -8,7 +8,7 @@
     "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "message": { "type": "text", "required": true },
     "link": { "type": "string" },
-    "pages": { "type": "string", "required": true },
+    "pages": { "type": "relation", "relation": "manyToMany", "target": "api::page.page" },
     "active": { "type": "boolean", "default": true }
   }
 }

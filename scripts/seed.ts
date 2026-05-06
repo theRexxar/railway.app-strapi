@@ -14,6 +14,7 @@ export async function seed(strapi) {
   ids.courseLearningMethods = await seedCourseLearningMethods(strapi)
   ids.authors = await seedAuthors(strapi)
   ids.personas = await seedPersonas(strapi)
+  ids.pages = await seedPages(strapi)
   ids.countries = await seedCountries(strapi)
   ids.protectionInfos = await seedProtectionInfos(strapi)
 
@@ -22,7 +23,7 @@ export async function seed(strapi) {
   ids.articles = await seedArticles(strapi, ids)
   ids.courses = await seedCourses(strapi, ids)
   ids.curriculums = await seedCurriculums(strapi, ids)
-  await seedAlerts(strapi)
+  await seedAlerts(strapi, ids)
 
   console.log('')
   ids.contentGroups = await seedContentGroupsAndContents(strapi, ids)
@@ -45,7 +46,7 @@ async function cleanDatabase(strapi) {
     'authors', 'countries', 'personas', 'article_categories', 'article_tags',
     'course_categories', 'course_tags', 'learning_platforms', 'course_learning_methods',
     'files', 'upload_folders',
-    'global', 'homepage',
+    'global', 'homepage', 'pages',
     'components_layout_footer_columns', 'components_layout_footer_columns_cmps',
     'components_layout_social_links', 'components_section_heroes', 'components_section_persona_cards',
     'components_shared_links', 'components_shared_seos',
@@ -374,17 +375,43 @@ async function seedCurriculums(strapi, ids) {
   return resultIds
 }
 
-async function seedAlerts(strapi) {
+async function seedPages(strapi) {
+  console.log('Seeding pages...')
+  const uid = 'api::page.page'
+  const items = [
+    { name: 'Home', slug: 'home' },
+    { name: 'Calon PMI', slug: 'calon-pmi' },
+    { name: 'PMI Aktif', slug: 'pmi-aktif' },
+    { name: 'Keluarga PMI', slug: 'keluarga-pmi' },
+    { name: 'Purna PMI', slug: 'purna-pmi' },
+    { name: 'Negara Tujuan', slug: 'negara-tujuan' },
+    { name: 'Pelatihan', slug: 'pelatihan' },
+    { name: 'Artikel', slug: 'artikel' },
+    { name: 'Informasi Keuangan', slug: 'informasi-keuangan' },
+  ]
+  const ids = {}
+  for (const item of items) {
+    const doc = await strapi.documents(uid).create({ data: item })
+    ids[item.slug] = doc.documentId
+  }
+  console.log(`  Created ${items.length} pages`)
+  return ids
+}
+
+async function seedAlerts(strapi, ids) {
   console.log('Seeding alerts...')
   const uid = 'api::alert.alert'
 
   const alerts = [
-    { type: 'warning', message: 'Pendaftaran PMI tahap II dibuka hingga 30 Juni 2026', link: 'https://bp2mi.go.id', pages: 'homepage,calon-pmi', active: true },
-    { type: 'info', message: 'Segera verifikasi dokumen Anda sebelum keberangkatan', link: '', pages: 'calon-pmi', active: true },
+    { type: 'warning', message: 'Pendaftaran PMI tahap II dibuka hingga 30 Juni 2026', link: 'https://bp2mi.go.id', pages: [ids.pages['home'], ids.pages['calon-pmi']], active: true },
+    { type: 'info', message: 'Segera verifikasi dokumen Anda sebelum keberangkatan', link: '', pages: [ids.pages['calon-pmi']], active: true },
   ]
 
   for (const alert of alerts) {
-    const doc = await strapi.documents(uid).create({ data: alert })
+    const { pages, ...data } = alert
+    const doc = await strapi.documents(uid).create({
+      data: { ...data, pages: { connect: pages.map(id => ({ documentId: id })) } },
+    })
     await strapi.documents(uid).publish(doc.documentId)
   }
   console.log(`  Created ${alerts.length} alerts (published)`)
