@@ -12,27 +12,29 @@ export async function resetContentManagerLayouts(strapi: Core.Strapi) {
 
   if (!RESET_MODE || RESET_MODE === 'false') return;
 
+  const configService = strapi.plugin('content-manager').service('configuration');
+
+  if (RESET_MODE === 'sync') {
+    console.log('[Layout] Syncing all Content Manager configurations...');
+    await configService.syncConfigurations();
+    console.log('[Layout] Sync complete.');
+    return;
+  }
+
   const uids = RESET_MODE === 'true' || RESET_MODE === '*' ? LAYOUT_UIDS : RESET_MODE.split(',').map(s => s.trim());
 
   console.log('[Layout] Resetting Content Manager layouts...');
 
-  const client = strapi.config.get('database.connection.client');
-
   for (const uid of uids) {
     try {
-      const key = `plugin_content_manager_configuration_content_types::${uid}`;
-
-      if (client === 'postgres' || client === 'pg') {
-        await strapi.db.connection.raw(`DELETE FROM strapi_core_store_settings WHERE key = ?`, [key]);
-      } else {
-        await strapi.db.connection('strapi_core_store_settings').where({ key }).del();
-      }
-
-      console.log(`[Layout] Reset: ${uid}`);
+      await configService.deleteConfiguration(uid);
+      console.log(`[Layout] Deleted: ${uid}`);
     } catch (err: any) {
-      console.warn(`[Layout] Could not reset ${uid}:`, err.message);
+      console.warn(`[Layout] Skip ${uid}:`, err.message);
     }
   }
 
-  console.log('[Layout] Done.');
+  // Regenerate defaults from schema
+  await configService.syncConfigurations();
+  console.log('[Layout] Layouts regenerated from schema.');
 }
