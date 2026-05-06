@@ -1,6 +1,120 @@
 // @ts-nocheck - Seeding module called from bootstrap lifecycle
 
+const TABLE_MAP: Record<string, { uid: string; deps: string[]; fn: string }> = {
+  'article-categories': { uid: 'api::article-category.article-category', deps: [], fn: 'seedArticleCategories' },
+  'article-tags': { uid: 'api::article-tag.article-tag', deps: [], fn: 'seedArticleTags' },
+  'course-categories': { uid: 'api::course-category.course-category', deps: [], fn: 'seedCourseCategories' },
+  'course-tags': { uid: 'api::course-tag.course-tag', deps: [], fn: 'seedCourseTags' },
+  'learning-platforms': { uid: 'api::learning-platform.learning-platform', deps: [], fn: 'seedLearningPlatforms' },
+  'course-learning-methods': { uid: 'api::course-learning-method.course-learning-method', deps: [], fn: 'seedCourseLearningMethods' },
+  'authors': { uid: 'api::author.author', deps: [], fn: 'seedAuthors' },
+  'personas': { uid: 'api::persona.persona', deps: [], fn: 'seedPersonas' },
+  'pages': { uid: 'api::page.page', deps: [], fn: 'seedPages' },
+  'countries': { uid: 'api::country.country', deps: [], fn: 'seedCountries' },
+  'protection-infos': { uid: 'api::protection-info.protection-info', deps: [], fn: 'seedProtectionInfos' },
+  'service-infos': { uid: 'api::service-info.service-info', deps: ['countries'], fn: 'seedServiceInfos' },
+  'articles': { uid: 'api::article.article', deps: ['article-categories', 'article-tags', 'authors'], fn: 'seedArticles' },
+  'courses': { uid: 'api::course.course', deps: ['course-categories', 'course-tags', 'learning-platforms', 'course-learning-methods'], fn: 'seedCourses' },
+  'curriculums': { uid: 'api::curriculum.curriculum', deps: ['courses'], fn: 'seedCurriculums' },
+  'alerts': { uid: 'api::alert.alert', deps: ['pages'], fn: 'seedAlerts' },
+  'content-groups': { uid: 'api::content-group.content-group', deps: ['personas', 'countries'], fn: 'seedContentGroups' },
+  'contents': { uid: 'api::content.content', deps: ['content-groups'], fn: 'seedContents' },
+  'global': { uid: 'api::global.global', deps: [], fn: 'seedGlobal' },
+  'tools': { uid: 'api::tool.tool', deps: ['personas'], fn: 'seedTools' },
+};
+
+function resolveSeedTables(selected: string[]): string[] {
+  const resolved = new Set<string>();
+  function add(table: string) {
+    if (resolved.has(table)) return;
+    resolved.add(table);
+    const config = TABLE_MAP[table];
+    if (config) {
+      for (const dep of config.deps) add(dep);
+    }
+  }
+  for (const t of selected) {
+    if (!TABLE_MAP[t]) {
+      console.warn(`Unknown table: "${t}". Available: ${Object.keys(TABLE_MAP).join(', ')}`);
+      continue;
+    }
+    add(t);
+  }
+  return [...resolved];
+}
+
 export async function seed(strapi) {
+  const selectedTables = process.env.SEED_TABLES?.split(',').map(t => t.trim()).filter(Boolean);
+
+  if (selectedTables?.length) {
+    const resolved = resolveSeedTables(selectedTables);
+    if (!resolved.length) {
+      console.log('No valid tables to seed.');
+      return;
+    }
+    console.log(`Seeding tables: ${resolved.join(', ')} (requested: ${selectedTables.join(', ')})`);
+
+    const client = strapi.config.get('database.connection.client');
+    const db = strapi.db;
+
+    for (const table of resolved) {
+      const uid = TABLE_MAP[table].uid;
+      try {
+        if (client === 'postgres' || client === 'pg') {
+          await db.connection.raw(`DELETE FROM "${uid.split('::')[1].replace(/\./g, '_') || uid}"`);
+        } else {
+          const docs = await strapi.documents(uid).findMany({ limit: 10000 });
+          for (const d of docs) {
+            await strapi.documents(uid).delete(d.documentId);
+          }
+        }
+      } catch {
+        // Skip if delete fails (table may not exist yet)
+      }
+    }
+    console.log('Cleaned selected tables.\n')
+
+    const ids = {};
+    for (const table of resolved) {
+      const fnName = TABLE_MAP[table].fn;
+      const needsIds = ['seedServiceInfos', 'seedArticles', 'seedCourses',
+        'seedCurriculums', 'seedAlerts', 'seedContentGroups', 'seedContents', 'seedTools'].includes(fnName);
+      const fn = needsIds ? await (async () => {
+        switch (fnName) {
+          case 'seedServiceInfos': return seedServiceInfos(strapi, ids);
+          case 'seedArticles': return seedArticles(strapi, ids);
+          case 'seedCourses': return seedCourses(strapi, ids);
+          case 'seedCurriculums': return seedCurriculums(strapi, ids);
+          case 'seedAlerts': return seedAlerts(strapi, ids);
+          case 'seedContentGroups': return seedContentGroups(strapi, ids);
+          case 'seedContents': return seedContents(strapi, ids);
+          case 'seedTools': return seedTools(strapi, ids);
+          default: return {};
+        }
+      })() : await (async () => {
+        switch (fnName) {
+          case 'seedArticleCategories': return seedArticleCategories(strapi);
+          case 'seedArticleTags': return seedArticleTags(strapi);
+          case 'seedCourseCategories': return seedCourseCategories(strapi);
+          case 'seedCourseTags': return seedCourseTags(strapi);
+          case 'seedLearningPlatforms': return seedLearningPlatforms(strapi);
+          case 'seedCourseLearningMethods': return seedCourseLearningMethods(strapi);
+          case 'seedAuthors': return seedAuthors(strapi);
+          case 'seedPersonas': return seedPersonas(strapi);
+          case 'seedPages': return seedPages(strapi);
+          case 'seedCountries': return seedCountries(strapi);
+          case 'seedProtectionInfos': return seedProtectionInfos(strapi);
+          case 'seedGlobal': return seedGlobal(strapi);
+          default: return {};
+        }
+      })();
+      ids[table] = fn;
+    }
+    console.log(`\nSeeded ${resolved.length} tables.`);
+    return;
+  }
+
+  // Full seed (no SEED_TABLES set)
   await cleanDatabase(strapi);
   console.log('');
 
@@ -26,7 +140,8 @@ export async function seed(strapi) {
   await seedAlerts(strapi, ids)
 
   console.log('')
-  ids.contentGroups = await seedContentGroupsAndContents(strapi, ids)
+  ids.contentGroups = await seedContentGroups(strapi, ids)
+  ids.contents = await seedContents(strapi, ids)
 
   console.log('')
   await seedGlobal(strapi)
@@ -417,10 +532,9 @@ async function seedAlerts(strapi, ids) {
   console.log(`  Created ${alerts.length} alerts (published)`)
 }
 
-async function seedContentGroupsAndContents(strapi, ids) {
-  console.log('Seeding content groups and contents...')
+async function seedContentGroups(strapi, ids) {
+  console.log('Seeding content groups...')
   const cgUid = 'api::content-group.content-group'
-  const cUid = 'api::content.content'
 
   const groups = [
     { title: 'Persiapan Sebelum Berangkat', slug: 'persiapan-sebelum-berangkat', description: '<p>Panduan lengkap untuk mempersiapkan diri sebelum bekerja ke luar negeri.</p>', personas: [ids.personas['calon-pmi']], order: 1, meta_seo: { meta_title: 'Persiapan Sebelum Berangkat - JARI PMI', meta_description: 'Panduan lengkap persiapan PMI sebelum berangkat ke luar negeri' } },
@@ -428,6 +542,24 @@ async function seedContentGroupsAndContents(strapi, ids) {
     { title: 'Panduan untuk Keluarga PMI', slug: 'panduan-untuk-keluarga-pmi', description: '<p>Informasi dan panduan untuk keluarga Pekerja Migran Indonesia.</p>', personas: [ids.personas['keluarga-pmi']], order: 3, meta_seo: { meta_title: 'Panduan untuk Keluarga PMI - JARI PMI', meta_description: 'Informasi dan panduan bagi keluarga Pekerja Migran Indonesia' } },
     { title: 'Memulai Kehidupan Baru', slug: 'memulai-kehidupan-baru', description: '<p>Panduan bagi PMI yang telah selesai bekerja di luar negeri untuk memulai kehidupan baru.</p>', personas: [ids.personas['purna-pmi']], order: 4, meta_seo: { meta_title: 'Memulai Kehidupan Baru - JARI PMI', meta_description: 'Panduan bagi Purna PMI untuk memulai kehidupan baru di Indonesia' } },
   ]
+
+  const groupIds = {}
+  for (const group of groups) {
+    const { personas, meta_seo, ...groupData } = group
+    const cgDoc = await strapi.documents(cgUid).create({
+      data: { ...groupData, personas: personas?.length ? { connect: personas.map(id => ({ documentId: id })) } : undefined, meta_seo },
+    })
+    await strapi.documents(cgUid).publish(cgDoc.documentId)
+    groupIds[group.slug] = cgDoc.documentId
+  }
+
+  console.log(`  Created ${groups.length} content groups (published)`)
+  return groupIds
+}
+
+async function seedContents(strapi, ids) {
+  console.log('Seeding contents...')
+  const cUid = 'api::content.content'
 
   const contentsByGroup = {
     'persiapan-sebelum-berangkat': [
@@ -448,22 +580,14 @@ async function seedContentGroupsAndContents(strapi, ids) {
     ],
   }
 
-  const groupIds = {}
-  for (const group of groups) {
-    const { personas, meta_seo, ...groupData } = group
-    const cgDoc = await strapi.documents(cgUid).create({
-      data: { ...groupData, personas: personas?.length ? { connect: personas.map(id => ({ documentId: id })) } : undefined, meta_seo },
-    })
-    await strapi.documents(cgUid).publish(cgDoc.documentId)
-    groupIds[group.slug] = cgDoc.documentId
-  }
-
+  let count = 0
   for (const [groupSlug, contents] of Object.entries(contentsByGroup)) {
-    const groupId = groupIds[groupSlug]
+    const groupId = ids.contentGroups[groupSlug]
     for (const content of contents) {
       await strapi.documents(cUid).create({
         data: { title: content.title, slug: content.slug, excerpt: content.excerpt, body: content.body, order: content.order, content_group: { connect: [{ documentId: groupId }] }, meta_seo: { meta_title: content.title, meta_description: content.excerpt } },
       })
+      count++
     }
   }
 
@@ -472,8 +596,12 @@ async function seedContentGroupsAndContents(strapi, ids) {
     await strapi.documents(cUid).publish(c.documentId)
   }
 
-  console.log(`  Created ${groups.length} content groups and ${groups.reduce((sum, g) => sum + g.contents.length, 0)} contents (published)`)
-  return groupIds
+  console.log(`  Created ${count} contents (published)`)
+}
+
+async function seedTools(strapi, ids) {
+  console.log('Seeding tools (no seed data yet)...')
+  return {}
 }
 
 async function seedGlobal(strapi) {
