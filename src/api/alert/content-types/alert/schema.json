@@ -5,8 +5,9 @@
   "options": { "draftAndPublish": true },
   "attributes": {
     "type": { "type": "enumeration", "enum": ["info", "warning", "success", "error"], "required": true },
+    "title": { "type": "string", "required": true },
+    "message": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
     "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
-    "message": { "type": "text", "required": true },
     "link": { "type": "string" },
     "pages": { "type": "relation", "relation": "manyToMany", "target": "api::page.page" },
     "active": { "type": "boolean", "default": true }

@@ -518,8 +518,8 @@ async function seedAlerts(strapi, ids) {
   const uid = 'api::alert.alert'
 
   const alerts = [
-    { type: 'warning', message: 'Pendaftaran PMI tahap II dibuka hingga 30 Juni 2026', link: 'https://bp2mi.go.id', pages: [ids.pages['home'], ids.pages['calon-pmi']], active: true },
-    { type: 'info', message: 'Segera verifikasi dokumen Anda sebelum keberangkatan', link: '', pages: [ids.pages['calon-pmi']], active: true },
+    { type: 'warning', title: 'Pendaftaran PMI Tahap II', message: '<p>Pendaftaran PMI tahap II dibuka hingga 30 Juni 2026</p>', link: 'https://bp2mi.go.id', pages: [ids.pages['home'], ids.pages['calon-pmi']], active: true },
+    { type: 'info', title: 'Verifikasi Dokumen', message: '<p>Segera verifikasi dokumen Anda sebelum keberangkatan</p>', link: '', pages: [ids.pages['calon-pmi']], active: true },
   ]
 
   for (const alert of alerts) {
