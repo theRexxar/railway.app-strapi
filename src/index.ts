@@ -4,6 +4,9 @@ export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    const { resetContentManagerLayouts } = await import('./utils/reset-layouts');
+    await resetContentManagerLayouts(strapi);
+
     if (process.env.SEED === 'true') {
       const { seed } = await import('../scripts/seed');
       console.log('SEED=true detected, running seeder...');
