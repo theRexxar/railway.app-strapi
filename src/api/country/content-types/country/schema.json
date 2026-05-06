@@ -8,7 +8,7 @@
     "slug": { "type": "uid", "targetField": "name", "required": true },
     "flag": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
-    "description": { "type": "richtext" },
+    "description": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" } },
     "region": { "type": "enumeration", "enum": ["asia", "middle-east", "europe", "africa", "americas", "oceania"] },
     "is_featured": { "type": "boolean", "default": false },
     "order": { "type": "integer", "default": 0 },

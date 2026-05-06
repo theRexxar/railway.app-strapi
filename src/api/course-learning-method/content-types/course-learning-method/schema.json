@@ -1,0 +1,11 @@
+{
+  "kind": "collectionType",
+  "collectionName": "course_learning_methods",
+  "info": { "singularName": "course-learning-method", "pluralName": "course-learning-methods", "displayName": "Course Learning Method", "description": "Learning method for courses (Offline, Webinar, Self-Paced)" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "name": { "type": "string", "required": true, "unique": true },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
+    "courses": { "type": "relation", "relation": "oneToMany", "target": "api::course.course", "mappedBy": "learning_method" }
+  }
+}

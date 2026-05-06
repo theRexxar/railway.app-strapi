@@ -1,0 +1,13 @@
+{
+  "kind": "collectionType",
+  "collectionName": "curriculums",
+  "info": { "singularName": "curriculum", "pluralName": "curriculums", "displayName": "Curriculum", "description": "Course curriculum items" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "content": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" } },
+    "duration": { "type": "integer", "default": 0 },
+    "order": { "type": "integer", "default": 0 },
+    "course": { "type": "relation", "relation": "manyToOne", "target": "api::course.course", "inversedBy": "curriculums" }
+  }
+}

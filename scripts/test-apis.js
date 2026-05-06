@@ -177,7 +177,7 @@ async function run() {
   }
   {
     const r = await fetchAPI(
-      `/api/content-groups?filters[personas][slug][$eq]=${v.personaSlug}&populate[contents][populate]=image&populate[service_infos][populate]=cover_image&populate[protection_infos][populate]=icon&populate[courses][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published`,
+      `/api/content-groups?filters[personas][slug][$eq]=${v.personaSlug}&populate[service_infos][populate]=cover_image&populate[protection_infos][populate]=icon&populate[countries][populate]=*&sort=order:asc&status=published`,
     );
     check(
       `GET /api/content-groups (filter by persona=${v.personaSlug})`,
@@ -239,7 +239,7 @@ async function run() {
   }
   {
     const r = await fetchAPI(
-      `/api/content-groups?filters[countries][slug][$eq]=${v.countrySlug}&populate[contents][populate]=image&sort=order:asc&status=published`,
+      `/api/content-groups?filters[countries][slug][$eq]=${v.countrySlug}&sort=order:asc&status=published`,
     );
     check(
       `GET /api/content-groups (filter by country=${v.countrySlug})`,
@@ -263,7 +263,7 @@ async function run() {
   }
   {
     const r = await fetchAPI(
-      `/api/content-groups?filters[service_infos][slug][$eq]=${v.serviceInfoSlug}&populate[contents][populate]=image&sort=order:asc&status=published`,
+      `/api/content-groups?filters[service_infos][slug][$eq]=${v.serviceInfoSlug}&sort=order:asc&status=published`,
     );
     check(
       `GET /api/content-groups (filter by service-info=${v.serviceInfoSlug})`,

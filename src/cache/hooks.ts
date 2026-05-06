@@ -18,6 +18,8 @@ const CACHEABLE_UIDS = [
   'api::course-category.course-category',
   'api::course-tag.course-tag',
   'api::learning-platform.learning-platform',
+  'api::course-learning-method.course-learning-method',
+  'api::curriculum.curriculum',
   'api::author.author',
   'api::global.global',
   'api::homepage.homepage',

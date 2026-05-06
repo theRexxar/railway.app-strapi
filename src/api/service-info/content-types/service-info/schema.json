@@ -7,10 +7,9 @@
     "title": { "type": "string", "required": true },
     "slug": { "type": "uid", "targetField": "title", "required": true },
     "excerpt": { "type": "text" },
-    "content": { "type": "richtext", "required": true },
+    "content": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
     "cover_image": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
     "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
-    "category": { "type": "string" },
     "link": { "type": "string" },
     "is_featured": { "type": "boolean", "default": false }
   }

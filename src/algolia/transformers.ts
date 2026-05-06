@@ -59,10 +59,6 @@ export function transformToAlgoliaRecord(
     }
   }
 
-  if (config.type === 'course' && entry.target_personas) {
-    record.target_personas = entry.target_personas;
-  }
-
   if (config.type === 'country' && entry.is_featured !== undefined) {
     record.is_featured = entry.is_featured;
   }

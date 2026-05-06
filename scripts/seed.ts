@@ -11,6 +11,7 @@ export async function seed(strapi) {
   ids.courseCategories = await seedCourseCategories(strapi)
   ids.courseTags = await seedCourseTags(strapi)
   ids.learningPlatforms = await seedLearningPlatforms(strapi)
+  ids.courseLearningMethods = await seedCourseLearningMethods(strapi)
   ids.authors = await seedAuthors(strapi)
   ids.personas = await seedPersonas(strapi)
   ids.countries = await seedCountries(strapi)
@@ -20,6 +21,7 @@ export async function seed(strapi) {
   ids.serviceInfos = await seedServiceInfos(strapi, ids)
   ids.articles = await seedArticles(strapi, ids)
   ids.courses = await seedCourses(strapi, ids)
+  ids.curriculums = await seedCurriculums(strapi, ids)
   await seedAlerts(strapi)
 
   console.log('')
@@ -37,13 +39,11 @@ async function cleanDatabase(strapi) {
   const tables = [
     'articles_article_category_lnk', 'articles_article_tags_lnk', 'articles_author_lnk',
     'content_groups_contents_lnk', 'content_groups_countries_lnk', 'content_groups_service_infos_lnk',
-    'content_groups_protection_infos_lnk', 'content_groups_courses_lnk', 'content_groups_personas_lnk',
-    'courses_course_category_lnk', 'courses_course_tags_lnk', 'courses_learning_platform_lnk', 'courses_countries_lnk',
-    'homepage_featured_services_lnk', 'homepage_featured_countries_lnk', 'homepage_featured_courses_lnk', 'homepage_featured_articles_lnk',
+    'content_groups_protection_infos_lnk', 'content_groups_personas_lnk',
     'service_infos_countries_lnk', 'files_related_mph', 'files_folder_lnk',
-    'content_groups', 'contents', 'articles', 'courses', 'service_infos', 'protection_infos', 'alerts',
+    'content_groups', 'contents', 'articles', 'curriculums', 'courses', 'service_infos', 'protection_infos', 'alerts',
     'authors', 'countries', 'personas', 'article_categories', 'article_tags',
-    'course_categories', 'course_tags', 'learning_platforms',
+    'course_categories', 'course_tags', 'learning_platforms', 'course_learning_methods',
     'files', 'upload_folders',
     'global', 'homepage',
     'components_layout_footer_columns', 'components_layout_footer_columns_cmps',
@@ -75,10 +75,10 @@ async function seedArticleCategories(strapi) {
   console.log('Seeding article categories...')
   const uid = 'api::article-category.article-category'
   const items = [
-    { name: 'Berita', slug: 'berita', description: 'Berita terbaru seputar PMI' },
-    { name: 'Ketenagakerjaan', slug: 'ketenagakerjaan', description: 'Informasi ketenagakerjaan' },
-    { name: 'Perlindungan', slug: 'perlindungan', description: 'Informasi perlindungan PMI' },
-    { name: 'Tips & Panduan', slug: 'tips-dan-panduan', description: 'Tips dan panduan untuk PMI' },
+    { name: 'Berita', slug: 'berita', description: '<p>Berita terbaru seputar PMI</p>' },
+    { name: 'Ketenagakerjaan', slug: 'ketenagakerjaan', description: '<p>Informasi ketenagakerjaan</p>' },
+    { name: 'Perlindungan', slug: 'perlindungan', description: '<p>Informasi perlindungan PMI</p>' },
+    { name: 'Tips & Panduan', slug: 'tips-dan-panduan', description: '<p>Tips dan panduan untuk PMI</p>' },
   ]
   const ids = {}
   for (const item of items) {
@@ -169,6 +169,23 @@ async function seedLearningPlatforms(strapi) {
   return ids
 }
 
+async function seedCourseLearningMethods(strapi) {
+  console.log('Seeding course learning methods...')
+  const uid = 'api::course-learning-method.course-learning-method'
+  const items = [
+    { name: 'Offline', slug: 'offline' },
+    { name: 'Webinar', slug: 'webinar' },
+    { name: 'Self-Paced', slug: 'self-paced' },
+  ]
+  const ids = {}
+  for (const item of items) {
+    const doc = await strapi.documents(uid).create({ data: item })
+    ids[item.slug] = doc.documentId
+  }
+  console.log(`  Created ${items.length} course learning methods`)
+  return ids
+}
+
 async function seedAuthors(strapi) {
   console.log('Seeding authors...')
   const uid = 'api::author.author'
@@ -197,10 +214,10 @@ async function seedPersonas(strapi) {
   console.log('Seeding personas...')
   const uid = 'api::persona.persona'
   const items = [
-    { name: 'Calon PMI', slug: 'calon-pmi', description: 'Berencana bekerja di luar negeri', background_color: '#1A5276', order: 1, meta_seo: { meta_title: 'Calon PMI - JARI PMI', meta_description: 'Informasi untuk calon Pekerja Migran Indonesia' } },
-    { name: 'PMI Aktif', slug: 'pmi-aktif', description: 'Sedang bekerja di luar negeri', background_color: '#117864', order: 2, meta_seo: { meta_title: 'PMI Aktif - JARI PMI', meta_description: 'Informasi untuk PMI yang sedang bekerja di luar negeri' } },
-    { name: 'Keluarga PMI', slug: 'keluarga-pmi', description: 'Keluarga pekerja migran Indonesia', background_color: '#7D3C98', order: 3, meta_seo: { meta_title: 'Keluarga PMI - JARI PMI', meta_description: 'Informasi untuk keluarga Pekerja Migran Indonesia' } },
-    { name: 'Purna PMI', slug: 'purna-pmi', description: 'Telah selesai bekerja di luar negeri', background_color: '#B7950B', order: 4, meta_seo: { meta_title: 'Purna PMI - JARI PMI', meta_description: 'Informasi untuk PMI yang telah selesai bekerja di luar negeri' } },
+    { name: 'Calon PMI', slug: 'calon-pmi', description: '<p>Berencana bekerja di luar negeri</p>', background_color: '#1A5276', order: 1, meta_seo: { meta_title: 'Calon PMI - JARI PMI', meta_description: 'Informasi untuk calon Pekerja Migran Indonesia' } },
+    { name: 'PMI Aktif', slug: 'pmi-aktif', description: '<p>Sedang bekerja di luar negeri</p>', background_color: '#117864', order: 2, meta_seo: { meta_title: 'PMI Aktif - JARI PMI', meta_description: 'Informasi untuk PMI yang sedang bekerja di luar negeri' } },
+    { name: 'Keluarga PMI', slug: 'keluarga-pmi', description: '<p>Keluarga pekerja migran Indonesia</p>', background_color: '#7D3C98', order: 3, meta_seo: { meta_title: 'Keluarga PMI - JARI PMI', meta_description: 'Informasi untuk keluarga Pekerja Migran Indonesia' } },
+    { name: 'Purna PMI', slug: 'purna-pmi', description: '<p>Telah selesai bekerja di luar negeri</p>', background_color: '#B7950B', order: 4, meta_seo: { meta_title: 'Purna PMI - JARI PMI', meta_description: 'Informasi untuk PMI yang telah selesai bekerja di luar negeri' } },
   ]
   const ids = {}
   for (const item of items) {
@@ -237,12 +254,12 @@ async function seedProtectionInfos(strapi) {
   console.log('Seeding protection infos...')
   const uid = 'api::protection-info.protection-info'
   const items = [
-    { title: 'Hak-Hak PMI di Luar Negeri', slug: 'hak-hak-pmi-di-luar-negeri', description: 'Ketahui hak Anda sebagai PMI di negara penempatan', content: '<p>Sebagai Pekerja Migran Indonesia, Anda memiliki hak-hak yang dilindungi oleh hukum, baik hukum Indonesia maupun hukum negara penempatan. Memahami hak-hak ini adalah langkah pertama untuk memastikan perlindungan Anda selama bekerja di luar negeri.</p><p>Hak-hak utama PMI meliputi: hak atas upah yang layak, hak atas istirahat dan cuti, hak atas perlindungan keselamatan dan kesehatan kerja, hak atas perlindungan sosial, serta hak atas perlakuan yang setara tanpa diskriminasi.</p>', category: 'hak-pmi', order: 1 },
-    { title: 'Prosedur Pengaduan PMI', slug: 'prosedur-pengaduan-pmi', description: 'Langkah-langkah pengaduan jika mengalami masalah', content: '<p>Jika Anda mengalami masalah selama bekerja di luar negeri, Anda berhak mengajukan pengaduan. Prosedur pengaduan PMI dirancang untuk memastikan setiap keluhan ditangani secara cepat dan adil.</p><p>Anda dapat mengajukan pengaduan melalui KBRI/KJRI setempat, layanan pengaduan online BP2MI, atau langsung melalui aplikasi JARI PMI ini. Simpan semua bukti dan dokumentasi terkait masalah Anda.</p>', category: 'perlindungan', order: 2 },
-    { title: 'Jaminan Sosial Tenaga Kerja', slug: 'jaminan-sosial-tenaga-kerja', description: 'Perlindungan jaminan sosial untuk PMI', content: '<p>PMI memiliki hak atas jaminan sosial tenaga kerja yang meliputi Jaminan Kecelakaan Kerja (JKK), Jaminan Kematian (JKM), Jaminan Hari Tua (JHT), dan Jaminan Pensiun. Program ini dikelola oleh BPJS Ketenagakerjaan.</p><p>Pastikan Anda terdaftar sebagai peserta BPJS Ketenagakerjaan sebelum berangkat ke luar negeri. Jaminan sosial ini memberikan perlindungan finansial jika terjadi kecelakaan kerja, sakit, atau risiko lainnya.</p>', category: 'jaminan-sosial', order: 3 },
-    { title: 'Klaim Asuransi PMI', slug: 'klaim-asuransi-pmi', description: 'Cara mengajukan klaim asuransi sebagai PMI', content: '<p>Sebagai PMI, Anda dilindungi oleh asuransi yang diatur dalam perjanjian kerja. Klaim asuransi dapat diajukan untuk kecelakaan kerja, sakit, repatriasi, dan risiko lainnya sesuai ketentuan polis.</p><p>Untuk mengajukan klaim, siapkan dokumen-dokumen yang diperlukan seperti surat keterangan dari perusahaan, bukti pembayaran premi, dan laporan kejadian. Proses klaim dapat dilakukan melalui agen asuransi atau langsung ke perusahaan asuransi penanggung.</p>', category: 'klaim', order: 4 },
-    { title: 'Reasuransi dan Perlindungan Tambahan', slug: 'reasuransi-dan-perlindungan-tambahan', description: 'Perlindungan tambahan melalui reasuransi', content: '<p>Reasuransi memberikan lapisan perlindungan tambahan bagi PMI di luar asuransi dasar. Program ini memastikan bahwa risiko yang tidak tertanggung oleh asuransi utama tetap mendapatkan perlindungan.</p><p>Konsultasikan dengan BP2MI dan perusahaan penempatan Anda tentang cakupan reasuransi yang tersedia. Pastikan Anda memahami apa saja yang ditanggung dan prosedur klaimnya.</p>', category: 'reasuransi', order: 5 },
-    { title: 'Tips Keselamatan di Negara Tujuan', slug: 'tips-keselamatan-di-negara-tujuan', description: 'Panduan keselamatan saat bekerja di luar negeri', content: '<p>Keselamatan adalah prioritas utama saat bekerja di luar negeri. Kenali lingkungan kerja Anda, pelajari prosedur keselamatan perusahaan, dan selalu gunakan alat pelindung diri yang disediakan.</p><p>Simpan nomor darurat KBRI/KJRI dan BP2MI di tempat yang mudah diakses. Jika merasa tidak aman, segera hubungi pihak berwenang atau KBRI/KJRI setempat.</p>', category: 'perlindungan', order: 6 },
+    { title: 'Hak-Hak PMI di Luar Negeri', slug: 'hak-hak-pmi-di-luar-negeri', description: '<p>Ketahui hak Anda sebagai PMI di negara penempatan</p>', content: '<p>Sebagai Pekerja Migran Indonesia, Anda memiliki hak-hak yang dilindungi oleh hukum, baik hukum Indonesia maupun hukum negara penempatan. Memahami hak-hak ini adalah langkah pertama untuk memastikan perlindungan Anda selama bekerja di luar negeri.</p><p>Hak-hak utama PMI meliputi: hak atas upah yang layak, hak atas istirahat dan cuti, hak atas perlindungan keselamatan dan kesehatan kerja, hak atas perlindungan sosial, serta hak atas perlakuan yang setara tanpa diskriminasi.</p>', order: 1 },
+    { title: 'Prosedur Pengaduan PMI', slug: 'prosedur-pengaduan-pmi', description: '<p>Langkah-langkah pengaduan jika mengalami masalah</p>', content: '<p>Jika Anda mengalami masalah selama bekerja di luar negeri, Anda berhak mengajukan pengaduan. Prosedur pengaduan PMI dirancang untuk memastikan setiap keluhan ditangani secara cepat dan adil.</p><p>Anda dapat mengajukan pengaduan melalui KBRI/KJRI setempat, layanan pengaduan online BP2MI, atau langsung melalui aplikasi JARI PMI ini. Simpan semua bukti dan dokumentasi terkait masalah Anda.</p>', order: 2 },
+    { title: 'Jaminan Sosial Tenaga Kerja', slug: 'jaminan-sosial-tenaga-kerja', description: '<p>Perlindungan jaminan sosial untuk PMI</p>', content: '<p>PMI memiliki hak atas jaminan sosial tenaga kerja yang meliputi Jaminan Kecelakaan Kerja (JKK), Jaminan Kematian (JKM), Jaminan Hari Tua (JHT), dan Jaminan Pensiun. Program ini dikelola oleh BPJS Ketenagakerjaan.</p><p>Pastikan Anda terdaftar sebagai peserta BPJS Ketenagakerjaan sebelum berangkat ke luar negeri. Jaminan sosial ini memberikan perlindungan finansial jika terjadi kecelakaan kerja, sakit, atau risiko lainnya.</p>', order: 3 },
+    { title: 'Klaim Asuransi PMI', slug: 'klaim-asuransi-pmi', description: '<p>Cara mengajukan klaim asuransi sebagai PMI</p>', content: '<p>Sebagai PMI, Anda dilindungi oleh asuransi yang diatur dalam perjanjian kerja. Klaim asuransi dapat diajukan untuk kecelakaan kerja, sakit, repatriasi, dan risiko lainnya sesuai ketentuan polis.</p><p>Untuk mengajukan klaim, siapkan dokumen-dokumen yang diperlukan seperti surat keterangan dari perusahaan, bukti pembayaran premi, dan laporan kejadian. Proses klaim dapat dilakukan melalui agen asuransi atau langsung ke perusahaan asuransi penanggung.</p>', order: 4 },
+    { title: 'Reasuransi dan Perlindungan Tambahan', slug: 'reasuransi-dan-perlindungan-tambahan', description: '<p>Perlindungan tambahan melalui reasuransi</p>', content: '<p>Reasuransi memberikan lapisan perlindungan tambahan bagi PMI di luar asuransi dasar. Program ini memastikan bahwa risiko yang tidak tertanggung oleh asuransi utama tetap mendapatkan perlindungan.</p><p>Konsultasikan dengan BP2MI dan perusahaan penempatan Anda tentang cakupan reasuransi yang tersedia. Pastikan Anda memahami apa saja yang ditanggung dan prosedur klaimnya.</p>', order: 5 },
+    { title: 'Tips Keselamatan di Negara Tujuan', slug: 'tips-keselamatan-di-negara-tujuan', description: '<p>Panduan keselamatan saat bekerja di luar negeri</p>', content: '<p>Keselamatan adalah prioritas utama saat bekerja di luar negeri. Kenali lingkungan kerja Anda, pelajari prosedur keselamatan perusahaan, dan selalu gunakan alat pelindung diri yang disediakan.</p><p>Simpan nomor darurat KBRI/KJRI dan BP2MI di tempat yang mudah diakses. Jika merasa tidak aman, segera hubungi pihak berwenang atau KBRI/KJRI setempat.</p>', order: 6 },
   ]
   const ids = {}
   for (const item of items) {
@@ -258,10 +275,10 @@ async function seedServiceInfos(strapi, ids) {
   const uid = 'api::service-info.service-info'
 
   const items = [
-    { title: 'QRIS Cross Border', slug: 'qris-cross-border', excerpt: 'Bayar dan transfer uang menggunakan QRIS di negara penempatan.', content: '<p>Layanan QRIS Cross Border memungkinkan PMI untuk melakukan pembayaran dan transfer uang menggunakan kode QR di negara penempatan. Layanan ini didukung oleh Bank Indonesia dan tersedia di beberapa negara tujuan PMI.</p><p>Dengan QRIS Cross Border, Anda dapat melakukan transaksi secara mudah dan aman tanpa perlu membawa uang tunai dalam jumlah besar. Cukup scan kode QR di tempat pembayaran yang tersedia.</p>', category: 'Keuangan', is_featured: true, countries: [ids.countries['malaysia'], ids.countries['arab-saudi'], ids.countries['hong-kong']] },
-    { title: 'BPJS Ketenagakerjaan', slug: 'bpjs-ketenagakerjaan', excerpt: 'Jaminan sosial tenaga kerja untuk perlindungan PMI selama bekerja di luar negeri.', content: '<p>BPJS Ketenagakerjaan memberikan jaminan sosial bagi PMI yang meliputi Jaminan Kecelakaan Kerja (JKK), Jaminan Kematian (JKM), Jaminan Hari Tua (JHT), dan Jaminan Pensiun.</p><p>Pastikan Anda terdaftar sebagai peserta BPJS Ketenagakerjaan sebelum berangkat ke luar negeri. Iuran dapat dibayarkan secara berkala selama Anda bekerja di luar negeri.</p>', category: 'Ketenagakerjaan', is_featured: true, countries: [ids.countries['malaysia'], ids.countries['singapura']] },
-    { title: 'BLTK Online', slug: 'bltk-online', excerpt: 'Buat dan kelola Berkas Penempatan Tenaga Kerja Indonesia secara online.', content: '<p>BLTK Online adalah layanan pembuatan Berkas Penempatan Tenaga Kerja Indonesia secara digital. Melalui layanan ini, Anda dapat mengurus persyaratan penempatan tanpa perlu datang langsung ke kantor BP2MI.</p><p>Layanan ini memudahkan proses administrasi penempatan PMI dengan sistem yang terintegrasi dan transparan.</p>', category: 'Dokumentasi', is_featured: true, countries: [ids.countries['taiwan'], ids.countries['hong-kong']] },
-    { title: 'Verifikasi Dokumen PMI', slug: 'verifikasi-dokumen-pmi', excerpt: 'Verifikasi keabsahan dokumen penempatan PMI sebelum keberangkatan.', content: '<p>Layanan Verifikasi Dokumen PMI membantu Anda memastikan keabsahan seluruh dokumen penempatan sebelum berangkat ke luar negeri. Dokumen yang perlu diverifikasi antara lain kontrak kerja, visa kerja, dan izin penempatan.</p><p>Pastikan semua dokumen Anda telah diverifikasi untuk menghindari masalah di negara penempatan.</p>', category: 'Dokumentasi', is_featured: false, countries: [] },
+    { title: 'QRIS Cross Border', slug: 'qris-cross-border', excerpt: 'Bayar dan transfer uang menggunakan QRIS di negara penempatan.', content: '<p>Layanan QRIS Cross Border memungkinkan PMI untuk melakukan pembayaran dan transfer uang menggunakan kode QR di negara penempatan. Layanan ini didukung oleh Bank Indonesia dan tersedia di beberapa negara tujuan PMI.</p><p>Dengan QRIS Cross Border, Anda dapat melakukan transaksi secara mudah dan aman tanpa perlu membawa uang tunai dalam jumlah besar. Cukup scan kode QR di tempat pembayaran yang tersedia.</p>', is_featured: true, countries: [ids.countries['malaysia'], ids.countries['arab-saudi'], ids.countries['hong-kong']] },
+    { title: 'BPJS Ketenagakerjaan', slug: 'bpjs-ketenagakerjaan', excerpt: 'Jaminan sosial tenaga kerja untuk perlindungan PMI selama bekerja di luar negeri.', content: '<p>BPJS Ketenagakerjaan memberikan jaminan sosial bagi PMI yang meliputi Jaminan Kecelakaan Kerja (JKK), Jaminan Kematian (JKM), Jaminan Hari Tua (JHT), dan Jaminan Pensiun.</p><p>Pastikan Anda terdaftar sebagai peserta BPJS Ketenagakerjaan sebelum berangkat ke luar negeri. Iuran dapat dibayarkan secara berkala selama Anda bekerja di luar negeri.</p>', is_featured: true, countries: [ids.countries['malaysia'], ids.countries['singapura']] },
+    { title: 'BLTK Online', slug: 'bltk-online', excerpt: 'Buat dan kelola Berkas Penempatan Tenaga Kerja Indonesia secara online.', content: '<p>BLTK Online adalah layanan pembuatan Berkas Penempatan Tenaga Kerja Indonesia secara digital. Melalui layanan ini, Anda dapat mengurus persyaratan penempatan tanpa perlu datang langsung ke kantor BP2MI.</p><p>Layanan ini memudahkan proses administrasi penempatan PMI dengan sistem yang terintegrasi dan transparan.</p>', is_featured: true, countries: [ids.countries['taiwan'], ids.countries['hong-kong']] },
+    { title: 'Verifikasi Dokumen PMI', slug: 'verifikasi-dokumen-pmi', excerpt: 'Verifikasi keabsahan dokumen penempatan PMI sebelum keberangkatan.', content: '<p>Layanan Verifikasi Dokumen PMI membantu Anda memastikan keabsahan seluruh dokumen penempatan sebelum berangkat ke luar negeri. Dokumen yang perlu diverifikasi antara lain kontrak kerja, visa kerja, dan izin penempatan.</p><p>Pastikan semua dokumen Anda telah diverifikasi untuk menghindari masalah di negara penempatan.</p>', is_featured: false, countries: [] },
   ]
 
   const resultIds = {}
@@ -305,30 +322,55 @@ async function seedCourses(strapi, ids) {
   const uid = 'api::course.course'
 
   const courses = [
-    { name: 'Pelatihan Keselamatan Kerja di Luar Negeri', slug: 'pelatihan-keselamatan-kerja-di-luar-negeri', excerpt: 'Pelatihan wajib tentang standar keselamatan dan kesehatan kerja untuk PMI.', description: '<p>Pelatihan ini mencakup standar keselamatan kerja internasional, penggunaan alat pelindung diri, prosedur darurat, dan hak-hak K3 PMI di negara penempatan.</p><p>Materi pelatihan meliputi identifikasi bahaya di tempat kerja, prosedur pelaporan kecelakaan, pertolongan pertama, dan evakuasi darurat.</p>', price: 0, link: 'https://bp2mi.go.id/pelatihan/keselamatan-kerja', course_category: ids.courseCategories['keselamatan-dan-k3'], course_tags: { connect: [ids.courseTags['gratis'], ids.courseTags['bersertifikat']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['bp2mi'], target_personas: ['calon-pmi', 'pmi-aktif'], is_featured: true, countries: [ids.countries['malaysia'], ids.countries['arab-saudi']] },
-    { name: 'Bahasa Mandarin Dasar untuk PMI', slug: 'bahasa-mandarin-dasar-untuk-pmi', excerpt: 'Kursus bahasa Mandarin dasar untuk PMI yang akan bekerja di Taiwan dan China.', description: '<p>Pelatihan bahasa Mandarin dasar ini dirancang khusus untuk PMI yang akan bekerja di negara berbahasa Mandarin. Materi mencakup percakapan sehari-hari, kosakata tempat kerja, dan ungkapan darurat.</p>', price: 0, link: 'https://p2mionline.kemnaker.go.id/kursus/mandarin-dasar', course_category: ids.courseCategories['bahasa'], course_tags: { connect: [ids.courseTags['online'], ids.courseTags['mandiri']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['p2mi-online'], target_personas: ['calon-pmi'], is_featured: true, countries: [ids.countries['taiwan']] },
-    { name: 'Bahasa Arab untuk Pekerja Migran', slug: 'bahasa-arab-untuk-pekerja-migran', excerpt: 'Kursus bahasa Arab dasar untuk PMI yang akan bekerja di Timur Tengah.', description: '<p>Pelatihan bahasa Arab dasar untuk PMI yang akan ditempatkan di negara-negara Timur Tengah. Materi mencakup percakapan di tempat kerja, istilah teknis, dan komunikasi darurat.</p>', price: 0, link: 'https://p2mionline.kemnaker.go.id/kursus/arab-dasar', course_category: ids.courseCategories['bahasa'], course_tags: { connect: [ids.courseTags['online'], ids.courseTags['mandiri']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['p2mi-online'], target_personas: ['calon-pmi'], is_featured: true, countries: [ids.countries['arab-saudi'], ids.countries['uni-emirates-arab']] },
-    { name: 'Keterampilan Teknik Bangunan', slug: 'keterampilan-teknik-bangunan', excerpt: 'Pelatihan keterampilan konstruksi dan teknik bangunan untuk PMI.', description: '<p>Pelatihan keterampilan teknik bangunan mencakup dasar-dasar konstruksi, pengelasan, plumbing, dan pengecatan. Pelatihan ini bersertifikat dan diakui oleh lembaga penempatan.</p>', price: 500000, link: 'https://bp2mi.go.id/pelatihan/teknik-bangunan', course_category: ids.courseCategories['keterampilan'], course_tags: { connect: [ids.courseTags['offline'], ids.courseTags['bersertifikat']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['lembaga-pelatihan-terakreditasi'], target_personas: ['calon-pmi'], is_featured: false, countries: [ids.countries['malaysia'], ids.countries['arab-saudi']] },
-    { name: 'Manajemen Keuangan untuk PMI', slug: 'manajemen-keuangan-untuk-pmi', excerpt: 'Pelatihan pengelolaan keuangan dan perencanaan masa depan untuk PMI.', description: '<p>Pelatihan manajemen keuangan ini membantu PMI mengelola penghasilan dengan bijak, termasuk cara menabung, mengirim uang ke tanah air, investasi, dan perencanaan keuangan jangka panjang.</p>', price: 0, link: 'https://bp2mi.go.id/pelatihan/manajemen-keuangan', course_category: ids.courseCategories['manajemen-keuangan'], course_tags: { connect: [ids.courseTags['gratis'], ids.courseTags['online']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['bp2mi'], target_personas: ['pmi-aktif', 'purna-pmi'], is_featured: true, countries: [] },
-    { name: 'Pelatihan K3 Konstruksi', slug: 'pelatihan-k3-konstruksi', excerpt: 'Sertifikasi K3 konstruksi untuk PMI di sektor bangunan.', description: '<p>Pelatihan K3 konstruksi memberikan sertifikasi keselamatan dan kesehatan kerja khusus untuk sektor konstruksi. Materi mencakup keselamatan di ketinggian, pengelasan aman, dan penanganan material berat.</p>', price: 750000, link: 'https://bp2mi.go.id/pelatihan/k3-konstruksi', course_category: ids.courseCategories['keselamatan-dan-k3'], course_tags: { connect: [ids.courseTags['offline'], ids.courseTags['bersertifikat']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['lembaga-pelatihan-terakreditasi'], target_personas: ['calon-pmi'], is_featured: false, countries: [ids.countries['malaysia'], ids.countries['singapura']] },
+    { name: 'Pelatihan Keselamatan Kerja di Luar Negeri', slug: 'pelatihan-keselamatan-kerja-di-luar-negeri', excerpt: 'Pelatihan wajib tentang standar keselamatan dan kesehatan kerja untuk PMI.', description: '<p>Pelatihan ini mencakup standar keselamatan kerja internasional, penggunaan alat pelindung diri, prosedur darurat, dan hak-hak K3 PMI di negara penempatan.</p><p>Materi pelatihan meliputi identifikasi bahaya di tempat kerja, prosedur pelaporan kecelakaan, pertolongan pertama, dan evakuasi darurat.</p>', price: 0, link: 'https://bp2mi.go.id/pelatihan/keselamatan-kerja', instructor: 'Tim BP2MI', course_duration: '2 hari', final_price: 0, course_category: ids.courseCategories['keselamatan-dan-k3'], learning_method: ids.courseLearningMethods['offline'], course_tags: { connect: [ids.courseTags['gratis'], ids.courseTags['bersertifikat']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['bp2mi'], is_featured: true },
+    { name: 'Bahasa Mandarin Dasar untuk PMI', slug: 'bahasa-mandarin-dasar-untuk-pmi', excerpt: 'Kursus bahasa Mandarin dasar untuk PMI yang akan bekerja di Taiwan dan China.', description: '<p>Pelatihan bahasa Mandarin dasar ini dirancang khusus untuk PMI yang akan bekerja di negara berbahasa Mandarin. Materi mencakup percakapan sehari-hari, kosakata tempat kerja, dan ungkapan darurat.</p>', price: 0, link: 'https://p2mionline.kemnaker.go.id/kursus/mandarin-dasar', instructor: 'Pengajar Bahasa Mandarin', course_duration: '4 minggu', final_price: 0, course_category: ids.courseCategories['bahasa'], learning_method: ids.courseLearningMethods['self-paced'], course_tags: { connect: [ids.courseTags['online'], ids.courseTags['mandiri']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['p2mi-online'], is_featured: true },
+    { name: 'Bahasa Arab untuk Pekerja Migran', slug: 'bahasa-arab-untuk-pekerja-migran', excerpt: 'Kursus bahasa Arab dasar untuk PMI yang akan bekerja di Timur Tengah.', description: '<p>Pelatihan bahasa Arab dasar untuk PMI yang akan ditempatkan di negara-negara Timur Tengah. Materi mencakup percakapan di tempat kerja, istilah teknis, dan komunikasi darurat.</p>', price: 0, link: 'https://p2mionline.kemnaker.go.id/kursus/arab-dasar', instructor: 'Pengajar Bahasa Arab', course_duration: '4 minggu', final_price: 0, course_category: ids.courseCategories['bahasa'], learning_method: ids.courseLearningMethods['self-paced'], course_tags: { connect: [ids.courseTags['online'], ids.courseTags['mandiri']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['p2mi-online'], is_featured: true },
+    { name: 'Keterampilan Teknik Bangunan', slug: 'keterampilan-teknik-bangunan', excerpt: 'Pelatihan keterampilan konstruksi dan teknik bangunan untuk PMI.', description: '<p>Pelatihan keterampilan teknik bangunan mencakup dasar-dasar konstruksi, pengelasan, plumbing, dan pengecatan. Pelatihan ini bersertifikat dan diakui oleh lembaga penempatan.</p>', price: 500000, link: 'https://bp2mi.go.id/pelatihan/teknik-bangunan', instructor: 'Instruktur Teknik', course_duration: '2 minggu', final_price: 450000, course_category: ids.courseCategories['keterampilan'], learning_method: ids.courseLearningMethods['offline'], course_tags: { connect: [ids.courseTags['offline'], ids.courseTags['bersertifikat']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['lembaga-pelatihan-terakreditasi'], is_featured: false },
+    { name: 'Manajemen Keuangan untuk PMI', slug: 'manajemen-keuangan-untuk-pmi', excerpt: 'Pelatihan pengelolaan keuangan dan perencanaan masa depan untuk PMI.', description: '<p>Pelatihan manajemen keuangan ini membantu PMI mengelola penghasilan dengan bijak, termasuk cara menabung, mengirim uang ke tanah air, investasi, dan perencanaan keuangan jangka panjang.</p>', price: 0, link: 'https://bp2mi.go.id/pelatihan/manajemen-keuangan', instructor: 'Konsultan Keuangan', course_duration: '1 bulan', final_price: 0, course_category: ids.courseCategories['manajemen-keuangan'], learning_method: ids.courseLearningMethods['webinar'], course_tags: { connect: [ids.courseTags['gratis'], ids.courseTags['online']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['bp2mi'], is_featured: true },
+    { name: 'Pelatihan K3 Konstruksi', slug: 'pelatihan-k3-konstruksi', excerpt: 'Sertifikasi K3 konstruksi untuk PMI di sektor bangunan.', description: '<p>Pelatihan K3 konstruksi memberikan sertifikasi keselamatan dan kesehatan kerja khusus untuk sektor konstruksi. Materi mencakup keselamatan di ketinggian, pengelasan aman, dan penanganan material berat.</p>', price: 750000, link: 'https://bp2mi.go.id/pelatihan/k3-konstruksi', instructor: 'Ahli K3', course_duration: '3 hari', final_price: 650000, course_category: ids.courseCategories['keselamatan-dan-k3'], learning_method: ids.courseLearningMethods['offline'], course_tags: { connect: [ids.courseTags['offline'], ids.courseTags['bersertifikat']].map(id => ({ documentId: id })) }, learning_platform: ids.learningPlatforms['lembaga-pelatihan-terakreditasi'], is_featured: false },
   ]
 
   const resultIds = {}
   for (const course of courses) {
-    const { course_category, course_tags, learning_platform, target_personas, is_featured, countries, ...data } = course
+    const { course_category, learning_method, course_tags, learning_platform, is_featured, ...data } = course
     const doc = await strapi.documents(uid).create({
       data: {
-        ...data, price: course.price,
+        ...data, price: course.price, final_price: course.final_price,
         course_category: course_category ? { connect: [{ documentId: course_category }] } : undefined,
+        learning_method: learning_method ? { connect: [{ documentId: learning_method }] } : undefined,
         course_tags, learning_platform: learning_platform ? { connect: [{ documentId: learning_platform }] } : undefined,
-        target_personas, is_featured,
-        countries: countries?.length ? { connect: countries.map(id => ({ documentId: id })) } : undefined,
+        is_featured,
       },
     })
     await strapi.documents(uid).publish(doc.documentId)
     resultIds[course.slug] = doc.documentId
   }
   console.log(`  Created ${courses.length} courses (published)`)
+  return resultIds
+}
+
+async function seedCurriculums(strapi, ids) {
+  console.log('Seeding curriculums...')
+  const uid = 'api::curriculum.curriculum'
+
+  const curriculums = [
+    { course: ids.courses['pelatihan-keselamatan-kerja-di-luar-negeri'], title: 'Identifikasi Bahaya', content: '<p>Memahami jenis-jenis bahaya di tempat kerja, cara mengidentifikasi potensi bahaya, dan langkah-langkah pencegahannya.</p>', duration: 15, order: 1 },
+    { course: ids.courses['pelatihan-keselamatan-kerja-di-luar-negeri'], title: 'Prosedur Darurat', content: '<p>Prosedur penanganan situasi darurat, jalur evakuasi, dan pertolongan pertama pada kecelakaan kerja.</p>', duration: 20, order: 2 },
+    { course: ids.courses['bahasa-mandarin-dasar-untuk-pmi'], title: 'Percakapan Sehari-hari', content: '<p>Ungkapan dasar bahasa Mandarin untuk komunikasi sehari-hari, termasuk salam, perkenalan, dan percakapan di lingkungan kerja.</p>', duration: 30, order: 1 },
+    { course: ids.courses['bahasa-mandarin-dasar-untuk-pmi'], title: 'Kosakata Tempat Kerja', content: '<p>Kosakata khusus untuk lingkungan kerja, termasuk istilah teknis, instruksi, dan komunikasi dengan atasan.</p>', duration: 25, order: 2 },
+    { course: ids.courses['manajemen-keuangan-untuk-pmi'], title: 'Menabung & Investasi', content: '<p>Strategi menabung yang efektif, jenis-jenis investasi untuk PMI, dan cara memulai investasi dengan modal kecil.</p>', duration: 20, order: 1 },
+    { course: ids.courses['manajemen-keuangan-untuk-pmi'], title: 'Perencanaan Pensiun', content: '<p>Pentingnya perencanaan pensiun sejak dini, cara menghitung dana pensiun yang dibutuhkan, dan instrumen keuangan untuk pensiun.</p>', duration: 15, order: 2 },
+  ]
+
+  const resultIds = {}
+  for (const item of curriculums) {
+    const { course, ...data } = item
+    const doc = await strapi.documents(uid).create({
+      data: { ...data, course: { connect: [{ documentId: course }] } },
+    })
+    resultIds[`${item.course}-${item.order}`] = doc.documentId
+  }
+  console.log(`  Created ${curriculums.length} curriculums`)
   return resultIds
 }
 
@@ -354,24 +396,46 @@ async function seedContentGroupsAndContents(strapi, ids) {
   const cUid = 'api::content.content'
 
   const groups = [
-    { title: 'Persiapan Sebelum Berangkat', slug: 'persiapan-sebelum-berangkat', description: 'Panduan lengkap untuk mempersiapkan diri sebelum bekerja ke luar negeri.', content_type: 'content', personas: [ids.personas['calon-pmi']], order: 1, meta_seo: { meta_title: 'Persiapan Sebelum Berangkat - JARI PMI', meta_description: 'Panduan lengkap persiapan PMI sebelum berangkat ke luar negeri' }, contents: [{ title: 'Dokumen yang Wajib Disiapkan', slug: 'dokumen-yang-wajib-disiapkan', excerpt: 'Daftar lengkap dokumen yang perlu disiapkan sebelum berangkat ke luar negeri.', body: '<p>Sebelum berangkat bekerja ke luar negeri, pastikan Anda sudah menyiapkan seluruh dokumen yang diperlukan. Kelengkapan dokumen adalah kunci utama untuk perlindungan dan kelancaran proses penempatan.</p><p>Dokumen wajib meliputi: paspor dengan masa berlaku minimal 2 tahun, visa kerja resmi, kontrak kerja yang telah ditandatangani, sertifikat kesehatan dari puskesmas/rumah sakit terakreditasi, sertifikat pelatihan dari BP2MI, dan surat izin penempatan.</p>', order: 1 }, { title: 'Tips Mengurus Izin Penempatan', slug: 'tips-mengurus-izin-penempatan', excerpt: 'Langkah-langkah mengurus izin penempatan PMI yang sah dan terpercaya.', body: '<p>Izin penempatan adalah dokumen resmi yang dikeluarkan oleh BP2MI sebagai bukti bahwa proses penempatan PMI telah sesuai dengan ketentuan yang berlaku. Mengurus izin penempatan melalui jalur resmi sangat penting untuk perlindungan Anda.</p><p>Proses pengurusan izin penempatan meliputi pendaftaran online melalui SISKOP2MI, verifikasi dokumen, pelaksanaan pelatihan, dan penerbitan izin oleh BP2MI. Hindari calo atau pihak yang menawarkan jasa penempatan ilegal.</p>', order: 2 }] },
-    { title: 'Hak dan Perlindungan PMI Aktif', slug: 'hak-dan-perlindungan-pmi-aktif', description: 'Informasi tentang hak dan perlindungan bagi PMI yang sedang bekerja di luar negeri.', content_type: 'content', personas: [ids.personas['pmi-aktif']], order: 2, meta_seo: { meta_title: 'Hak dan Perlindungan PMI Aktif - JARI PMI', meta_description: 'Informasi hak dan perlindungan PMI yang sedang bekerja di luar negeri' }, contents: [{ title: 'Hak Upah dan Tunjangan PMI', slug: 'hak-upah-dan-tunjangan-pmi', excerpt: 'Ketahui hak Anda atas upah dan tunjangan selama bekerja di luar negeri.', body: '<p>Setiap PMI berhak mendapatkan upah sesuai dengan yang tercantum dalam kontrak kerja. Upah harus dibayar tepat waktu dan tidak boleh dipotong tanpa alasan yang sah.</p><p>Selain upah dasar, PMI juga berhak atas tunjangan perumahan, tunjangan transportasi, dan tunjangan makan sesuai ketentuan kontrak kerja. Pastikan Anda memahami seluruh komponen remunerasi sebelum menandatangani kontrak.</p>', order: 1 }, { title: 'Prosedur Pengaduan di Luar Negeri', slug: 'prosedur-pengaduan-di-luar-negeri', excerpt: 'Langkah-langkah yang harus diambil jika mengalami masalah di negara penempatan.', body: '<p>Jika Anda mengalami masalah di negara penempatan, langkah pertama adalah menghubungi KBRI atau KJRI setempat. Mereka akan membantu menyelesaikan masalah Anda sesuai dengan hukum yang berlaku.</p><p>Anda juga dapat mengajukan pengaduan melalui layanan online BP2MI atau menghubungi tim perlindungan PMI. Dokumentasikan semua bukti terkait masalah yang Anda alami.</p>', order: 2 }] },
-    { title: 'Panduan untuk Keluarga PMI', slug: 'panduan-untuk-keluarga-pmi', description: 'Informasi dan panduan untuk keluarga Pekerja Migran Indonesia.', content_type: 'content', personas: [ids.personas['keluarga-pmi']], order: 3, meta_seo: { meta_title: 'Panduan untuk Keluarga PMI - JARI PMI', meta_description: 'Informasi dan panduan bagi keluarga Pekerja Migran Indonesia' }, contents: [{ title: 'Cara Berkomunikasi dengan PMI di Luar Negeri', slug: 'cara-berkomunikasi-dengan-pmi-di-luar-negeri', excerpt: 'Tips menjaga komunikasi dengan keluarga yang bekerja di luar negeri.', body: '<p>Komunikasi yang rutin dengan keluarga di luar negeri sangat penting untuk menjaga kesehatan mental dan hubungan keluarga. Manfaatkan teknologi komunikasi seperti video call, pesan teks, dan media sosial.</p><p>Atur jadwal komunikasi yang konsisten dan pastikan untuk selalu menanyakan kondisi kerja dan kesehatan. Jika ada tanda-tanda masalah, segera laporkan ke pihak berwenang.</p>', order: 1 }, { title: 'Mengelola Keuangan Keluarga PMI', slug: 'mengelola-keuangan-keluarga-pmi', excerpt: 'Panduan pengelolaan keuangan bagi keluarga yang menerima remitansi.', body: '<p>Mengelola remitansi dengan bijak adalah kunci untuk memaksimalkan manfaat dari kerja di luar negeri. Buat rencana keuangan keluarga yang mencakup kebutuhan sehari-hari, tabungan, investasi, dan dana darurat.</p><p>Gunakan layanan transfer uang resmi yang terdaftar di Bank Indonesia. Hindari pengiriman uang melalui jalur informal yang berisiko dan tidak terlindungi hukum.</p>', order: 2 }] },
-    { title: 'Memulai Kehidupan Baru', slug: 'memulai-kehidupan-baru', description: 'Panduan bagi PMI yang telah selesai bekerja di luar negeri untuk memulai kehidupan baru.', content_type: 'content', personas: [ids.personas['purna-pmi']], order: 4, meta_seo: { meta_title: 'Memulai Kehidupan Baru - JARI PMI', meta_description: 'Panduan bagi Purna PMI untuk memulai kehidupan baru di Indonesia' }, contents: [{ title: 'Program Reintegrasi untuk Purna PMI', slug: 'program-reintegrasi-untuk-purna-pmi', excerpt: 'Informasi tentang program reintegrasi dan dukungan bagi Purna PMI.', body: '<p>Program reintegrasi dirancang untuk membantu Purna PMI kembali beradaptasi dan berkontribusi di Indonesia. Program ini mencakup pelatihan kewirausahaan, bantuan modal usaha, dan konseling karier.</p><p>Manfaatkan program-program reintegrasi yang disediakan oleh pemerintah melalui BP2MI dan Kementerian Ketenagakerjaan. Program ini bertujuan memastikan pengalaman bekerja di luar negeri dapat bermanfaat bagi masa depan Anda di Indonesia.</p>', order: 1 }, { title: 'Tips Berwirausaha Setelah Pulang', slug: 'tips-berwirausaha-setelah-pulang', excerpt: 'Panduan memulai usaha sendiri setelah selesai bekerja di luar negeri.', body: '<p>Bekerja di luar negeri memberikan pengalaman dan modal yang berharga untuk memulai usaha sendiri di Indonesia. Identifikasi keterampilan dan pengetahuan yang Anda peroleh selama bekerja dan bagaimana hal itu dapat diterapkan dalam konteks lokal.</p><p>Langkah-langkah memulai usaha: riset pasar, buat rencana bisnis, daftar program bantuan modal pemerintah, dan jaringan dengan sesama Purna PMI yang sudah berhasil berwirausaha.</p>', order: 2 }] },
+    { title: 'Persiapan Sebelum Berangkat', slug: 'persiapan-sebelum-berangkat', description: '<p>Panduan lengkap untuk mempersiapkan diri sebelum bekerja ke luar negeri.</p>', personas: [ids.personas['calon-pmi']], order: 1, meta_seo: { meta_title: 'Persiapan Sebelum Berangkat - JARI PMI', meta_description: 'Panduan lengkap persiapan PMI sebelum berangkat ke luar negeri' } },
+    { title: 'Hak dan Perlindungan PMI Aktif', slug: 'hak-dan-perlindungan-pmi-aktif', description: '<p>Informasi tentang hak dan perlindungan bagi PMI yang sedang bekerja di luar negeri.</p>', personas: [ids.personas['pmi-aktif']], order: 2, meta_seo: { meta_title: 'Hak dan Perlindungan PMI Aktif - JARI PMI', meta_description: 'Informasi hak dan perlindungan PMI yang sedang bekerja di luar negeri' } },
+    { title: 'Panduan untuk Keluarga PMI', slug: 'panduan-untuk-keluarga-pmi', description: '<p>Informasi dan panduan untuk keluarga Pekerja Migran Indonesia.</p>', personas: [ids.personas['keluarga-pmi']], order: 3, meta_seo: { meta_title: 'Panduan untuk Keluarga PMI - JARI PMI', meta_description: 'Informasi dan panduan bagi keluarga Pekerja Migran Indonesia' } },
+    { title: 'Memulai Kehidupan Baru', slug: 'memulai-kehidupan-baru', description: '<p>Panduan bagi PMI yang telah selesai bekerja di luar negeri untuk memulai kehidupan baru.</p>', personas: [ids.personas['purna-pmi']], order: 4, meta_seo: { meta_title: 'Memulai Kehidupan Baru - JARI PMI', meta_description: 'Panduan bagi Purna PMI untuk memulai kehidupan baru di Indonesia' } },
   ]
+
+  const contentsByGroup = {
+    'persiapan-sebelum-berangkat': [
+      { title: 'Dokumen yang Wajib Disiapkan', slug: 'dokumen-yang-wajib-disiapkan', excerpt: 'Daftar lengkap dokumen yang perlu disiapkan sebelum berangkat ke luar negeri.', body: '<p>Sebelum berangkat bekerja ke luar negeri, pastikan Anda sudah menyiapkan seluruh dokumen yang diperlukan. Kelengkapan dokumen adalah kunci utama untuk perlindungan dan kelancaran proses penempatan.</p><p>Dokumen wajib meliputi: paspor dengan masa berlaku minimal 2 tahun, visa kerja resmi, kontrak kerja yang telah ditandatangani, sertifikat kesehatan dari puskesmas/rumah sakit terakreditasi, sertifikat pelatihan dari BP2MI, dan surat izin penempatan.</p>', order: 1 },
+      { title: 'Tips Mengurus Izin Penempatan', slug: 'tips-mengurus-izin-penempatan', excerpt: 'Langkah-langkah mengurus izin penempatan PMI yang sah dan terpercaya.', body: '<p>Izin penempatan adalah dokumen resmi yang dikeluarkan oleh BP2MI sebagai bukti bahwa proses penempatan PMI telah sesuai dengan ketentuan yang berlaku. Mengurus izin penempatan melalui jalur resmi sangat penting untuk perlindungan Anda.</p><p>Proses pengurusan izin penempatan meliputi pendaftaran online melalui SISKOP2MI, verifikasi dokumen, pelaksanaan pelatihan, dan penerbitan izin oleh BP2MI. Hindari calo atau pihak yang menawarkan jasa penempatan ilegal.</p>', order: 2 },
+    ],
+    'hak-dan-perlindungan-pmi-aktif': [
+      { title: 'Hak Upah dan Tunjangan PMI', slug: 'hak-upah-dan-tunjangan-pmi', excerpt: 'Ketahui hak Anda atas upah dan tunjangan selama bekerja di luar negeri.', body: '<p>Setiap PMI berhak mendapatkan upah sesuai dengan yang tercantum dalam kontrak kerja. Upah harus dibayar tepat waktu dan tidak boleh dipotong tanpa alasan yang sah.</p><p>Selain upah dasar, PMI juga berhak atas tunjangan perumahan, tunjangan transportasi, dan tunjangan makan sesuai ketentuan kontrak kerja. Pastikan Anda memahami seluruh komponen remunerasi sebelum menandatangani kontrak.</p>', order: 1 },
+      { title: 'Prosedur Pengaduan di Luar Negeri', slug: 'prosedur-pengaduan-di-luar-negeri', excerpt: 'Langkah-langkah yang harus diambil jika mengalami masalah di negara penempatan.', body: '<p>Jika Anda mengalami masalah di negara penempatan, langkah pertama adalah menghubungi KBRI atau KJRI setempat. Mereka akan membantu menyelesaikan masalah Anda sesuai dengan hukum yang berlaku.</p><p>Anda juga dapat mengajukan pengaduan melalui layanan online BP2MI atau menghubungi tim perlindungan PMI. Dokumentasikan semua bukti terkait masalah yang Anda alami.</p>', order: 2 },
+    ],
+    'panduan-untuk-keluarga-pmi': [
+      { title: 'Cara Berkomunikasi dengan PMI di Luar Negeri', slug: 'cara-berkomunikasi-dengan-pmi-di-luar-negeri', excerpt: 'Tips menjaga komunikasi dengan keluarga yang bekerja di luar negeri.', body: '<p>Komunikasi yang rutin dengan keluarga di luar negeri sangat penting untuk menjaga kesehatan mental dan hubungan keluarga. Manfaatkan teknologi komunikasi seperti video call, pesan teks, dan media sosial.</p><p>Atur jadwal komunikasi yang konsisten dan pastikan untuk selalu menanyakan kondisi kerja dan kesehatan. Jika ada tanda-tanda masalah, segera laporkan ke pihak berwenang.</p>', order: 1 },
+      { title: 'Mengelola Keuangan Keluarga PMI', slug: 'mengelola-keuangan-keluarga-pmi', excerpt: 'Panduan pengelolaan keuangan bagi keluarga yang menerima remitansi.', body: '<p>Mengelola remitansi dengan bijak adalah kunci untuk memaksimalkan manfaat dari kerja di luar negeri. Buat rencana keuangan keluarga yang mencakup kebutuhan sehari-hari, tabungan, investasi, dan dana darurat.</p><p>Gunakan layanan transfer uang resmi yang terdaftar di Bank Indonesia. Hindari pengiriman uang melalui jalur informal yang berisiko dan tidak terlindungi hukum.</p>', order: 2 },
+    ],
+    'memulai-kehidupan-baru': [
+      { title: 'Program Reintegrasi untuk Purna PMI', slug: 'program-reintegrasi-untuk-purna-pmi', excerpt: 'Informasi tentang program reintegrasi dan dukungan bagi Purna PMI.', body: '<p>Program reintegrasi dirancang untuk membantu Purna PMI kembali beradaptasi dan berkontribusi di Indonesia. Program ini mencakup pelatihan kewirausahaan, bantuan modal usaha, dan konseling karier.</p><p>Manfaatkan program-program reintegrasi yang disediakan oleh pemerintah melalui BP2MI dan Kementerian Ketenagakerjaan. Program ini bertujuan memastikan pengalaman bekerja di luar negeri dapat bermanfaat bagi masa depan Anda di Indonesia.</p>', order: 1 },
+      { title: 'Tips Berwirausaha Setelah Pulang', slug: 'tips-berwirausaha-setelah-pulang', excerpt: 'Panduan memulai usaha sendiri setelah selesai bekerja di luar negeri.', body: '<p>Bekerja di luar negeri memberikan pengalaman dan modal yang berharga untuk memulai usaha sendiri di Indonesia. Identifikasi keterampilan dan pengetahuan yang Anda peroleh selama bekerja dan bagaimana hal itu dapat diterapkan dalam konteks lokal.</p><p>Langkah-langkah memulai usaha: riset pasar, buat rencana bisnis, daftar program bantuan modal pemerintah, dan jaringan dengan sesama Purna PMI yang sudah berhasil berwirausaha.</p>', order: 2 },
+    ],
+  }
 
   const groupIds = {}
   for (const group of groups) {
-    const { content_type, personas, contents, meta_seo, ...groupData } = group
+    const { personas, meta_seo, ...groupData } = group
     const cgDoc = await strapi.documents(cgUid).create({
-      data: { ...groupData, content_type, personas: personas?.length ? { connect: personas.map(id => ({ documentId: id })) } : undefined, meta_seo },
+      data: { ...groupData, personas: personas?.length ? { connect: personas.map(id => ({ documentId: id })) } : undefined, meta_seo },
     })
     await strapi.documents(cgUid).publish(cgDoc.documentId)
     groupIds[group.slug] = cgDoc.documentId
+  }
 
+  for (const [groupSlug, contents] of Object.entries(contentsByGroup)) {
+    const groupId = groupIds[groupSlug]
     for (const content of contents) {
       await strapi.documents(cUid).create({
-        data: { title: content.title, slug: content.slug, excerpt: content.excerpt, body: content.body, order: content.order, content_group: { connect: [{ documentId: cgDoc.documentId }] }, meta_seo: { meta_title: content.title, meta_description: content.excerpt } },
+        data: { title: content.title, slug: content.slug, excerpt: content.excerpt, body: content.body, order: content.order, content_group: { connect: [{ documentId: groupId }] }, meta_seo: { meta_title: content.title, meta_description: content.excerpt } },
       })
     }
   }

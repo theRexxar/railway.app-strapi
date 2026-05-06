@@ -53,8 +53,12 @@ tags:
     description: Training/pelatihan entries
   - name: Course Category
     description: Course categories for filtering
+  - name: Course Learning Method
+    description: "Learning method for courses (Offline, Webinar, Self-Paced)"
   - name: Course Tag
     description: Course tags for filtering
+  - name: Curriculum
+    description: Course curriculum items
   - name: Global
     description: "Site-wide configuration: navbar, footer, social links, default SEO"
   - name: Homepage
@@ -275,12 +279,6 @@ paths:
         - $ref: "#/components/parameters/paginationPage"
         - $ref: "#/components/parameters/paginationPageSize"
         - $ref: "#/components/parameters/populate"
-        - name: "filters[content_type][$eq]"
-          in: query
-          schema:
-            type: string
-            enum: [content, country, service-info, protection-info, course]
-          description: "Filter by content_type"
       responses:
         "200":
           description: OK
@@ -380,6 +378,29 @@ paths:
       responses:
         "200":
           description: OK
+  "/course-learning-methods":
+    get:
+      tags: [Course Learning Method]
+      summary: "List all course learning method entries"
+      operationId: getCourse-learning-methods
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/course-learning-methods/{id}":
+    get:
+      tags: [Course Learning Method]
+      summary: "Get a course learning method by documentId"
+      operationId: getCourse-learning-method
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
   "/course-tags":
     get:
       tags: [Course Tag]
@@ -397,6 +418,29 @@ paths:
       tags: [Course Tag]
       summary: "Get a course tag by documentId"
       operationId: getCourse-tag
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/curriculums":
+    get:
+      tags: [Curriculum]
+      summary: "List all curriculum entries"
+      operationId: getCurriculums
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/curriculums/{id}":
+    get:
+      tags: [Curriculum]
+      summary: "Get a curriculum by documentId"
+      operationId: getCurriculum
       parameters:
         - $ref: "#/components/parameters/documentId"
         - $ref: "#/components/parameters/populate"
@@ -474,12 +518,6 @@ paths:
         - $ref: "#/components/parameters/paginationPage"
         - $ref: "#/components/parameters/paginationPageSize"
         - $ref: "#/components/parameters/populate"
-        - name: "filters[category][$eq]"
-          in: query
-          schema:
-            type: string
-            enum: [perlindungan, hak-pmi, jaminan-sosial, klaim, reasuransi]
-          description: "Filter by category"
       responses:
         "200":
           description: OK

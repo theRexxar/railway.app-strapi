@@ -19,7 +19,7 @@
 | Section | API | Endpoint |
 |---------|-----|----------|
 | Hero | `GET /api/personas` | `?filters[slug][$eq]={slug}&populate=*` |
-| Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[contents][populate]=image&populate[contents][filters][status][$eq]=published&populate[service_infos][populate]=cover_image&populate[protection_infos][populate]=icon&populate[courses][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published` |
+| Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[service_infos][populate]=cover_image&populate[protection_infos][populate]=icon&populate[countries][populate]=*&sort=order:asc&status=published` |
 | Section Penting Diketahui | `GET /api/protection-infos` | `?populate=*&sort=order:asc` |
 | Section Alat Bantu Interaktif | `GET /api/tools` | `?filters[personas][slug][$eq]={personaSlug}&populate=*` |
 | Section Negara Tujuan | `GET /api/countries` | `?populate=*&sort=order:asc` |
@@ -43,7 +43,7 @@
 | Section | API | Endpoint |
 |---------|-----|----------|
 | Section Penjelasan | `GET /api/countries` | `?filters[slug][$eq]={slug}&populate=*` |
-| Section Pilihan informasi | `GET /api/content-groups` | `?filters[countries][slug][$eq]={countrySlug}&populate[contents][populate]=image&populate[contents][filters][status][$eq]=published&sort=order:asc&status=published` |
+| Section Pilihan informasi | `GET /api/content-groups` | `?filters[countries][slug][$eq]={countrySlug}&sort=order:asc&status=published` |
 
 ## Page Detail Informasi dari Pilihan Informasi Country
 
@@ -54,7 +54,7 @@ Sama seperti [Page Detail Informasi dari Pilihan Informasi](#page-detail-informa
 | Section | API | Endpoint |
 |---------|-----|----------|
 | Section Penjelasan | `GET /api/service-infos` | `?filters[slug][$eq]={slug}&populate=*&status=published` |
-| Section Pilihan informasi | `GET /api/content-groups` | `?filters[service_infos][slug][$eq]={serviceInfoSlug}&populate[contents][populate]=image&populate[contents][filters][status][$eq]=published&sort=order:asc&status=published` |
+| Section Pilihan informasi | `GET /api/content-groups` | `?filters[service_infos][slug][$eq]={serviceInfoSlug}&sort=order:asc&status=published` |
 
 ## Page Detail Informasi dari Pilihan Informasi Keuangan
 
