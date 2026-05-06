@@ -6,9 +6,10 @@
   "attributes": {
     "name": { "type": "string", "required": true, "unique": true },
     "slug": { "type": "uid", "targetField": "name", "required": true },
+    "excerpt": { "type": "text" },
+    "description": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" } },
     "flag": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
-    "description": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" } },
     "region": { "type": "enumeration", "enum": ["asia", "middle-east", "europe", "africa", "americas", "oceania"] },
     "is_featured": { "type": "boolean", "default": false },
     "order": { "type": "integer", "default": 0 },

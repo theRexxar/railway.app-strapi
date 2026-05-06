@@ -177,7 +177,7 @@ async function run() {
   }
   {
     const r = await fetchAPI(
-      `/api/content-groups?filters[personas][slug][$eq]=${v.personaSlug}&populate[service_infos][populate]=cover_image&populate[protection_infos][populate]=icon&populate[countries][populate]=*&sort=order:asc&status=published`,
+      `/api/content-groups?filters[personas][slug][$eq]=${v.personaSlug}&populate[service_infos][populate]=image&populate[protection_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published`,
     );
     check(
       `GET /api/content-groups (filter by persona=${v.personaSlug})`,

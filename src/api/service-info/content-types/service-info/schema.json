@@ -4,13 +4,15 @@
   "info": { "singularName": "service-info", "pluralName": "service-infos", "displayName": "Service Info", "description": "Service/layanan entries" },
   "options": { "draftAndPublish": true },
   "attributes": {
-    "title": { "type": "string", "required": true },
-    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "name": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
     "excerpt": { "type": "text" },
-    "content": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
-    "cover_image": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
+    "description": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
+    "image": { "type": "media", "media": true, "allowedTypes": ["images"], "required": true },
     "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
     "link": { "type": "string" },
-    "is_featured": { "type": "boolean", "default": false }
+    "is_featured": { "type": "boolean", "default": false },
+    "order": { "type": "integer", "default": 0 },
+    "meta_seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
   }
 }

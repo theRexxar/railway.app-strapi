@@ -19,7 +19,7 @@
 | Section | API | Endpoint |
 |---------|-----|----------|
 | Hero | `GET /api/personas` | `?filters[slug][$eq]={slug}&populate=*` |
-| Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[service_infos][populate]=cover_image&populate[protection_infos][populate]=icon&populate[countries][populate]=*&sort=order:asc&status=published` |
+| Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[service_infos][populate]=image&populate[protection_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published` |
 | Section Penting Diketahui | `GET /api/protection-infos` | `?populate=*&sort=order:asc` |
 | Section Alat Bantu Interaktif | `GET /api/tools` | `?filters[personas][slug][$eq]={personaSlug}&populate=*` |
 | Section Negara Tujuan | `GET /api/countries` | `?populate=*&sort=order:asc` |

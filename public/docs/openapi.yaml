@@ -520,6 +520,11 @@ paths:
         - $ref: "#/components/parameters/paginationPage"
         - $ref: "#/components/parameters/paginationPageSize"
         - $ref: "#/components/parameters/populate"
+        - name: "filters[is_featured][$eq]"
+          in: query
+          schema:
+            type: boolean
+          description: "Filter by is_featured"
       responses:
         "200":
           description: OK
@@ -543,6 +548,11 @@ paths:
         - $ref: "#/components/parameters/paginationPage"
         - $ref: "#/components/parameters/paginationPageSize"
         - $ref: "#/components/parameters/populate"
+        - name: "filters[is_featured][$eq]"
+          in: query
+          schema:
+            type: boolean
+          description: "Filter by is_featured"
       responses:
         "200":
           description: OK

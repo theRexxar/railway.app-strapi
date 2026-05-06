@@ -754,6 +754,7 @@ export interface ApiCountryCountry extends Struct.CollectionTypeSchema {
           preset: 'defaultHtml';
         }
       >;
+    excerpt: Schema.Attribute.Text;
     flag: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     image: Schema.Attribute.Media<'images'>;
     is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1160,11 +1161,12 @@ export interface ApiPersonaPersona extends Struct.CollectionTypeSchema {
   };
   attributes: {
     background_color: Schema.Attribute.String;
+    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    excerpt: Schema.Attribute.Text & Schema.Attribute.Required;
     description: Schema.Attribute.RichText &
-      Schema.Attribute.Required &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
         {
@@ -1202,7 +1204,10 @@ export interface ApiProtectionInfoProtectionInfo
     draftAndPublish: false;
   };
   attributes: {
-    content: Schema.Attribute.RichText &
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText &
       Schema.Attribute.Required &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
@@ -1210,27 +1215,20 @@ export interface ApiProtectionInfoProtectionInfo
           preset: 'defaultHtml';
         }
       >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
-    icon: Schema.Attribute.Media<'images'>;
+    excerpt: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::protection-info.protection-info'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    meta_seo: Schema.Attribute.Component<'shared.seo', false>;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1249,7 +1247,11 @@ export interface ApiServiceInfoServiceInfo extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    content: Schema.Attribute.RichText &
+    countries: Schema.Attribute.Relation<'manyToMany', 'api::country.country'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText &
       Schema.Attribute.Required &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
@@ -1257,13 +1259,11 @@ export interface ApiServiceInfoServiceInfo extends Struct.CollectionTypeSchema {
           preset: 'defaultHtml';
         }
       >;
-    countries: Schema.Attribute.Relation<'manyToMany', 'api::country.country'>;
-    cover_image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
     excerpt: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    meta_seo: Schema.Attribute.Component<'shared.seo', false>;
     link: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1271,9 +1271,9 @@ export interface ApiServiceInfoServiceInfo extends Struct.CollectionTypeSchema {
       'api::service-info.service-info'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
