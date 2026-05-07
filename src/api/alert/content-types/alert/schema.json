@@ -8,6 +8,7 @@
     "title": { "type": "string", "required": true },
     "message": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
     "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "link": { "type": "string" },
     "pages": { "type": "relation", "relation": "manyToMany", "target": "api::page.page" },
     "active": { "type": "boolean", "default": true },

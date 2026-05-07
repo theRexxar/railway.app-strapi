@@ -448,6 +448,7 @@ export interface ApiAlertAlert extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     end_date: Schema.Attribute.DateTime;
     icon: Schema.Attribute.Media<'images'>;
+    image: Schema.Attribute.Media<'images'>;
     link: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::alert.alert'> &
