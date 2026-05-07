@@ -9,9 +9,11 @@
     "excerpt": { "type": "text" },
     "body": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "icon": { "type": "media", "allowedTypes": ["images"] },
     "link": { "type": "string" },
     "content_group": { "type": "relation", "relation": "manyToOne", "target": "api::content-group.content-group" },
     "order": { "type": "integer", "default": 0 },
+    "is_featured": { "type": "boolean", "default": false },
     "meta_seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
   }
 }

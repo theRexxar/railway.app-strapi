@@ -20,7 +20,7 @@
 |---------|-----|----------|
 | Hero | `GET /api/personas` | `?filters[slug][$eq]={slug}&populate=*` |
 | Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[service_infos][populate]=image&populate[protection_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published` |
-| Section Penting Diketahui | `GET /api/protection-infos` | `?populate=*&sort=order:asc` |
+| Section Penting Diketahui | `GET /api/contents` | `?filters[content_group][documentId][$in][0]={id1}&filters[content_group][documentId][$in][1]={id2}&filters[is_featured][$eq]=true&populate[content_group][fields][0]=slug&populate[content_group][fields][1]=documentId&populate=*&status=published&sort=order:asc` — content-group IDs from Section Pilihan informasi above |
 | Section Alat Bantu Interaktif | `GET /api/tools` | `?filters[personas][slug][$eq]={personaSlug}&populate=*` |
 | Section Negara Tujuan | `GET /api/countries` | `?populate=*&sort=order:asc` |
 | Section Pelatihan Untuk Kamu | `GET /api/courses` | `?populate=*&status=published` |

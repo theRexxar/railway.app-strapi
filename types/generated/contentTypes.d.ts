@@ -714,6 +714,8 @@ export interface ApiContentContent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     excerpt: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'>;
+    icon: Schema.Attribute.Media<'images'>;
+    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     link: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1161,7 +1163,8 @@ export interface ApiPersonaPersona extends Struct.CollectionTypeSchema {
   };
   attributes: {
     background_color: Schema.Attribute.String;
-    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    banner_subtitle: Schema.Attribute.String;
+    banner_title: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
