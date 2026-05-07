@@ -10,6 +10,8 @@
     "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "link": { "type": "string" },
     "pages": { "type": "relation", "relation": "manyToMany", "target": "api::page.page" },
-    "active": { "type": "boolean", "default": true }
+    "active": { "type": "boolean", "default": true },
+    "start_date": { "type": "datetime" },
+    "end_date": { "type": "datetime" }
   }
 }

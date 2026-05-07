@@ -446,6 +446,7 @@ export interface ApiAlertAlert extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    end_date: Schema.Attribute.DateTime;
     icon: Schema.Attribute.Media<'images'>;
     link: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -459,6 +460,7 @@ export interface ApiAlertAlert extends Struct.CollectionTypeSchema {
       >;
     pages: Schema.Attribute.Relation<'manyToMany', 'api::page.page'>;
     publishedAt: Schema.Attribute.DateTime;
+    start_date: Schema.Attribute.DateTime;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     type: Schema.Attribute.Enumeration<
       ['info', 'warning', 'success', 'error']
