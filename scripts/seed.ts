@@ -17,6 +17,7 @@ const TABLE_MAP: Record<string, { uid: string; deps: string[]; fn: string }> = {
   'courses': { uid: 'api::course.course', deps: ['course-categories', 'course-tags', 'learning-platforms', 'course-learning-methods'], fn: 'seedCourses' },
   'curriculums': { uid: 'api::curriculum.curriculum', deps: ['courses'], fn: 'seedCurriculums' },
   'alerts': { uid: 'api::alert.alert', deps: ['pages'], fn: 'seedAlerts' },
+  'announcements': { uid: 'api::announcement.announcement', deps: ['personas'], fn: 'seedAnnouncements' },
   'content-groups': { uid: 'api::content-group.content-group', deps: ['personas', 'countries'], fn: 'seedContentGroups' },
   'contents': { uid: 'api::content.content', deps: ['content-groups'], fn: 'seedContents' },
   'global': { uid: 'api::global.global', deps: [], fn: 'seedGlobal' },
@@ -78,7 +79,7 @@ export async function seed(strapi) {
     for (const table of resolved) {
       const fnName = TABLE_MAP[table].fn;
       const needsIds = ['seedServiceInfos', 'seedArticles', 'seedCourses',
-        'seedCurriculums', 'seedAlerts', 'seedContentGroups', 'seedContents', 'seedTools'].includes(fnName);
+        'seedCurriculums', 'seedAlerts', 'seedAnnouncements', 'seedContentGroups', 'seedContents', 'seedTools'].includes(fnName);
       const fn = needsIds ? await (async () => {
         switch (fnName) {
           case 'seedServiceInfos': return seedServiceInfos(strapi, ids);
@@ -86,6 +87,7 @@ export async function seed(strapi) {
           case 'seedCourses': return seedCourses(strapi, ids);
           case 'seedCurriculums': return seedCurriculums(strapi, ids);
           case 'seedAlerts': return seedAlerts(strapi, ids);
+          case 'seedAnnouncements': return seedAnnouncements(strapi, ids);
           case 'seedContentGroups': return seedContentGroups(strapi, ids);
           case 'seedContents': return seedContents(strapi, ids);
           case 'seedTools': return seedTools(strapi, ids);
@@ -138,6 +140,7 @@ export async function seed(strapi) {
   ids.courses = await seedCourses(strapi, ids)
   ids.curriculums = await seedCurriculums(strapi, ids)
   await seedAlerts(strapi, ids)
+  ids.announcements = await seedAnnouncements(strapi, ids)
 
   console.log('')
   ids.contentGroups = await seedContentGroups(strapi, ids)
@@ -157,7 +160,7 @@ async function cleanDatabase(strapi) {
     'content_groups_contents_lnk', 'content_groups_countries_lnk', 'content_groups_service_infos_lnk',
     'content_groups_protection_infos_lnk', 'content_groups_personas_lnk',
     'service_infos_countries_lnk', 'files_related_mph', 'files_folder_lnk',
-    'content_groups', 'contents', 'articles', 'curriculums', 'courses', 'service_infos', 'protection_infos', 'alerts',
+    'content_groups', 'contents', 'articles', 'curriculums', 'courses', 'service_infos', 'protection_infos', 'alerts', 'announcements',
     'authors', 'countries', 'personas', 'article_categories', 'article_tags',
     'course_categories', 'course_tags', 'learning_platforms', 'course_learning_methods',
     'files', 'upload_folders',
@@ -530,6 +533,28 @@ async function seedAlerts(strapi, ids) {
     await strapi.documents(uid).publish(doc.documentId)
   }
   console.log(`  Created ${alerts.length} alerts (published)`)
+}
+
+async function seedAnnouncements(strapi, ids) {
+  console.log('Seeding announcements...')
+  const uid = 'api::announcement.announcement'
+
+  const items = [
+    { name: 'Pendaftaran PMI Gelombang 2', slug: 'pendaftaran-pmi-gelombang-2', excerpt: 'Daftar sekarang untuk penempatan luar negeri', description: '<p>Pendaftaran PMI gelombang kedua telah dibuka. Segera daftarkan diri Anda melalui layanan BLTK Online atau kunjungi kantor BP2MI terdekat.</p>', link: 'https://bp2mi.go.id/pendaftaran', start_date: '2026-05-01T00:00:00.000Z', end_date: '2026-06-30T23:59:59.000Z', personas: [ids.personas['calon-pmi']], order: 1 },
+    { name: 'Webinar Manajemen Keuangan', slug: 'webinar-manajemen-keuangan', excerpt: 'Ikuti webinar gratis tentang pengelolaan keuangan', description: '<p>Webinar gratis untuk PMI dan keluarga tentang cara mengelola keuangan dengan bijak, termasuk tips menabung, investasi, dan perencanaan masa depan.</p>', link: 'https://bp2mi.go.id/webinar/keuangan', start_date: '2026-05-01T00:00:00.000Z', end_date: '2026-05-30T23:59:59.000Z', personas: [ids.personas['pmi-aktif'], ids.personas['purna-pmi']], order: 2 },
+    { name: 'Panduan Vaksinasi PMI', slug: 'panduan-vaksinasi-pmi', excerpt: 'Informasi lengkap vaksinasi untuk PMI', description: '<p>Ketahui jenis vaksin yang diperlukan sebelum berangkat ke luar negeri, lokasi vaksinasi terdekat, dan prosedur mendapatkan sertifikat vaksin internasional.</p>', link: 'https://bp2mi.go.id/vaksinasi', start_date: '2026-05-01T00:00:00.000Z', end_date: '2026-12-31T23:59:59.000Z', personas: [ids.personas['calon-pmi'], ids.personas['pmi-aktif']], order: 3 },
+  ]
+
+  const resultIds = {}
+  for (const item of items) {
+    const { personas, ...data } = item
+    const doc = await strapi.documents(uid).create({
+      data: { ...data, personas: { connect: personas.map(id => ({ documentId: id })) } },
+    })
+    resultIds[item.slug] = doc.documentId
+  }
+  console.log(`  Created ${items.length} announcements`)
+  return resultIds
 }
 
 async function seedContentGroups(strapi, ids) {

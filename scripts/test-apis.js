@@ -146,10 +146,8 @@ async function run() {
     check("GET /api/search", "Section Search", r.ok, r.status);
   }
   {
-    const r = await fetchAPI(
-      "/api/service-infos?filters[link][$notNull]=true&populate=*&status=published",
-    );
-    check("GET /api/service-infos", "Section Informasi Layanan", r.ok, r.status);
+    const r = await fetchAPI("/api/announcements?populate=*&sort=order:asc");
+    check("GET /api/announcements", "Section Informasi Layanan", r.ok, r.status);
   }
   {
     const r = await fetchAPI("/api/countries?populate=*&sort=order:asc");

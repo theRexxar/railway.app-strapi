@@ -9,7 +9,7 @@
 | Modal Persona Selector | `GET /api/personas` | `?populate=*&sort=order:asc` |
 | Popular Searches | `GET /api/search/popular` | — |
 | Section Search | `GET /api/search` | `?q={query}` |
-| Section Informasi Layanan | `GET /api/service-infos` | `?filters[link][$notNull]=true&populate=*&status=published` |
+| Section Informasi Layanan | `GET /api/announcements` | `?filters[start_date][$lte]=now&filters[$or][0][end_date][$gte]=now&filters[$or][1][end_date][$null]=true&populate=*&sort=order:asc` |
 | Section Negara Tujuan | `GET /api/countries` | `?populate=*&sort=order:asc` |
 | Section Pelatihan Untuk Kamu | `GET /api/courses` | `?populate=*&status=published` |
 | Section Artikel Terbaru | `GET /api/articles` | `?populate=*&status=published&sort=createdAt:desc&pagination[pageSize]=10` |

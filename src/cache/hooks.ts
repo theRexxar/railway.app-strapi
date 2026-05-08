@@ -13,6 +13,7 @@ const CACHEABLE_UIDS = [
   'api::country.country',
   'api::persona.persona',
   'api::alert.alert',
+  'api::announcement.announcement',
   'api::article-category.article-category',
   'api::article-tag.article-tag',
   'api::course-category.course-category',
