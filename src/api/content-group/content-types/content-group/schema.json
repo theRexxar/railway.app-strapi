@@ -8,6 +8,7 @@
     "slug": { "type": "uid", "targetField": "title", "required": true },
     "description": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" } },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
     "service_infos": { "type": "relation", "relation": "manyToMany", "target": "api::service-info.service-info" },
     "personas": { "type": "relation", "relation": "manyToMany", "target": "api::persona.persona" },
