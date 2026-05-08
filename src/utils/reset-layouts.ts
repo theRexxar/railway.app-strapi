@@ -2,7 +2,6 @@ import type { Core } from '@strapi/strapi';
 
 const LAYOUT_UIDS = [
   'api::course.course',
-  'api::protection-info.protection-info',
   'api::tool.tool',
   'api::country.country',
 ];

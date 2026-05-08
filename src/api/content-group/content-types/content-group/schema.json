@@ -10,7 +10,6 @@
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
     "service_infos": { "type": "relation", "relation": "manyToMany", "target": "api::service-info.service-info" },
-    "protection_infos": { "type": "relation", "relation": "manyToMany", "target": "api::protection-info.protection-info" },
     "personas": { "type": "relation", "relation": "manyToMany", "target": "api::persona.persona" },
     "order": { "type": "integer", "default": 0 },
     "meta_seo": { "type": "component", "repeatable": false, "component": "shared.seo" }

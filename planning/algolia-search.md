@@ -16,13 +16,12 @@ Frontend → GET /api/search?q=pelindungan&type=article
 
 **Single unified index** (`jari_pmi_dev`) with a `type` facet field. Not separate indices per content type. This enables true global search with mixed result types rendered differently on the frontend.
 
-## Searchable Content Types (7)
+## Searchable Content Types (6)
 
 | Type | UID | Title Field | Searchable Text | Facets | Draft/Publish |
 |------|-----|-------------|----------------|--------|---------------|
 | `article` | `api::article.article` | title | content (truncated 300 chars) | article_category.slug, article_tags[].slug, author.slug | yes |
 | `service-info` | `api::service-info.service-info` | title | content (truncated 300 chars) | category, countries[].slug | yes |
-| `protection-info` | `api::protection-info.protection-info` | title | content (truncated 300 chars) | category | no |
 | `course` | `api::course.course` | name | description (truncated 300 chars) | course_category.slug, course_tags[].slug, countries[].slug | yes |
 | `content` | `api::content.content` | title | body (truncated 300 chars) | content_group.slug | yes |
 | `country` | `api::country.country` | name | description (truncated 300 chars) | region, is_featured | no |
@@ -82,7 +81,6 @@ Only a truncated searchable snippet is stored — the frontend fetches full cont
 |------|------------------------|
 | `article` | objectID, type, slug, title, excerpt, content_snippet (300 chars), article_category[], article_tags[], author, published_at, updated_at |
 | `service-info` | objectID, type, slug, title, excerpt, content_snippet (300 chars), category, countries[], published_at, updated_at |
-| `protection-info` | objectID, type, slug, title, content_snippet (300 chars), category, updated_at |
 | `course` | objectID, type, slug, name, excerpt, description_snippet (300 chars), course_category, course_tags[], countries[], is_featured, published_at, updated_at |
 | `content` | objectID, type, slug, title, excerpt, body_snippet (300 chars), content_group, published_at, updated_at |
 | `country` | objectID, type, slug, name, description_snippet (300 chars), region, is_featured, updated_at |
@@ -97,7 +95,7 @@ Only a truncated searchable snippet is stored — the frontend fetches full cont
 - **HTML stripped via regex** — CKEditor stores `<p>` tags, no extra dependency needed
 - **Draft handling** — `draftAndPublish: true` types only index when `publishedAt !== null`
 - **Re-fetch on lifecycle events** — `event.result` doesn't include populated relations, must re-fetch with populate
-- **Draft/publish hooks** — `afterPublish` indexes a record, `afterUnpublish` removes it from Algolia. `afterCreate` only indexes for `draftAndPublish: false` types (protection-info, country, persona). `draftAndPublish: true` types are only indexed on publish.
+- **Draft/publish hooks** — `afterPublish` indexes a record, `afterUnpublish` removes it. `afterCreate` only indexes for `draftAndPublish: false` types (country, persona). `draftAndPublish: true` types are only indexed on publish.
 - **Public search proxy** — `/api/search` requires no auth, uses search-only key server-side
 - **Conditionally enabled** — Only registers hooks when `ALGOLIA_APPLICATION_ID` and `ALGOLIA_ADMIN_API_KEY` env vars are set
 - **Reindex via CLI** — `npm run reindex` for initial/forced full reindex

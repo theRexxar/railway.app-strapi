@@ -47,7 +47,7 @@ Each persona uses the same schema, with only name, image, background_color, and 
 |---------|---------|---------------|
 | Hero Menu Persona | Persona name, description, image, background_color | `persona-page` (name, description, image, background_color) |
 | Content Group | Grouped content relevant to persona | `content-group` filtered by `personas` relation, items rendered by `content_type` |
-| Penting Diketahui | Protection info entries | `protection-info` collection filtered by category |
+| Penting Diketahui | Featured content entries | `content` entries with `is_featured: true` filtered by content-group |
 | Alat Bantu | Feature/help cards | Frontend-driven (static or from `service-info`) |
 | Negara Tujuan | Countries relevant to persona | `country` collection (is_featured or all) |
 | Pelatihan | Courses relevant to persona | `course` collection filtered by `target_personas` |
@@ -58,7 +58,7 @@ Each persona uses the same schema, with only name, image, background_color, and 
 |---------|---------|---------------|
 | Group Header | Group title, description, image | `content-group.title/slug/description/image` |
 | Group Description | Intro text for the content group | `content-group.description` |
-| Content Items | Items rendered based on `content_type` | `content_type` determines which relation: `contents`, `countries`, `service_infos`, or `protection_infos` |
+| Content Items | Items rendered based on `content_type` | `content_type` determines which relation: `contents`, `countries`, or `service_infos` |
 
 ### 4. Pelatihan Page Sections
 
@@ -102,13 +102,12 @@ These are not standalone pages but provide entries consumed by the pages above.
 |------------|---------|-------|
 | `persona` | Persona Page | Persona identity (name, image, description, color) |
 | `alert` | All pages | Site-wide alerts filtered by `pages` string field |
-| `content-group` | Content Group Page, Persona Page | Groups items by type (content, country, service-info, protection-info) |
+| `content-group` | Content Group Page, Persona Page | Groups items by type (content, country, service-info) |
 | `content` | Content Group Page, Persona Page | Informational content entries (distinct from articles) |
 | `country` | Homepage, Persona pages, Pelatihan page | Destination countries with flag, region |
 | `article` | Homepage, List Artikel, Artikel | Articles with category, tags, author |
 | `service-info` | Homepage (Informasi Layanan), Content Group | Service entries with cover image |
 | `course` | Homepage, Persona pages, Pelatihan, Pelatihan Detail | Training courses with platform, price |
-| `protection-info` | Persona pages (Penting Diketahui) | Protection info entries |
 | `author` | Artikel page | Author bio and avatar |
 | `article-category` | Artikel filtering | Categories for articles |
 | `article-tag` | Artikel filtering | Tags for articles |

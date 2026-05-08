@@ -11,8 +11,9 @@ const TABLE_MAP: Record<string, { uid: string; deps: string[]; fn: string }> = {
   'personas': { uid: 'api::persona.persona', deps: [], fn: 'seedPersonas' },
   'pages': { uid: 'api::page.page', deps: [], fn: 'seedPages' },
   'countries': { uid: 'api::country.country', deps: [], fn: 'seedCountries' },
-  'protection-infos': { uid: 'api::protection-info.protection-info', deps: [], fn: 'seedProtectionInfos' },
+  'provinces': { uid: 'api::province.province', deps: [], fn: 'seedProvinces' },
   'service-infos': { uid: 'api::service-info.service-info', deps: ['countries'], fn: 'seedServiceInfos' },
+  'purna-pmis': { uid: 'api::purna-pmi.purna-pmi', deps: ['provinces'], fn: 'seedPurnaPmis' },
   'articles': { uid: 'api::article.article', deps: ['article-categories', 'article-tags', 'authors'], fn: 'seedArticles' },
   'courses': { uid: 'api::course.course', deps: ['course-categories', 'course-tags', 'learning-platforms', 'course-learning-methods'], fn: 'seedCourses' },
   'curriculums': { uid: 'api::curriculum.curriculum', deps: ['courses'], fn: 'seedCurriculums' },
@@ -79,7 +80,7 @@ export async function seed(strapi) {
     for (const table of resolved) {
       const fnName = TABLE_MAP[table].fn;
       const needsIds = ['seedServiceInfos', 'seedArticles', 'seedCourses',
-        'seedCurriculums', 'seedAlerts', 'seedAnnouncements', 'seedContentGroups', 'seedContents', 'seedTools'].includes(fnName);
+        'seedCurriculums', 'seedAlerts', 'seedAnnouncements', 'seedContentGroups', 'seedContents', 'seedTools', 'seedPurnaPmis'].includes(fnName);
       const fn = needsIds ? await (async () => {
         switch (fnName) {
           case 'seedServiceInfos': return seedServiceInfos(strapi, ids);
@@ -91,6 +92,7 @@ export async function seed(strapi) {
           case 'seedContentGroups': return seedContentGroups(strapi, ids);
           case 'seedContents': return seedContents(strapi, ids);
           case 'seedTools': return seedTools(strapi, ids);
+          case 'seedPurnaPmis': return seedPurnaPmis(strapi, ids);
           default: return {};
         }
       })() : await (async () => {
@@ -105,7 +107,7 @@ export async function seed(strapi) {
           case 'seedPersonas': return seedPersonas(strapi);
           case 'seedPages': return seedPages(strapi);
           case 'seedCountries': return seedCountries(strapi);
-          case 'seedProtectionInfos': return seedProtectionInfos(strapi);
+          case 'seedProvinces': return seedProvinces(strapi);
           case 'seedGlobal': return seedGlobal(strapi);
           default: return {};
         }
@@ -132,13 +134,14 @@ export async function seed(strapi) {
   ids.personas = await seedPersonas(strapi)
   ids.pages = await seedPages(strapi)
   ids.countries = await seedCountries(strapi)
-  ids.protectionInfos = await seedProtectionInfos(strapi)
+  ids.provinces = await seedProvinces(strapi)
 
   console.log('')
   ids.serviceInfos = await seedServiceInfos(strapi, ids)
   ids.articles = await seedArticles(strapi, ids)
   ids.courses = await seedCourses(strapi, ids)
   ids.curriculums = await seedCurriculums(strapi, ids)
+  ids.purnaPmis = await seedPurnaPmis(strapi, ids)
   await seedAlerts(strapi, ids)
   ids.announcements = await seedAnnouncements(strapi, ids)
 
@@ -158,10 +161,11 @@ async function cleanDatabase(strapi) {
   const tables = [
     'articles_article_category_lnk', 'articles_article_tags_lnk', 'articles_author_lnk',
     'content_groups_contents_lnk', 'content_groups_countries_lnk', 'content_groups_service_infos_lnk',
-    'content_groups_protection_infos_lnk', 'content_groups_personas_lnk',
+    'content_groups_personas_lnk',
     'service_infos_countries_lnk', 'files_related_mph', 'files_folder_lnk',
-    'content_groups', 'contents', 'articles', 'curriculums', 'courses', 'service_infos', 'protection_infos', 'alerts', 'announcements',
-    'authors', 'countries', 'personas', 'article_categories', 'article_tags',
+    'content_groups', 'contents', 'articles', 'curriculums', 'courses', 'service_infos', 'alerts', 'announcements',
+    'authors', 'countries', 'personas', 'provinces', 'purna_pmis',
+    'article_categories', 'article_tags',
     'course_categories', 'course_tags', 'learning_platforms', 'course_learning_methods',
     'files', 'upload_folders',
     'global', 'homepage', 'pages',
@@ -366,26 +370,6 @@ async function seedCountries(strapi) {
     ids[item.slug] = doc.documentId
   }
   console.log(`  Created ${items.length} countries`)
-  return ids
-}
-
-async function seedProtectionInfos(strapi) {
-  console.log('Seeding protection infos...')
-  const uid = 'api::protection-info.protection-info'
-  const items = [
-    { name: 'Hak-Hak PMI di Luar Negeri', slug: 'hak-hak-pmi-di-luar-negeri', excerpt: 'Ketahui hak Anda sebagai PMI di negara penempatan', description: '<p>Sebagai Pekerja Migran Indonesia, Anda memiliki hak-hak yang dilindungi oleh hukum, baik hukum Indonesia maupun hukum negara penempatan. Memahami hak-hak ini adalah langkah pertama untuk memastikan perlindungan Anda selama bekerja di luar negeri.</p><p>Hak-hak utama PMI meliputi: hak atas upah yang layak, hak atas istirahat dan cuti, hak atas perlindungan keselamatan dan kesehatan kerja, hak atas perlindungan sosial, serta hak atas perlakuan yang setara tanpa diskriminasi.</p>', is_featured: true, order: 1, meta_seo: { meta_title: 'Hak-Hak PMI di Luar Negeri - JARI PMI', meta_description: 'Ketahui hak Anda sebagai PMI di negara penempatan' } },
-    { name: 'Prosedur Pengaduan PMI', slug: 'prosedur-pengaduan-pmi', excerpt: 'Langkah-langkah pengaduan jika mengalami masalah', description: '<p>Jika Anda mengalami masalah selama bekerja di luar negeri, Anda berhak mengajukan pengaduan. Prosedur pengaduan PMI dirancang untuk memastikan setiap keluhan ditangani secara cepat dan adil.</p><p>Anda dapat mengajukan pengaduan melalui KBRI/KJRI setempat, layanan pengaduan online BP2MI, atau langsung melalui aplikasi JARI PMI ini. Simpan semua bukti dan dokumentasi terkait masalah Anda.</p>', is_featured: true, order: 2, meta_seo: { meta_title: 'Prosedur Pengaduan PMI - JARI PMI', meta_description: 'Langkah-langkah pengaduan jika mengalami masalah' } },
-    { name: 'Jaminan Sosial Tenaga Kerja', slug: 'jaminan-sosial-tenaga-kerja', excerpt: 'Perlindungan jaminan sosial untuk PMI', description: '<p>PMI memiliki hak atas jaminan sosial tenaga kerja yang meliputi Jaminan Kecelakaan Kerja (JKK), Jaminan Kematian (JKM), Jaminan Hari Tua (JHT), dan Jaminan Pensiun. Program ini dikelola oleh BPJS Ketenagakerjaan.</p><p>Pastikan Anda terdaftar sebagai peserta BPJS Ketenagakerjaan sebelum berangkat ke luar negeri. Jaminan sosial ini memberikan perlindungan finansial jika terjadi kecelakaan kerja, sakit, atau risiko lainnya.</p>', is_featured: true, order: 3, meta_seo: { meta_title: 'Jaminan Sosial Tenaga Kerja - JARI PMI', meta_description: 'Perlindungan jaminan sosial untuk PMI' } },
-    { name: 'Klaim Asuransi PMI', slug: 'klaim-asuransi-pmi', excerpt: 'Cara mengajukan klaim asuransi sebagai PMI', description: '<p>Sebagai PMI, Anda dilindungi oleh asuransi yang diatur dalam perjanjian kerja. Klaim asuransi dapat diajukan untuk kecelakaan kerja, sakit, repatriasi, dan risiko lainnya sesuai ketentuan polis.</p><p>Untuk mengajukan klaim, siapkan dokumen-dokumen yang diperlukan seperti surat keterangan dari perusahaan, bukti pembayaran premi, dan laporan kejadian. Proses klaim dapat dilakukan melalui agen asuransi atau langsung ke perusahaan asuransi penanggung.</p>', is_featured: false, order: 4, meta_seo: { meta_title: 'Klaim Asuransi PMI - JARI PMI', meta_description: 'Cara mengajukan klaim asuransi sebagai PMI' } },
-    { name: 'Reasuransi dan Perlindungan Tambahan', slug: 'reasuransi-dan-perlindungan-tambahan', excerpt: 'Perlindungan tambahan melalui reasuransi', description: '<p>Reasuransi memberikan lapisan perlindungan tambahan bagi PMI di luar asuransi dasar. Program ini memastikan bahwa risiko yang tidak tertanggung oleh asuransi utama tetap mendapatkan perlindungan.</p><p>Konsultasikan dengan BP2MI dan perusahaan penempatan Anda tentang cakupan reasuransi yang tersedia. Pastikan Anda memahami apa saja yang ditanggung dan prosedur klaimnya.</p>', is_featured: false, order: 5, meta_seo: { meta_title: 'Reasuransi dan Perlindungan Tambahan - JARI PMI', meta_description: 'Perlindungan tambahan melalui reasuransi' } },
-    { name: 'Tips Keselamatan di Negara Tujuan', slug: 'tips-keselamatan-di-negara-tujuan', excerpt: 'Panduan keselamatan saat bekerja di luar negeri', description: '<p>Keselamatan adalah prioritas utama saat bekerja di luar negeri. Kenali lingkungan kerja Anda, pelajari prosedur keselamatan perusahaan, dan selalu gunakan alat pelindung diri yang disediakan.</p><p>Simpan nomor darurat KBRI/KJRI dan BP2MI di tempat yang mudah diakses. Jika merasa tidak aman, segera hubungi pihak berwenang atau KBRI/KJRI setempat.</p>', is_featured: false, order: 6, meta_seo: { meta_title: 'Tips Keselamatan di Negara Tujuan - JARI PMI', meta_description: 'Panduan keselamatan saat bekerja di luar negeri' } },
-  ]
-  const ids = {}
-  for (const item of items) {
-    const doc = await strapi.documents(uid).create({ data: item })
-    ids[item.slug] = doc.documentId
-  }
-  console.log(`  Created ${items.length} protection infos`)
   return ids
 }
 
@@ -627,6 +611,82 @@ async function seedContents(strapi, ids) {
 async function seedTools(strapi, ids) {
   console.log('Seeding tools (no seed data yet)...')
   return {}
+}
+
+async function seedProvinces(strapi) {
+  console.log('Seeding provinces...')
+  const uid = 'api::province.province'
+  const items = [
+    { name: 'Banten', slug: 'banten', order: 1, meta_seo: { meta_title: 'Purna PMI Banten - JARI PMI', meta_description: 'Profil Purna PMI asal Banten' } },
+    { name: 'Lampung', slug: 'lampung', order: 2, meta_seo: { meta_title: 'Purna PMI Lampung - JARI PMI', meta_description: 'Profil Purna PMI asal Lampung' } },
+    { name: 'Jawa Barat', slug: 'jawa-barat', order: 3, meta_seo: { meta_title: 'Purna PMI Jawa Barat - JARI PMI', meta_description: 'Profil Purna PMI asal Jawa Barat' } },
+    { name: 'Yogyakarta', slug: 'yogyakarta', order: 4, meta_seo: { meta_title: 'Purna PMI Yogyakarta - JARI PMI', meta_description: 'Profil Purna PMI asal Yogyakarta' } },
+  ]
+  const ids = {}
+  for (const item of items) {
+    const doc = await strapi.documents(uid).create({ data: item })
+    ids[item.slug] = doc.documentId
+  }
+  console.log(`  Created ${items.length} provinces`)
+  return ids
+}
+
+async function seedPurnaPmis(strapi, ids) {
+  console.log('Seeding purna pmis...')
+  const uid = 'api::purna-pmi.purna-pmi'
+
+  const items = [
+    {
+      name: 'Bapak Turidjo Hadi & Ibu Sri Titin',
+      slug: 'bapak-turidjo-hadi-dan-ibu-sri-titin',
+      brand: 'Saripati Laer',
+      business_type: 'Kuliner (Minuman Herbal)',
+      products: 'Minuman Instan Berbahan Herbal',
+      revenue: 'Rp 50 Juta / bulan',
+      employee_count: '20 Orang',
+      production_capacity: '3.000 kg / bulan',
+      year_established: 2006,
+      legal_entity: 'CV. Saripati Laer',
+      city: 'Cilegon',
+      marketing_channels: ['Retail', 'Online', 'Ekspor'],
+      contact: '081960615933',
+      province: ids.provinces['banten'],
+      is_featured: true,
+      order: 1,
+      meta_seo: { meta_title: 'Bapak Turidjo Hadi & Ibu Sri Titin - Purna PMI JARI PMI', meta_description: 'Kisah sukses Purna PMI asal Banten dengan usaha Saripati Laer' },
+    },
+    {
+      name: 'Bapak Ahmad Suhendra',
+      slug: 'bapak-ahmad-suhendra',
+      brand: 'Suhendra Furniture',
+      business_type: 'Furniture (Mebel)',
+      products: 'Meubel Kayu Jati dan Mahoni',
+      revenue: 'Rp 80 Juta / bulan',
+      employee_count: '15 Orang',
+      production_capacity: '50 unit / bulan',
+      year_established: 2012,
+      legal_entity: 'UD. Suhendra Furniture',
+      city: 'Bandar Lampung',
+      marketing_channels: ['Retail', 'Online'],
+      contact: '081234567890',
+      province: ids.provinces['lampung'],
+      is_featured: true,
+      order: 2,
+      meta_seo: { meta_title: 'Bapak Ahmad Suhendra - Purna PMI JARI PMI', meta_description: 'Kisah sukses Purna PMI asal Lampung dengan usaha mebel' },
+    },
+  ]
+
+  const resultIds = {}
+  for (const item of items) {
+    const { province, ...data } = item
+    const doc = await strapi.documents(uid).create({
+      data: { ...data, province: { connect: [{ documentId: province }] } },
+    })
+    await strapi.documents(uid).publish(doc.documentId)
+    resultIds[item.slug] = doc.documentId
+  }
+  console.log(`  Created ${items.length} purna pmis (published)`)
+  return resultIds
 }
 
 async function seedGlobal(strapi) {

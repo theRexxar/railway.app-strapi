@@ -1,6 +1,6 @@
 # Pages
 
-11 page types. Personae are enum values within the Persona Page, not separate page types.
+12 page types. Personae are enum values within the Persona Page, not separate page types.
 
 ## Home
 
@@ -19,7 +19,7 @@
 | Section | API | Endpoint |
 |---------|-----|----------|
 | Hero | `GET /api/personas` | `?filters[slug][$eq]={slug}&populate=*` |
-| Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[service_infos][populate]=image&populate[protection_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published` |
+| Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[service_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published` |
 | Section Penting Diketahui | `GET /api/contents` | `?filters[content_group][documentId][$in][0]={id1}&filters[content_group][documentId][$in][1]={id2}&filters[is_featured][$eq]=true&populate[content_group][fields][0]=slug&populate[content_group][fields][1]=documentId&populate=*&status=published&sort=order:asc` — content-group IDs from Section Pilihan informasi above |
 | Section Alat Bantu Interaktif | `GET /api/tools` | `?filters[personas][slug][$eq]={personaSlug}&populate=*` |
 | Section Negara Tujuan | `GET /api/countries` | `?populate=*&sort=order:asc` |
@@ -86,3 +86,11 @@ Sama seperti [Page Detail Informasi dari Pilihan Informasi](#page-detail-informa
 | ↳ Filter by kategori | | `&filters[article_category][slug][$eq]={categorySlug}` |
 | ↳ Search (algolia) | `GET /api/search` | `?q={query}&type=article` |
 | Section list kategori | `GET /api/article-categories` | `?populate=*` |
+
+## Page Purna PMI
+
+| Section | API | Endpoint |
+|---------|-----|----------|
+| Section List Purna PMI | `GET /api/purna-pmis` | `?populate=*&sort=order:asc` |
+| ↳ Filter by provinsi | | `&filters[province][slug][$eq]={provinceSlug}` |
+| Section filter provinsi | `GET /api/provinces` | `?sort=order:asc&fields=name,slug` |

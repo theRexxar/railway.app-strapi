@@ -34,16 +34,6 @@ const searchableTypes: SearchableTypeConfig[] = [
     draftAndPublish: true,
   },
   {
-    uid: 'api::protection-info.protection-info',
-    type: 'protection-info',
-    titleField: 'name',
-    textField: 'description',
-    snippetField: 'description_snippet',
-    facets: [],
-    populate: '',
-    draftAndPublish: false,
-  },
-  {
     uid: 'api::course.course',
     type: 'course',
     titleField: 'name',

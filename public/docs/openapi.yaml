@@ -564,34 +564,6 @@ paths:
       responses:
         "200":
           description: OK
-  "/protection-infos":
-    get:
-      tags: [Protection Info]
-      summary: "List all protection info entries"
-      operationId: getProtection-infos
-      parameters:
-        - $ref: "#/components/parameters/paginationPage"
-        - $ref: "#/components/parameters/paginationPageSize"
-        - $ref: "#/components/parameters/populate"
-        - name: "filters[is_featured][$eq]"
-          in: query
-          schema:
-            type: boolean
-          description: "Filter by is_featured"
-      responses:
-        "200":
-          description: OK
-  "/protection-infos/{id}":
-    get:
-      tags: [Protection Info]
-      summary: "Get a protection info by documentId"
-      operationId: getProtection-info
-      parameters:
-        - $ref: "#/components/parameters/documentId"
-        - $ref: "#/components/parameters/populate"
-      responses:
-        "200":
-          description: OK
   "/service-infos":
     get:
       tags: [Service Info]

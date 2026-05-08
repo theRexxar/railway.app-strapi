@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "purna_pmis",
+  "info": { "singularName": "purna-pmi", "pluralName": "purna-pmis", "displayName": "Purna PMI", "description": "Purna PMI success stories and business profiles" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
+    "brand": { "type": "string" },
+    "business_type": { "type": "string" },
+    "products": { "type": "string" },
+    "revenue": { "type": "string" },
+    "employee_count": { "type": "string" },
+    "production_capacity": { "type": "string" },
+    "year_established": { "type": "integer" },
+    "legal_entity": { "type": "string" },
+    "city": { "type": "string" },
+    "contact": { "type": "string" },
+    "marketing_channels": {
+      "type": "enumeration",
+      "enum": ["Retail", "Online", "Ekspor"],
+      "required": false
+    },
+    "province": { "type": "relation", "relation": "manyToOne", "target": "api::province.province" },
+    "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
+    "is_featured": { "type": "boolean", "default": false },
+    "order": { "type": "integer", "default": 0 },
+    "meta_seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
+  }
+}

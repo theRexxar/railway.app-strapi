@@ -457,7 +457,9 @@ export interface ApiAlertAlert extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
-        { preset: 'defaultHtml' }
+        {
+          preset: 'defaultHtml';
+        }
       >;
     pages: Schema.Attribute.Relation<'manyToMany', 'api::page.page'>;
     publishedAt: Schema.Attribute.DateTime;
@@ -473,7 +475,8 @@ export interface ApiAlertAlert extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiAnnouncementAnnouncement extends Struct.CollectionTypeSchema {
+export interface ApiAnnouncementAnnouncement
+  extends Struct.CollectionTypeSchema {
   collectionName: 'announcements';
   info: {
     description: 'Announcement slider for Informasi Layanan section';
@@ -486,24 +489,37 @@ export interface ApiAnnouncementAnnouncement extends Struct.CollectionTypeSchema
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
     description: Schema.Attribute.RichText &
       Schema.Attribute.Required &
-      Schema.Attribute.CustomField<'plugin::ckeditor5.CKEditor', { preset: 'defaultHtml' }>;
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     end_date: Schema.Attribute.DateTime;
     excerpt: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     link: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::announcement.announcement'> & Schema.Attribute.Private;
-    name: Schema.Attribute.String & Schema.Attribute.Required & Schema.Attribute.Unique;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::announcement.announcement'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     personas: Schema.Attribute.Relation<'manyToMany', 'api::persona.persona'>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     start_date: Schema.Attribute.DateTime & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -703,10 +719,6 @@ export interface ApiContentGroupContentGroup
     meta_seo: Schema.Attribute.Component<'shared.seo', false>;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     personas: Schema.Attribute.Relation<'manyToMany', 'api::persona.persona'>;
-    protection_infos: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::protection-info.protection-info'
-    >;
     publishedAt: Schema.Attribute.DateTime;
     service_infos: Schema.Attribute.Relation<
       'manyToMany',
@@ -750,8 +762,8 @@ export interface ApiContentContent extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     excerpt: Schema.Attribute.Text;
-    image: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.Media<'images'>;
+    image: Schema.Attribute.Media<'images'>;
     is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     link: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1205,7 +1217,6 @@ export interface ApiPersonaPersona extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    excerpt: Schema.Attribute.Text & Schema.Attribute.Required;
     description: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
@@ -1213,6 +1224,7 @@ export interface ApiPersonaPersona extends Struct.CollectionTypeSchema {
           preset: 'defaultHtml';
         }
       >;
+    excerpt: Schema.Attribute.Text & Schema.Attribute.Required;
     image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1231,14 +1243,13 @@ export interface ApiPersonaPersona extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiProtectionInfoProtectionInfo
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'protection_infos';
+export interface ApiProvinceProvince extends Struct.CollectionTypeSchema {
+  collectionName: 'provinces';
   info: {
-    description: 'Protection info entries for Penting Diketahui section';
-    displayName: 'Protection Info';
-    pluralName: 'protection-infos';
-    singularName: 'protection-info';
+    description: 'Province reference for filtering Purna PMI entries';
+    displayName: 'Province';
+    pluralName: 'provinces';
+    singularName: 'province';
   };
   options: {
     draftAndPublish: false;
@@ -1247,31 +1258,72 @@ export interface ApiProtectionInfoProtectionInfo
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.RichText &
-      Schema.Attribute.Required &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
-    excerpt: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'>;
+    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::protection-info.protection-info'
+      'api::province.province'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     meta_seo: Schema.Attribute.Component<'shared.seo', false>;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPurnaPmiPurnaPmi extends Struct.CollectionTypeSchema {
+  collectionName: 'purna_pmis';
+  info: {
+    description: 'Purna PMI success stories and business profiles';
+    displayName: 'Purna PMI';
+    pluralName: 'purna-pmis';
+    singularName: 'purna-pmi';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    brand: Schema.Attribute.String;
+    business_type: Schema.Attribute.String;
+    city: Schema.Attribute.String;
+    contact: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    employee_count: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    legal_entity: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::purna-pmi.purna-pmi'
+    > &
+      Schema.Attribute.Private;
+    marketing_channels: Schema.Attribute.Enumeration<
+      ['Retail', 'Online', 'Ekspor']
+    >;
+    meta_seo: Schema.Attribute.Component<'shared.seo', false>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    production_capacity: Schema.Attribute.String;
+    products: Schema.Attribute.String;
+    province: Schema.Attribute.Relation<'manyToOne', 'api::province.province'>;
+    publishedAt: Schema.Attribute.DateTime;
+    revenue: Schema.Attribute.String;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    year_established: Schema.Attribute.Integer;
   };
 }
 
@@ -1302,8 +1354,6 @@ export interface ApiServiceInfoServiceInfo extends Struct.CollectionTypeSchema {
     excerpt: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    meta_seo: Schema.Attribute.Component<'shared.seo', false>;
     link: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1311,7 +1361,9 @@ export interface ApiServiceInfoServiceInfo extends Struct.CollectionTypeSchema {
       'api::service-info.service-info'
     > &
       Schema.Attribute.Private;
+    meta_seo: Schema.Attribute.Component<'shared.seo', false>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -1886,7 +1938,8 @@ declare module '@strapi/strapi' {
       'api::learning-platform.learning-platform': ApiLearningPlatformLearningPlatform;
       'api::page.page': ApiPagePage;
       'api::persona.persona': ApiPersonaPersona;
-      'api::protection-info.protection-info': ApiProtectionInfoProtectionInfo;
+      'api::province.province': ApiProvinceProvince;
+      'api::purna-pmi.purna-pmi': ApiPurnaPmiPurnaPmi;
       'api::service-info.service-info': ApiServiceInfoServiceInfo;
       'api::tool.tool': ApiToolTool;
       'plugin::content-releases.release': PluginContentReleasesRelease;

@@ -112,21 +112,7 @@ Service/layanan entries (e.g. QRIS Cross Border). Displayed on Homepage Informas
 
 `draftAndPublish: true`
 
-### 5. `protection-info`
-
-Protection info entries for Penting Diketahui section on Persona Pages.
-
-| Field | Type | Required | Repeatable | Notes |
-|-------|------|----------|------------|-------|
-| title | string | yes | — | |
-| slug | uid (targetField: title) | yes | — | |
-| description | text | no | — | |
-| content | richtext | yes | — | |
-| icon | media (single, images) | no | — | |
-| category | enumeration | no | — | perlindungan, hak-pmi, jaminan-sosial, klaim, reasuransi |
-| order | integer | no | — | default: 0 |
-
-### 6. `content-group`
+### 5. `content-group`
 
 Groups content under a themed section. Each group contains items of **one type** (determined by `content_type`). Used on Persona Page Content Group and Content Group Page (`/konten/:groupSlug`).
 
@@ -136,11 +122,10 @@ Groups content under a themed section. Each group contains items of **one type**
 | slug | uid (targetField: title) | yes | — | |
 | description | text | no | — | Group intro text |
 | image | media (single, images) | no | — | Group cover image |
-| content_type | enumeration | yes | — | content, country, service-info, protection-info, course |
+| content_type | enumeration | yes | — | content, country, service-info, course |
 | contents | relation | no | — | manyToMany → content (when content_type=content) |
 | countries | relation | no | — | manyToMany → country (when content_type=country) |
 | service_infos | relation | no | — | manyToMany → service-info (when content_type=service-info) |
-| protection_infos | relation | no | — | manyToMany → protection-info (when content_type=protection-info) |
 | courses | relation | no | — | manyToMany → course (when content_type=course) |
 | personas | relation | no | — | manyToMany → persona (which personas show this group) |
 | order | integer | no | — | default: 0 |
@@ -291,7 +276,7 @@ These components are defined separately and referenced by entities above.
 ## Notes
 
 - **No `training-page` or `article-list-page` singleTypes needed.** These listing pages are frontend-driven. Pelatihan Page renders `course` collection with filters. List Artikel Page renders `article` collection with filters.
-- **No `protection-page` singleType needed.** Protection info is served as entries from `protection-info` collection, rendered under Persona Page Penting Diketahui section by the frontend.
+- **No `protection-page` singleType needed.** Protection info is now served via `content` with `is_featured: true`, rendered under Persona Page Penting Diketahui section by the frontend.
 - **`persona-page` is a collection** because there are 4 distinct entries. It stores only identity data (name, description, image, background_color). Section content is assembled by the frontend from generic collections.
 - **`content-group` + `content`** group mixed informational content (tips, guides, highlights) for Persona Pages and `/konten/:groupSlug`. This is separate from `article`, which is strictly for news/blog-style content.
 - **`course` detail page** reads directly from the `course` collection by slug. No separate entity needed.

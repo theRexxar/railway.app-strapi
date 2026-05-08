@@ -6,7 +6,6 @@ import { invalidateForContentType, invalidateDetail } from './invalidation';
 const CACHEABLE_UIDS = [
   'api::article.article',
   'api::service-info.service-info',
-  'api::protection-info.protection-info',
   'api::course.course',
   'api::content.content',
   'api::content-group.content-group',

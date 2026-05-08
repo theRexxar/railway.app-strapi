@@ -38,8 +38,6 @@ Redis is **not** used for search (Algolia handles that). Redis caches **full API
 | `GET /api/courses/:slug` | collection detail | `courses:detail:{slug}` | 10 min | |
 | `GET /api/countries` | collection list | `countries:list:{queryHash}` | 1 hour | Reference data, rarely changes |
 | `GET /api/countries/:slug` | collection detail | `countries:detail:{slug}` | 1 hour | |
-| `GET /api/protection-infos` | collection list | `protection-infos:list:{queryHash}` | 1 hour | No draft/publish |
-| `GET /api/protection-infos/:slug` | collection detail | `protection-infos:detail:{slug}` | 1 hour | |
 | `GET /api/service-infos` | collection list | `service-infos:list:{queryHash}` | 10 min | |
 | `GET /api/service-infos/:slug` | collection detail | `service-infos:detail:{slug}` | 10 min | |
 | `GET /api/personas` | collection list | `personas:list:{queryHash}` | 1 hour | Only 4 personas, rarely changes |
@@ -83,7 +81,7 @@ On any write event (afterCreate, afterUpdate, afterDelete, afterPublish, afterUn
    - When a country changes → invalidate `countries:*`, `courses:list:*`, `service-infos:list:*`
    - When a persona changes → invalidate `content-groups:list:*`
    - When content changes → invalidate `content-groups:list:*`
-   - When an article/course/service-info/protection-info changes → also invalidate `homepage` (featured items)
+   - When an article/course/service-info changes → also invalidate `homepage` (featured items)
 
 ### Invalidation Mapping
 
@@ -91,7 +89,6 @@ On any write event (afterCreate, afterUpdate, afterDelete, afterPublish, afterUn
 |---|---|---|
 | `api::article.article` | `articles:*` | `homepage` |
 | `api::service-info.service-info` | `service-infos:*` | `homepage` |
-| `api::protection-info.protection-info` | `protection-infos:*` | |
 | `api::course.course` | `courses:*` | `homepage` |
 | `api::content.content` | `contents:*` | `content-groups:*` |
 | `api::content-group.content-group` | `content-groups:*` | |

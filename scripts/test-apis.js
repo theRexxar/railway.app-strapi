@@ -175,17 +175,13 @@ async function run() {
   }
   {
     const r = await fetchAPI(
-      `/api/content-groups?filters[personas][slug][$eq]=${v.personaSlug}&populate[service_infos][populate]=image&populate[protection_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published`,
+      `/api/content-groups?filters[personas][slug][$eq]=${v.personaSlug}&populate[service_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published`,
     );
     check(
       `GET /api/content-groups (filter by persona=${v.personaSlug})`,
       "Section Pilihan informasi",
       r.ok, r.status,
     );
-  }
-  {
-    const r = await fetchAPI("/api/protection-infos?populate=*&sort=order:asc");
-    check("GET /api/protection-infos", "Section Penting Diketahui", r.ok, r.status);
   }
   {
     const r = await fetchAPI(
@@ -325,6 +321,22 @@ async function run() {
   {
     const r = await fetchAPI("/api/article-categories?populate=*");
     check("GET /api/article-categories", "Section list kategori", r.ok, r.status);
+  }
+
+  // ── Page Purna PMI ────────────────────────────────────────────────────
+
+  console.log("\n── Page Purna PMI ──");
+  {
+    const r = await fetchAPI("/api/provinces?sort=order:asc");
+    check("GET /api/provinces", "Filter provinsi", r.ok, r.status);
+  }
+  {
+    const r = await fetchAPI("/api/purna-pmis?populate=*");
+    check("GET /api/purna-pmis", "List Purna PMI", r.ok, r.status);
+  }
+  {
+    const r = await fetchAPI("/api/purna-pmis?populate=*&filters[province][slug][$eq]=banten");
+    check("GET /api/purna-pmis (filter by province=banten)", "Filter by provinsi", r.ok, r.status);
   }
 
   // ── Summary ───────────────────────────────────────────────────────────
