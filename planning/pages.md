@@ -9,6 +9,7 @@
 | Modal Persona Selector | `GET /api/personas` | `?populate=*&sort=order:asc` |
 | Popular Searches | `GET /api/search/popular` | — |
 | Section Search | `GET /api/search` | `?q={query}` |
+| Alert | `GET /api/alerts` | `?filters[active][$eq]=true&filters[pages][slug][$eq]=home&populate=*&sort=start_date:desc` |
 | Section Informasi Layanan | `GET /api/announcements` | `?filters[start_date][$lte]=now&filters[$or][0][end_date][$gte]=now&filters[$or][1][end_date][$null]=true&populate=*&sort=order:asc` |
 | Section Negara Tujuan | `GET /api/countries` | `?populate=*&sort=order:asc` |
 | Section Pelatihan Untuk Kamu | `GET /api/courses` | `?populate=*&status=published` |
@@ -19,6 +20,7 @@
 | Section | API | Endpoint |
 |---------|-----|----------|
 | Hero | `GET /api/personas` | `?filters[slug][$eq]={slug}&populate=*` |
+| Alert | `GET /api/alerts` | `?filters[active][$eq]=true&filters[pages][slug][$eq]={personaSlug}&populate=*&sort=start_date:desc` |
 | Section Pilihan informasi | `GET /api/content-groups` | `?filters[personas][slug][$eq]={personaSlug}&populate[service_infos][populate]=image&populate[countries][populate]=*&sort=order:asc&status=published` |
 | Section Penting Diketahui | `GET /api/contents` | `?filters[content_group][documentId][$in][0]={id1}&filters[content_group][documentId][$in][1]={id2}&filters[is_featured][$eq]=true&populate[content_group][fields][0]=slug&populate[content_group][fields][1]=documentId&populate=*&status=published&sort=order:asc` — content-group IDs from Section Pilihan informasi above |
 | Section Alat Bantu Interaktif | `GET /api/tools` | `?filters[personas][slug][$eq]={personaSlug}&populate=*` |
