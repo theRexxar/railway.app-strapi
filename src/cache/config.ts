@@ -11,6 +11,7 @@ const CACHE_CONFIGS: CacheConfig[] = [
   { apiPath: '/api/articles', contentType: 'articles', ttl: 600, isSingleType: false },
   { apiPath: '/api/courses', contentType: 'courses', ttl: 600, isSingleType: false },
   { apiPath: '/api/countries', contentType: 'countries', ttl: 3600, isSingleType: false },
+  { apiPath: '/api/faqs', contentType: 'faqs', ttl: 3600, isSingleType: false },
   { apiPath: '/api/service-infos', contentType: 'service-infos', ttl: 600, isSingleType: false },
   { apiPath: '/api/personas', contentType: 'personas', ttl: 3600, isSingleType: false },
   { apiPath: '/api/content-groups', contentType: 'content-groups', ttl: 600, isSingleType: false },
@@ -53,6 +54,10 @@ const INVALIDATION_MAP: Record<string, InvalidationRule> = {
   'api::country.country': {
     selfKeys: ['countries'],
     relatedKeys: ['courses', 'service-infos'],
+  },
+  'api::faq.faq': {
+    selfKeys: ['faqs'],
+    relatedKeys: [],
   },
   'api::persona.persona': {
     selfKeys: ['personas'],

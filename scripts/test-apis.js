@@ -339,6 +339,14 @@ async function run() {
     check("GET /api/purna-pmis (filter by province=banten)", "Filter by provinsi", r.ok, r.status);
   }
 
+  // ── Page FAQ ──────────────────────────────────────────────────────────
+
+  console.log("\n── Page FAQ ──");
+  {
+    const r = await fetchAPI("/api/faqs?sort=order:asc,createdAt:desc");
+    check("GET /api/faqs", "List FAQ", r.ok, r.status);
+  }
+
   // ── Summary ───────────────────────────────────────────────────────────
 
   summarize();

@@ -2,6 +2,7 @@ import type { Core } from '@strapi/strapi';
 
 const LAYOUT_UIDS = [
   'api::course.course',
+  'api::faq.faq',
   'api::tool.tool',
   'api::country.country',
 ];

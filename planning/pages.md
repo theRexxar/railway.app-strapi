@@ -1,6 +1,6 @@
 # Pages
 
-12 page types. Personae are enum values within the Persona Page, not separate page types.
+13 page types. Personae are enum values within the Persona Page, not separate page types.
 
 ## Home
 
@@ -94,3 +94,9 @@ Sama seperti [Page Detail Informasi dari Pilihan Informasi](#page-detail-informa
 | Section List Purna PMI | `GET /api/purna-pmis` | `?populate=*&sort=order:asc` |
 | ↳ Filter by provinsi | | `&filters[province][slug][$eq]={provinceSlug}` |
 | Section filter provinsi | `GET /api/provinces` | `?sort=order:asc&fields=name,slug` |
+
+## Page FAQ
+
+| Section | API | Endpoint |
+|---------|-----|----------|
+| Section List FAQ | `GET /api/faqs` | `?sort=order:asc,createdAt:desc` |

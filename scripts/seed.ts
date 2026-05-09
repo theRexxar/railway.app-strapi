@@ -11,6 +11,7 @@ const TABLE_MAP: Record<string, { uid: string; deps: string[]; fn: string }> = {
   'personas': { uid: 'api::persona.persona', deps: [], fn: 'seedPersonas' },
   'pages': { uid: 'api::page.page', deps: [], fn: 'seedPages' },
   'countries': { uid: 'api::country.country', deps: [], fn: 'seedCountries' },
+  'faqs': { uid: 'api::faq.faq', deps: [], fn: 'seedFaqs' },
   'provinces': { uid: 'api::province.province', deps: [], fn: 'seedProvinces' },
   'service-infos': { uid: 'api::service-info.service-info', deps: ['countries'], fn: 'seedServiceInfos' },
   'purna-pmis': { uid: 'api::purna-pmi.purna-pmi', deps: ['provinces'], fn: 'seedPurnaPmis' },
@@ -107,6 +108,7 @@ export async function seed(strapi) {
           case 'seedPersonas': return seedPersonas(strapi);
           case 'seedPages': return seedPages(strapi);
           case 'seedCountries': return seedCountries(strapi);
+          case 'seedFaqs': return seedFaqs(strapi);
           case 'seedProvinces': return seedProvinces(strapi);
           case 'seedGlobal': return seedGlobal(strapi);
           default: return {};
@@ -134,6 +136,7 @@ export async function seed(strapi) {
   ids.personas = await seedPersonas(strapi)
   ids.pages = await seedPages(strapi)
   ids.countries = await seedCountries(strapi)
+  ids.faqs = await seedFaqs(strapi)
   ids.provinces = await seedProvinces(strapi)
 
   console.log('')
@@ -164,7 +167,7 @@ async function cleanDatabase(strapi) {
     'content_groups_personas_lnk',
     'service_infos_countries_lnk', 'files_related_mph', 'files_folder_lnk',
     'content_groups', 'contents', 'articles', 'curriculums', 'courses', 'service_infos', 'alerts', 'announcements',
-    'authors', 'countries', 'personas', 'provinces', 'purna_pmis',
+    'authors', 'countries', 'personas', 'provinces', 'purna_pmis', 'faqs',
     'article_categories', 'article_tags',
     'course_categories', 'course_tags', 'learning_platforms', 'course_learning_methods',
     'files', 'upload_folders',
@@ -613,8 +616,27 @@ async function seedTools(strapi, ids) {
   return {}
 }
 
-async function seedProvinces(strapi) {
-  console.log('Seeding provinces...')
+async function seedFaqs(strapi) {
+  console.log('Seeding faqs...')
+  const uid = 'api::faq.faq'
+  const items = [
+    { title: 'Apa itu JARI PMI?', content: '<p>JARI PMI adalah portal informasi dan layanan terpadu untuk Pekerja Migran Indonesia (PMI). Portal ini menyediakan informasi lengkap tentang perlindungan, pelatihan, dan layanan yang dibutuhkan oleh PMI dan keluarganya.</p>', order: 1 },
+    { title: 'Siapa saja yang bisa menggunakan JARI PMI?', content: '<p>JARI PMI dapat digunakan oleh Calon PMI (yang akan bekerja di luar negeri), PMI Aktif (yang sedang bekerja di luar negeri), Keluarga PMI, dan Purna PMI (yang telah selesai bekerja di luar negeri).</p>', order: 2 },
+    { title: 'Bagaimana cara mendaftar sebagai PMI?', content: '<p>Untuk mendaftar sebagai PMI, Anda harus melalui jalur resmi yang disediakan oleh pemerintah. Langkah-langkahnya meliputi: pendaftaran online melalui SISKOP2MI, mengikuti pelatihan dan sertifikasi, melengkapi dokumen persyaratan, dan mendapatkan izin penempatan dari BP2MI.</p>', order: 3 },
+    { title: 'Dokumen apa saja yang diperlukan untuk menjadi PMI?', content: '<p>Dokumen yang diperlukan meliputi: KTP, Kartu Keluarga, paspor, visa kerja, kontrak kerja, sertifikat kesehatan, sertifikat pelatihan, dan surat izin penempatan dari BP2MI. Pastikan semua dokumen lengkap dan sah sebelum berangkat.</p>', order: 4 },
+    { title: 'Apa yang harus dilakukan jika mengalami masalah di luar negeri?', content: '<p>Jika Anda mengalami masalah di negara penempatan, segera hubungi KBRI atau KJRI setempat. Anda juga dapat mengajukan pengaduan melalui layanan online BP2MI atau menghubungi hotline perlindungan PMI di +62 812 3456 7890.</p>', order: 5 },
+    { title: 'Apakah layanan di JARI PMI gratis?', content: '<p>Ya, seluruh informasi dan layanan yang disediakan di portal JARI PMI dapat diakses secara gratis. Beberapa pelatihan juga tersedia tanpa biaya melalui program pemerintah.</p>', order: 6 },
+  ]
+  const ids = {}
+  for (const item of items) {
+    const doc = await strapi.documents(uid).create({ data: item })
+    ids[item.title] = doc.documentId
+  }
+  console.log(`  Created ${items.length} faqs`)
+  return ids
+}
+
+async function seedProvinces(strapi) {  console.log('Seeding provinces...')
   const uid = 'api::province.province'
   const items = [
     { name: 'Banten', slug: 'banten', order: 1, meta_seo: { meta_title: 'Purna PMI Banten - JARI PMI', meta_description: 'Profil Purna PMI asal Banten' } },
