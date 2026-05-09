@@ -15,6 +15,7 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
     "generate:docs": "node scripts/generate-openapi.js",
     "test:apis": "node scripts/test-apis.js",
+    "fix:svg-cloudinary": "node scripts/fix-svg-cloudinary.js",
     "seed": "SEED=true strapi develop",
     "reindex": "REINDEX=true strapi develop"
   },

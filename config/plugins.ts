@@ -1,17 +1,24 @@
-import type { Core } from '@strapi/strapi';
+import type { Core } from "@strapi/strapi";
 
-const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
+const config = ({
+  env,
+}: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
   upload: {
     config: {
-      provider: 'cloudinary',
+      provider: "cloudinary",
       providerOptions: {
-        cloud_name: env('CLOUDINARY_NAME'),
-        api_key: env('CLOUDINARY_KEY'),
-        api_secret: env('CLOUDINARY_SECRET'),
+        cloud_name: env("CLOUDINARY_NAME"),
+        api_key: env("CLOUDINARY_KEY"),
+        api_secret: env("CLOUDINARY_SECRET"),
       },
       actionOptions: {
         upload: {
-          folder: 'jari-pmi',
+          folder: "jari-pmi",
+          resource_type: "image",
+        },
+        uploadStream: {
+          folder: "jari-pmi",
+          resource_type: "image",
         },
       },
     },
@@ -22,7 +29,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
   health: {
     enabled: true,
     config: {
-      path: '/health',
+      path: "/health",
       cache: false,
       checks: {
         memory: true,
