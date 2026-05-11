@@ -1,120 +1,118 @@
-# JARI PMI - Strapi v5 CMS Planning
+# JARI PMI — Strapi v5 CMS Technical Overview
 
 ## Context
 
-JARI PMI is a product/service landing page providing information for Indonesian migrant workers (PMI). The CMS backend uses Strapi v5 with PostgreSQL and Cloudinary, built from scratch. Pages no need to stored in strapi entities because it will handled by frontend.
+JARI PMI is a product/service landing page providing information for Indonesian migrant workers (PMI). The CMS backend uses Strapi v5 with PostgreSQL, Redis, Cloudinary, and Algolia, built from scratch. Pages are handled by the frontend (not stored in Strapi entities).
 
 ## Tech Stack
 
 | Layer | Choice |
 |-------|--------|
-| CMS | Strapi v5 (TypeScript) |
+| CMS | Strapi v5.43 (TypeScript) |
 | Database | PostgreSQL |
+| Cache | Redis (ioredis) |
 | Media Storage | Cloudinary |
+| Search | Algolia |
+| Rich Text | CKEditor5 (GPL) |
 | Language | TypeScript |
+
+### Custom Infrastructure
+
+| Layer | Files | Description |
+|-------|-------|-------------|
+| Redis Cache | `src/cache/` | Koa middleware — transparent GET caching (17 endpoints), auto-invalidation via lifecycle hooks |
+| Algolia Search | `src/algolia/` | Unified search index (6 types), lifecycle hooks for auto-indexing, public proxy API |
+| Popular Searches | `src/api/popular-searches/` | Redis sorted set tracking, top 5 API endpoint |
+
+## Entities (23 Total)
+
+| Type | Count | Names |
+|------|-------|-------|
+| Single Types | 2 | `global`, `homepage` |
+| Collection Types | 21 | `persona`, `alert`, `country`, `service-info`, `content-group`, `content`, `article`, `article-category`, `article-tag`, `author`, `course`, `course-category`, `course-tag`, `learning-platform`, `course-learning-method`, `curriculum`, `announcement`, `faq`, `tool`, `province`, `purna-pmi` |
+| Custom APIs (no schema) | 2 | `search` (Algolia proxy), `popular-searches` (Redis) |
+
+> Full field definitions: see [entities.md](./entities.md)
+
+## Components (10 Total)
+
+| Category | Names |
+|----------|-------|
+| shared | `shared.seo`, `shared.link` |
+| layout | `layout.footer-column`, `layout.social-link` |
+| section | `section.hero`, `section.persona-card`, `section.step-item`, `section.feature-card`, `section.accordion-item`, `section.tab-panel` |
+
+> 4 section components (`tab-panel`, `accordion-item`, `step-item`, `feature-card`) are defined but not yet referenced by any content type — ready for future use.
 
 ## Pages Identified
 
-7 page types. Personae (Calon PMI, PMI Aktif, Keluarga PMI, Purna PMI) are enum values within the Persona Page, not separate page types.
+13 page types. Personae (Calon PMI, PMI Aktif, Keluarga PMI, Purna PMI) are entries within the `persona` collection, not separate page types.
 
-| # | Page Type | Route Pattern | Strapi Type | Personae |
-|---|-----------|---------------|-------------|----------|
-| 1 | Homepage | `/` | singleType `homepage` | — |
-| 2 | Persona Page | `/<persona-slug>` | collection `persona-page` | 4 entries |
-| 3 | Content Group Page | `/konten/:groupSlug` | collection `content-group` | — |
-| 4 | Pelatihan Page | `/pelatihan` | frontend-driven | — |
-| 5 | Pelatihan Detail Page | `/pelatihan/:slug` | collection `course` | — |
-| 6 | List Artikel Page | `/artikel` | frontend-driven | — |
-| 7 | Artikel Page | `/artikel/:slug` | collection `article` | — |
+| # | Page Type | Route Pattern | Data Source |
+|---|-----------|---------------|-------------|
+| 1 | Homepage | `/` | singleType `homepage` + `announcement` + `persona` |
+| 2 | Persona Page | `/<persona-slug>` | collection `persona` + `content-group` + `country` + `course` + `tool` + `alert` |
+| 3 | Content Group Page | `/konten/:groupSlug` | collection `content-group` + `content` |
+| 4 | Content Group Detail (Country) | `/konten/:groupSlug?country=:slug` | collection `content-group` (filtered by country) |
+| 5 | Informasi Keuangan Page | `/keuangan/:slug` | collection `service-info` |
+| 6 | Informasi Keuangan Detail | `/keuangan/:slug?group=:slug` | collection `content-group` (filtered by service-info) |
+| 7 | Pelatihan Page | `/pelatihan` | collection `course` + `course-category` + `course-tag` + `learning-platform` + `course-learning-method` |
+| 8 | Pelatihan Detail Page | `/pelatihan/:slug` | collection `course` + `curriculum` |
+| 9 | List Artikel Page | `/artikel` | collection `article` + `article-category` + `article-tag` |
+| 10 | Artikel Page | `/artikel/:slug` | collection `article` |
+| 11 | Negara Tujuan Page | `/negara-tujuan` | collection `country` |
+| 12 | Negara Tujuan Detail Page | `/negara-tujuan/:slug` | collection `country` + `content-group` |
+| 13 | Purna PMI Page | `/purna-pmi` | collection `purna-pmi` + `province` |
+| 14 | FAQ Page | `/faq` | collection `faq` |
 
-### 1. Homepage Sections
+### Homepage Sections
 
 | Section | Content | Strapi Source |
 |---------|---------|---------------|
 | Hero | Headline, description, search placeholder, illustration | `homepage.hero` (section.hero) |
 | Persona Modal | Modal title, text, 4 persona cards | `homepage.persona_modal_title/text`, `homepage.persona_cards` (section.persona-card) |
-| Informasi Layanan | Section title + curated service cards | `homepage.service_section_title/desc`, `homepage.featured_services` → service-info |
-| Negara Tujuan | Section title + curated country cards | `homepage.country_section_title`, `homepage.featured_countries` → country |
-| Pelatihan | Section title + curated course cards | `homepage.training_section_title`, `homepage.featured_courses` → course |
-| Artikel Terbaru | Section title + curated article cards | `homepage.article_section_title`, `homepage.featured_articles` → article |
+| Informasi Layanan | Announcement slider with time-based scheduling | `announcement` (filtered by `start_date`/`end_date`, sorted by `order`) |
+| Negara Tujuan | Section title + curated country cards | `homepage.country_section_title`, `homepage.featured_countries` → `country` |
+| Pelatihan | Section title + curated course cards | `homepage.training_section_title`, `homepage.featured_courses` → `course` |
+| Artikel Terbaru | Section title + curated article cards | `homepage.article_section_title`, `homepage.featured_articles` → `article` |
 | Layanan Pengaduan | Footer link to complaints | `global.external_links` (shared.link) |
 
-### 2. Persona Page Sections
+### Persona Page Sections
 
-Each persona uses the same schema, with only name, image, background_color, and description stored in Strapi. Section content is assembled by the frontend from generic collections.
+Each persona uses the same schema, stored in the `persona` collection. Section content is assembled by the frontend from generic collections.
 
 | Section | Content | Strapi Source |
 |---------|---------|---------------|
-| Hero Menu Persona | Persona name, description, image, background_color | `persona-page` (name, description, image, background_color) |
-| Content Group | Grouped content relevant to persona | `content-group` filtered by `personas` relation, items rendered by `content_type` |
+| Hero Menu Persona | Persona banner_title, banner_subtitle, image, background_color | `persona` (banner_title, banner_subtitle, image, background_color) |
+| Content Group | Grouped content relevant to persona | `content-group` filtered by `personas` relation |
 | Penting Diketahui | Featured content entries | `content` entries with `is_featured: true` filtered by content-group |
-| Alat Bantu | Feature/help cards | Frontend-driven (static or from `service-info`) |
-| Negara Tujuan | Countries relevant to persona | `country` collection (is_featured or all) |
-| Pelatihan | Courses relevant to persona | `course` collection filtered by `target_personas` |
+| Alat Bantu | Tool/resource cards | `tool` filtered by `personas` relation |
+| Negara Tujuan | Countries | `country` collection (all or is_featured) |
+| Pelatihan | Courses | `course` collection (all or is_featured) |
 
-### 3. Content Group Page Sections
-
-| Section | Content | Strapi Source |
-|---------|---------|---------------|
-| Group Header | Group title, description, image | `content-group.title/slug/description/image` |
-| Group Description | Intro text for the content group | `content-group.description` |
-| Content Items | Items rendered based on `content_type` | `content_type` determines which relation: `contents`, `countries`, or `service_infos` |
-
-### 4. Pelatihan Page Sections
+### Pelatihan Page Sections
 
 | Section | Content | Strapi Source |
 |---------|---------|---------------|
 | Cari Pelatihan | Search bar and heading | Frontend static |
-| Filter Pelatihan | Category, tag, country filters | `course-category`, `course-tag`, `country` collections |
-| List Pelatihan | Course cards grid | `course` collection with filters |
+| Filter Pelatihan | Category, tag, learning platform, learning method | `course-category`, `course-tag`, `learning-platform`, `course-learning-method` |
+| List Pelatihan | Course cards grid with curriculum count | `course` collection with filters + `curriculum` relation |
 
-### 5. Pelatihan Detail Page Sections
-
-| Section | Content | Strapi Source |
-|---------|---------|---------------|
-| Title | Course name | `course.name` |
-| Informasi Pelatihan | Price, platform, category | `course.price`, `course.learning_platform`, `course.course_category` |
-| Deskripsi | Full description | `course.description` (richtext) |
-| Kurikulum | Course content outline | `course.description` or dedicated field |
-
-### 6. List Artikel Page Sections
+### Pelatihan Detail Page Sections
 
 | Section | Content | Strapi Source |
 |---------|---------|---------------|
-| Page Header | Title and description | Frontend static |
-| Artikel Terbaru | Paginated article cards | `article` collection, sorted by published date |
-| Filter | Category and tag filters | `article-category`, `article-tag` collections |
+| Title & Meta | Course name, instructor, duration, platform | `course.name/instructor/course_duration/learning_platform` |
+| Informasi Pelatihan | Price, final_price, category, tags, method | `course.price/final_price/course_category/course_tags/learning_method` |
+| Deskripsi | Full description | `course.description` (richtext CKEditor5) |
+| Kurikulum | Course curriculum modules | `curriculum` (title, content, duration, order) related to course |
 
-### 7. Artikel Page Sections
+### Purna PMI Page Sections
 
 | Section | Content | Strapi Source |
 |---------|---------|---------------|
-| Cover | Cover image, category badge | `article.cover_image`, `article.article_category` |
-| Title & Meta | Title, excerpt, author, date | `article.title/excerpt/author` |
-| Content | Full article body | `article.content` (richtext) |
-| Related Articles | Other articles in same category | `article` collection filtered by `article_category` |
-
-### Supporting Collection Types
-
-These are not standalone pages but provide entries consumed by the pages above.
-
-| Collection | Used By | Notes |
-|------------|---------|-------|
-| `persona` | Persona Page | Persona identity (name, image, description, color) |
-| `alert` | All pages | Site-wide alerts filtered by `pages` string field |
-| `content-group` | Content Group Page, Persona Page | Groups items by type (content, country, service-info) |
-| `content` | Content Group Page, Persona Page | Informational content entries (distinct from articles) |
-| `country` | Homepage, Persona pages, Pelatihan page | Destination countries with flag, region |
-| `article` | Homepage, List Artikel, Artikel | Articles with category, tags, author |
-| `service-info` | Homepage (Informasi Layanan), Content Group | Service entries with cover image |
-| `course` | Homepage, Persona pages, Pelatihan, Pelatihan Detail | Training courses with platform, price |
-| `author` | Artikel page | Author bio and avatar |
-| `article-category` | Artikel filtering | Categories for articles |
-| `article-tag` | Artikel filtering | Tags for articles |
-| `course-category` | Pelatihan, Pelatihan Detail | Categories for courses |
-| `course-tag` | Pelatihan, Pelatihan Detail | Tags for courses |
-| `learning-platform` | Pelatihan Detail | Platform provider for courses | 
-
+| Filter Provinsi | Province dropdown | `province` (name, slug) |
+| List Purna PMI | Business profile cards, filter by province | `purna-pmi` (brand, products, revenue, image, province) |
 
 ## CMS vs Frontend Split
 
@@ -126,9 +124,39 @@ These are not standalone pages but provide entries consumed by the pages above.
 | Section titles per page | Section spacing, responsive breakpoints |
 | Footer links, social links | Footer layout/styling |
 | SEO metadata per page | Meta tag injection |
-| Protection page tabs/accordions content | Tab switching, accordion behavior |
+| Tab/accordion content (via tab-panel component) | Tab switching, accordion behavior |
+| Announcement slider (time-scheduled) | Slider carousel behavior |
+
+## Draft/Publish Entities
+
+7 of 24 entities support draft/publish workflow:
+
+| Entity | Reason |
+|--------|--------|
+| `alert` | Time-sensitive, needs scheduling |
+| `content-group` | Editorial review |
+| `content` | Informational content review |
+| `service-info` | Service entry accuracy |
+| `article` | Editorial review |
+| `course` | Course details accuracy |
+| `purna-pmi` | Success story curation |
+
+## Infrastructure Highlights
+
+| Feature | Implementation |
+|---------|---------------|
+| **API Cache** | Redis middleware — 17 endpoints cached, TTL 300s–3600s, auto-invalidate on write |
+| **Global Search** | Algolia single index — 6 searchable types, lifecycle hooks, public proxy API |
+| **Popular Searches** | Redis sorted set — `/api/search/popular` returns top 5 |
+| **Health Check** | `/health` — memory, disk, PostgreSQL connectivity |
+| **Media Sanitization** | Cloudinary SVG auto-sanitize via `fl_sanitize/` URL patch |
+| **CSP Security** | Custom Content-Security-Policy allowing Cloudinary, Redocly, unpkg |
 
 ## Planning Documents
 
-- [pages.md](./pages.md) - Pages mapping
-- [entities.md](./entities.md) - Strapi entities (standalone vs collection)
+- [entities.md](./entities.md) — Full Strapi entity definitions (2 single + 21 collection types + 10 components)
+- [pages.md](./pages.md) — Page-to-API mapping per section
+- [algolia-search.md](./algolia-search.md) — Algolia search implementation plan
+- [redis-cache.md](./redis-cache.md) — Redis cache implementation plan
+- [technical-doc.md](./technical-doc.md) — Comprehensive technical documentation
+- [diagrams/](./diagrams/) — C4 architecture diagrams (context + container)

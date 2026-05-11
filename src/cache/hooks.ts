@@ -24,7 +24,6 @@ const CACHEABLE_UIDS = [
   'api::author.author',
   'api::global.global',
   'api::homepage.homepage',
-  'api::page.page',
 ];
 
 async function handleCacheInvalidation(strapi: Core.Strapi, uid: string, documentId?: string, slug?: string) {

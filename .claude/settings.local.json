@@ -3,7 +3,15 @@
     "allow": [
       "Bash(find /Users/muhammadzuhri/Project/github.com/jawara/railway.app-strapi/src/api -name \"schema.json\" -exec grep -l \"collectionType\" {})",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__query-docs"
+      "mcp__context7__query-docs",
+      "Bash(ls \"/Users/muhammadzuhri/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/7b63e284-258a-4bce-8dd7-51959e572606/e10d53f6-ffa3-40d1-b425-7731418e3a20/skills/docx/scripts/office/\")",
+      "Bash(npm list *)",
+      "Read(//private/tmp/**)",
+      "Bash(npm install *)",
+      "Bash(node generate-arch-doc.js)",
+      "Bash(python3 \"/Users/muhammadzuhri/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/7b63e284-258a-4bce-8dd7-51959e572606/e10d53f6-ffa3-40d1-b425-7731418e3a20/skills/docx/scripts/office/validate.py\" /tmp/jari-pmi-architecture.docx)",
+      "Bash(pip install *)",
+      "Bash(pip3 install *)"
     ]
   }
 }

@@ -10,7 +10,7 @@
     "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "link": { "type": "string" },
-    "pages": { "type": "relation", "relation": "manyToMany", "target": "api::page.page" },
+    "personas": { "type": "relation", "relation": "manyToMany", "target": "api::persona.persona" },
     "active": { "type": "boolean", "default": true },
     "start_date": { "type": "datetime" },
     "end_date": { "type": "datetime" }
