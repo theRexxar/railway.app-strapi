@@ -24,12 +24,12 @@ JARI PMI is a product/service landing page providing information for Indonesian 
 | Algolia Search | `src/algolia/` | Unified search index (6 types), lifecycle hooks for auto-indexing, public proxy API |
 | Popular Searches | `src/api/popular-searches/` | Redis sorted set tracking, top 5 API endpoint |
 
-## Entities (23 Total)
+## Entities (24 Total)
 
 | Type | Count | Names |
 |------|-------|-------|
 | Single Types | 2 | `global`, `homepage` |
-| Collection Types | 21 | `persona`, `alert`, `country`, `service-info`, `content-group`, `content`, `article`, `article-category`, `article-tag`, `author`, `course`, `course-category`, `course-tag`, `learning-platform`, `course-learning-method`, `curriculum`, `announcement`, `faq`, `tool`, `province`, `purna-pmi` |
+| Collection Types | 22 | `persona`, `alert`, `country`, `service-info`, `content-group`, `content`, `article`, `article-category`, `article-tag`, `author`, `course`, `course-category`, `course-tag`, `learning-platform`, `course-learning-method`, `curriculum`, `announcement`, `faq`, `faq-category`, `tool`, `province`, `purna-pmi` |
 | Custom APIs (no schema) | 2 | `search` (Algolia proxy), `popular-searches` (Redis) |
 
 > Full field definitions: see [entities.md](./entities.md)
@@ -154,7 +154,7 @@ Each persona uses the same schema, stored in the `persona` collection. Section c
 
 ## Planning Documents
 
-- [entities.md](./entities.md) — Full Strapi entity definitions (2 single + 21 collection types + 10 components)
+- [entities.md](./entities.md) — Full Strapi entity definitions (2 single + 22 collection types + 10 components)
 - [pages.md](./pages.md) — Page-to-API mapping per section
 - [algolia-search.md](./algolia-search.md) — Algolia search implementation plan
 - [redis-cache.md](./redis-cache.md) — Redis cache implementation plan

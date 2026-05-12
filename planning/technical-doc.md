@@ -431,12 +431,27 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 |-------|------|----------|-------|
 | `title` | string | yes | Question |
 | `content` | CKEditor5 | yes | Answer |
+| `faq_category` | relation (MTO) | no | → `api::faq-category.faq-category` |
 | `order` | integer | no | default: 0 |
 
 **Options**: `draftAndPublish: false`
 **Collection name**: `faqs`
 
-### 4.19 `tool` — Helpful Resources
+### 4.19 `faq-category` — FAQ Categories
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `name` | string | yes | unique |
+| `slug` | uid (name) | yes | |
+| `order` | integer | no | default: 0 |
+| `faqs` | relation (OTM) | no | ← `api::faq.faq` (mappedBy: faq_category) |
+
+**Options**: `draftAndPublish: false`
+**Collection name**: `faq_categories`
+
+> **Pattern**: Same as `article-category`/`course-category`. Groups FAQs into collapsible sections (e.g. "Tentang Jari PMI", "Pendaftaran", "Pelatihan").
+
+### 4.20 `tool` — Helpful Resources
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
@@ -449,7 +464,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 **Options**: `draftAndPublish: false`
 **Collection name**: `tools`
 
-### 4.20 `province` — Province Reference Data
+### 4.21 `province` — Province Reference Data
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
@@ -463,7 +478,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 **Options**: `draftAndPublish: false`
 **Collection name**: `provinces`
 
-### 4.21 `purna-pmi` — Purna PMI Success Stories
+### 4.22 `purna-pmi` — Purna PMI Success Stories
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|

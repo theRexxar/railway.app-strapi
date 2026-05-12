@@ -105,7 +105,9 @@
 
 | Section | API | Endpoint |
 |---------|-----|----------|
-| List FAQ | `GET /api/faqs` | `?sort=order:asc&populate=*` |
+| List Categories | `GET /api/faq-categories` | `?populate=*&sort=order:asc` |
+| List FAQ by Category | `GET /api/faqs` | `?filters[faq_category][slug][$eq]={categorySlug}&sort=order:asc&populate=*` |
+| All FAQs (grouped) | `GET /api/faq-categories` | `?populate[faqs][sort]=order:asc&populate[faqs][populate]=*&sort=order:asc` |
 
 ## Global (Shared Across Pages)
 

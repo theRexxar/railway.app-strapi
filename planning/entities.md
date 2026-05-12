@@ -342,15 +342,31 @@ Announcement slider for the Homepage Informasi Layanan section. Time-scheduled w
 
 ### 18. `faq`
 
-Frequently asked questions for the FAQ page.
+Frequently asked questions for the FAQ page, grouped by category.
 
 | Field | Type | Required | Repeatable | Notes |
 |-------|------|----------|------------|-------|
 | title | string | yes | — | Question |
 | content | richtext (CKEditor5) | yes | — | Answer |
+| faq_category | relation (MTO) | no | — | → faq-category |
 | order | integer | no | — | default: 0 |
 
 `draftAndPublish: false` — Collection name: `faqs`
+
+### 19. `faq-category`
+
+FAQ grouping categories for organizing FAQs into sections.
+
+| Field | Type | Required | Repeatable | Notes |
+|-------|------|----------|------------|-------|
+| name | string | yes | — | unique |
+| slug | uid (targetField: name) | yes | — | |
+| order | integer | no | — | default: 0 |
+| faqs | relation (OTM) | no | — | ← faq (mappedBy: faq_category) |
+
+`draftAndPublish: false` — Collection name: `faq_categories`
+
+> **Pattern**: Same as `article-category`/`course-category`. Groups FAQs into collapsible sections (e.g. "Tentang Jari PMI", "Pendaftaran", "Pelatihan").
 
 ### 19. `tool`
 

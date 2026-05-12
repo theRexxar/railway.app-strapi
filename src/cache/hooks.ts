@@ -22,6 +22,7 @@ const CACHEABLE_UIDS = [
   'api::course-learning-method.course-learning-method',
   'api::curriculum.curriculum',
   'api::author.author',
+  'api::faq-category.faq-category',
   'api::global.global',
   'api::homepage.homepage',
 ];

@@ -23,6 +23,7 @@ const CACHE_CONFIGS: CacheConfig[] = [
   { apiPath: '/api/course-tags', contentType: 'course-tags', ttl: 3600, isSingleType: false },
   { apiPath: '/api/learning-platforms', contentType: 'learning-platforms', ttl: 3600, isSingleType: false },
   { apiPath: '/api/authors', contentType: 'authors', ttl: 3600, isSingleType: false },
+  { apiPath: '/api/faq-categories', contentType: 'faq-categories', ttl: 3600, isSingleType: false },
 ];
 
 interface InvalidationRule {
@@ -90,6 +91,10 @@ const INVALIDATION_MAP: Record<string, InvalidationRule> = {
   'api::author.author': {
     selfKeys: ['authors'],
     relatedKeys: ['articles'],
+  },
+  'api::faq-category.faq-category': {
+    selfKeys: ['faq-categories'],
+    relatedKeys: ['faqs'],
   },
   'api::global.global': {
     selfKeys: ['global'],

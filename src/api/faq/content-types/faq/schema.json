@@ -6,6 +6,7 @@
   "attributes": {
     "title": { "type": "string", "required": true },
     "content": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
+    "faq_category": { "type": "relation", "relation": "manyToOne", "target": "api::faq-category.faq-category", "inversedBy": "faqs" },
     "order": { "type": "integer", "default": 0 }
   }
 }
