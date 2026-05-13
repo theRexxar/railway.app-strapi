@@ -461,7 +461,7 @@ export interface ApiAlertAlert extends Struct.CollectionTypeSchema {
           preset: 'defaultHtml';
         }
       >;
-    pages: Schema.Attribute.Relation<'manyToMany', 'api::page.page'>;
+    personas: Schema.Attribute.Relation<'manyToMany', 'api::persona.persona'>;
     publishedAt: Schema.Attribute.DateTime;
     start_date: Schema.Attribute.DateTime;
     title: Schema.Attribute.String & Schema.Attribute.Required;
@@ -709,8 +709,8 @@ export interface ApiContentGroupContentGroup
           preset: 'defaultHtml';
         }
       >;
-    image: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.Media<'images'>;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1043,6 +1043,40 @@ export interface ApiCurriculumCurriculum extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiFaqCategoryFaqCategory extends Struct.CollectionTypeSchema {
+  collectionName: 'faq_categories';
+  info: {
+    description: 'FAQ grouping categories (e.g. Tentang Jari PMI, Pendaftaran, Pelatihan)';
+    displayName: 'FAQ Category';
+    pluralName: 'faq-categories';
+    singularName: 'faq-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    faqs: Schema.Attribute.Relation<'oneToMany', 'api::faq.faq'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::faq-category.faq-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
   collectionName: 'faqs';
   info: {
@@ -1066,6 +1100,10 @@ export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    faq_category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::faq-category.faq-category'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::faq.faq'> &
       Schema.Attribute.Private;
@@ -1964,12 +2002,13 @@ declare module '@strapi/strapi' {
       'api::content-group.content-group': ApiContentGroupContentGroup;
       'api::content.content': ApiContentContent;
       'api::country.country': ApiCountryCountry;
-      'api::faq.faq': ApiFaqFaq;
       'api::course-category.course-category': ApiCourseCategoryCourseCategory;
       'api::course-learning-method.course-learning-method': ApiCourseLearningMethodCourseLearningMethod;
       'api::course-tag.course-tag': ApiCourseTagCourseTag;
       'api::course.course': ApiCourseCourse;
       'api::curriculum.curriculum': ApiCurriculumCurriculum;
+      'api::faq-category.faq-category': ApiFaqCategoryFaqCategory;
+      'api::faq.faq': ApiFaqFaq;
       'api::global.global': ApiGlobalGlobal;
       'api::homepage.homepage': ApiHomepageHomepage;
       'api::learning-platform.learning-platform': ApiLearningPlatformLearningPlatform;

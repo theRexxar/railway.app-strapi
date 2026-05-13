@@ -9,16 +9,16 @@ const TABLE_MAP: Record<string, { uid: string; deps: string[]; fn: string }> = {
   'course-learning-methods': { uid: 'api::course-learning-method.course-learning-method', deps: [], fn: 'seedCourseLearningMethods' },
   'authors': { uid: 'api::author.author', deps: [], fn: 'seedAuthors' },
   'personas': { uid: 'api::persona.persona', deps: [], fn: 'seedPersonas' },
-  'pages': { uid: 'api::page.page', deps: [], fn: 'seedPages' },
   'countries': { uid: 'api::country.country', deps: [], fn: 'seedCountries' },
-  'faqs': { uid: 'api::faq.faq', deps: [], fn: 'seedFaqs' },
+  'faq-categories': { uid: 'api::faq-category.faq-category', deps: [], fn: 'seedFaqCategories' },
+  'faqs': { uid: 'api::faq.faq', deps: ['faq-categories'], fn: 'seedFaqs' },
   'provinces': { uid: 'api::province.province', deps: [], fn: 'seedProvinces' },
   'service-infos': { uid: 'api::service-info.service-info', deps: ['countries'], fn: 'seedServiceInfos' },
   'purna-pmis': { uid: 'api::purna-pmi.purna-pmi', deps: ['provinces'], fn: 'seedPurnaPmis' },
   'articles': { uid: 'api::article.article', deps: ['article-categories', 'article-tags', 'authors'], fn: 'seedArticles' },
   'courses': { uid: 'api::course.course', deps: ['course-categories', 'course-tags', 'learning-platforms', 'course-learning-methods'], fn: 'seedCourses' },
   'curriculums': { uid: 'api::curriculum.curriculum', deps: ['courses'], fn: 'seedCurriculums' },
-  'alerts': { uid: 'api::alert.alert', deps: ['pages'], fn: 'seedAlerts' },
+  'alerts': { uid: 'api::alert.alert', deps: ['personas'], fn: 'seedAlerts' },
   'announcements': { uid: 'api::announcement.announcement', deps: ['personas'], fn: 'seedAnnouncements' },
   'content-groups': { uid: 'api::content-group.content-group', deps: ['personas', 'countries'], fn: 'seedContentGroups' },
   'contents': { uid: 'api::content.content', deps: ['content-groups'], fn: 'seedContents' },
@@ -81,7 +81,7 @@ export async function seed(strapi) {
     for (const table of resolved) {
       const fnName = TABLE_MAP[table].fn;
       const needsIds = ['seedServiceInfos', 'seedArticles', 'seedCourses',
-        'seedCurriculums', 'seedAlerts', 'seedAnnouncements', 'seedContentGroups', 'seedContents', 'seedTools', 'seedPurnaPmis'].includes(fnName);
+        'seedCurriculums', 'seedAlerts', 'seedAnnouncements', 'seedContentGroups', 'seedContents', 'seedTools', 'seedPurnaPmis', 'seedFaqs'].includes(fnName);
       const fn = needsIds ? await (async () => {
         switch (fnName) {
           case 'seedServiceInfos': return seedServiceInfos(strapi, ids);
@@ -94,6 +94,7 @@ export async function seed(strapi) {
           case 'seedContents': return seedContents(strapi, ids);
           case 'seedTools': return seedTools(strapi, ids);
           case 'seedPurnaPmis': return seedPurnaPmis(strapi, ids);
+          case 'seedFaqs': return seedFaqs(strapi, ids);
           default: return {};
         }
       })() : await (async () => {
@@ -106,9 +107,8 @@ export async function seed(strapi) {
           case 'seedCourseLearningMethods': return seedCourseLearningMethods(strapi);
           case 'seedAuthors': return seedAuthors(strapi);
           case 'seedPersonas': return seedPersonas(strapi);
-          case 'seedPages': return seedPages(strapi);
           case 'seedCountries': return seedCountries(strapi);
-          case 'seedFaqs': return seedFaqs(strapi);
+          case 'seedFaqCategories': return seedFaqCategories(strapi);
           case 'seedProvinces': return seedProvinces(strapi);
           case 'seedGlobal': return seedGlobal(strapi);
           default: return {};
@@ -134,9 +134,9 @@ export async function seed(strapi) {
   ids.courseLearningMethods = await seedCourseLearningMethods(strapi)
   ids.authors = await seedAuthors(strapi)
   ids.personas = await seedPersonas(strapi)
-  ids.pages = await seedPages(strapi)
+  ids.faqCategories = await seedFaqCategories(strapi)
   ids.countries = await seedCountries(strapi)
-  ids.faqs = await seedFaqs(strapi)
+  ids.faqs = await seedFaqs(strapi, ids)
   ids.provinces = await seedProvinces(strapi)
 
   console.log('')
@@ -167,11 +167,11 @@ async function cleanDatabase(strapi) {
     'content_groups_personas_lnk',
     'service_infos_countries_lnk', 'files_related_mph', 'files_folder_lnk',
     'content_groups', 'contents', 'articles', 'curriculums', 'courses', 'service_infos', 'alerts', 'announcements',
-    'authors', 'countries', 'personas', 'provinces', 'purna_pmis', 'faqs',
+    'authors', 'countries', 'personas', 'provinces', 'purna_pmis', 'faqs', 'faq_categories', 'faqs_faq_category_lnk',
     'article_categories', 'article_tags',
     'course_categories', 'course_tags', 'learning_platforms', 'course_learning_methods',
     'files', 'upload_folders',
-    'global', 'homepage', 'pages',
+    'global', 'homepage',
     'components_layout_footer_columns', 'components_layout_footer_columns_cmps',
     'components_layout_social_links', 'components_section_heroes', 'components_section_persona_cards',
     'components_shared_links', 'components_shared_seos',
@@ -480,26 +480,20 @@ async function seedCurriculums(strapi, ids) {
   return resultIds
 }
 
-async function seedPages(strapi) {
-  console.log('Seeding pages...')
-  const uid = 'api::page.page'
+async function seedFaqCategories(strapi) {
+  console.log('Seeding faq categories...')
+  const uid = 'api::faq-category.faq-category'
   const items = [
-    { name: 'Home', slug: 'home' },
-    { name: 'Calon PMI', slug: 'calon-pmi' },
-    { name: 'PMI Aktif', slug: 'pmi-aktif' },
-    { name: 'Keluarga PMI', slug: 'keluarga-pmi' },
-    { name: 'Purna PMI', slug: 'purna-pmi' },
-    { name: 'Negara Tujuan', slug: 'negara-tujuan' },
-    { name: 'Pelatihan', slug: 'pelatihan' },
-    { name: 'Artikel', slug: 'artikel' },
-    { name: 'Informasi Keuangan', slug: 'informasi-keuangan' },
+    { name: 'Tentang Jari PMI', slug: 'tentang-jari-pmi', order: 1 },
+    { name: 'Pendaftaran', slug: 'pendaftaran', order: 2 },
+    { name: 'Pelatihan', slug: 'pelatihan', order: 3 },
   ]
   const ids = {}
   for (const item of items) {
     const doc = await strapi.documents(uid).create({ data: item })
     ids[item.slug] = doc.documentId
   }
-  console.log(`  Created ${items.length} pages`)
+  console.log(`  Created ${items.length} faq categories`)
   return ids
 }
 
@@ -508,14 +502,14 @@ async function seedAlerts(strapi, ids) {
   const uid = 'api::alert.alert'
 
   const alerts = [
-    { type: 'warning', title: 'Pendaftaran PMI Tahap II', message: '<p>Pendaftaran PMI tahap II dibuka hingga 30 Juni 2026</p>', link: 'https://bp2mi.go.id', pages: [ids.pages['home'], ids.pages['calon-pmi']], active: true, start_date: '2026-05-01T00:00:00.000Z', end_date: '2026-06-30T23:59:59.000Z' },
-    { type: 'info', title: 'Verifikasi Dokumen', message: '<p>Segera verifikasi dokumen Anda sebelum keberangkatan</p>', link: '', pages: [ids.pages['calon-pmi']], active: true, start_date: '2026-05-01T00:00:00.000Z', end_date: '2026-12-31T23:59:59.000Z' },
+    { type: 'warning', title: 'Pendaftaran PMI Tahap II', message: '<p>Pendaftaran PMI tahap II dibuka hingga 30 Juni 2026</p>', link: 'https://bp2mi.go.id', personas: [ids.personas['calon-pmi']], active: true, start_date: '2026-05-01T00:00:00.000Z', end_date: '2026-06-30T23:59:59.000Z' },
+    { type: 'info', title: 'Verifikasi Dokumen', message: '<p>Segera verifikasi dokumen Anda sebelum keberangkatan</p>', link: '', personas: [ids.personas['calon-pmi'], ids.personas['pmi-aktif']], active: true, start_date: '2026-05-01T00:00:00.000Z', end_date: '2026-12-31T23:59:59.000Z' },
   ]
 
   for (const alert of alerts) {
-    const { pages, ...data } = alert
+    const { personas, ...data } = alert
     const doc = await strapi.documents(uid).create({
-      data: { ...data, pages: { connect: pages.map(id => ({ documentId: id })) } },
+      data: { ...data, personas: { connect: personas.map(id => ({ documentId: id })) } },
     })
     await strapi.documents(uid).publish(doc.documentId)
   }
@@ -616,24 +610,61 @@ async function seedTools(strapi, ids) {
   return {}
 }
 
-async function seedFaqs(strapi) {
+async function seedFaqs(strapi, ids) {
   console.log('Seeding faqs...')
   const uid = 'api::faq.faq'
-  const items = [
-    { title: 'Apa itu JARI PMI?', content: '<p>JARI PMI adalah portal informasi dan layanan terpadu untuk Pekerja Migran Indonesia (PMI). Portal ini menyediakan informasi lengkap tentang perlindungan, pelatihan, dan layanan yang dibutuhkan oleh PMI dan keluarganya.</p>', order: 1 },
-    { title: 'Siapa saja yang bisa menggunakan JARI PMI?', content: '<p>JARI PMI dapat digunakan oleh Calon PMI (yang akan bekerja di luar negeri), PMI Aktif (yang sedang bekerja di luar negeri), Keluarga PMI, dan Purna PMI (yang telah selesai bekerja di luar negeri).</p>', order: 2 },
-    { title: 'Bagaimana cara mendaftar sebagai PMI?', content: '<p>Untuk mendaftar sebagai PMI, Anda harus melalui jalur resmi yang disediakan oleh pemerintah. Langkah-langkahnya meliputi: pendaftaran online melalui SISKOP2MI, mengikuti pelatihan dan sertifikasi, melengkapi dokumen persyaratan, dan mendapatkan izin penempatan dari BP2MI.</p>', order: 3 },
-    { title: 'Dokumen apa saja yang diperlukan untuk menjadi PMI?', content: '<p>Dokumen yang diperlukan meliputi: KTP, Kartu Keluarga, paspor, visa kerja, kontrak kerja, sertifikat kesehatan, sertifikat pelatihan, dan surat izin penempatan dari BP2MI. Pastikan semua dokumen lengkap dan sah sebelum berangkat.</p>', order: 4 },
-    { title: 'Apa yang harus dilakukan jika mengalami masalah di luar negeri?', content: '<p>Jika Anda mengalami masalah di negara penempatan, segera hubungi KBRI atau KJRI setempat. Anda juga dapat mengajukan pengaduan melalui layanan online BP2MI atau menghubungi hotline perlindungan PMI di +62 812 3456 7890.</p>', order: 5 },
-    { title: 'Apakah layanan di JARI PMI gratis?', content: '<p>Ya, seluruh informasi dan layanan yang disediakan di portal JARI PMI dapat diakses secara gratis. Beberapa pelatihan juga tersedia tanpa biaya melalui program pemerintah.</p>', order: 6 },
-  ]
-  const ids = {}
-  for (const item of items) {
-    const doc = await strapi.documents(uid).create({ data: item })
-    ids[item.title] = doc.documentId
+  const faqsByCategory = {
+    'tentang-jari-pmi': [
+      { title: 'Apa itu Jari PMI?', content: '<p>Jari PMI adalah event satu pekan yang diselenggarakan oleh Jari PMI setiap dua bulan dengan memberikan pelatihan secara gratis, murah dan mudah dalam waktu terbatas yang bertujuan untuk meningkatkan kesadaran masyarakat Indonesia terhadap pentingnya pembelajaran sepanjang hayat (<i>lifelong learning</i>) melalui berbagai pelatihan peningkatan keterampilan.</p>', order: 1 },
+      { title: 'Siapa saja yang bisa mendaftar Jari PMI?', content: '<p>Kamu bisa mendaftar Event Jari PMI jika kamu memenuhi syarat berikut ini:</p><ol><li>Mempunyai akun Jari PMI (Apabila belum terdaftar silahkan mengikuti proses registrasi akun melalui <a href="www.jaripmi.com" target="_blank">www.jaripmi.com</a>)</li><li>WNI usia minimal 18 Tahun</li></ol>', order: 2 },
+      { title: 'Saya belum terdaftar sebagai Penerima Kartu Jari PMI, apakah saya boleh mendaftar event Jari PMI ini?', content: '<p>Boleh, silakan mengikuti proses registrasi terlebih dahulu melalui <a href="www.jaripmi.com" target="_blank">www.jaripmi.com</a>, setelah memiliki akun Jari PMI, silahkan memilih pelatihan yang ditawarkan di event Jari PMI.</p>', order: 3 },
+      { title: 'Apakah jika saya terdaftar di acara Jari PMI otomatis saya juga menjadi penerima Program Kartu Jari PMI?', content: '<p>Event ini adalah event terpisah diluar pelatihan yang diselenggarakan oleh Program Kartu Jari PMI. Jadi peserta Jari PMI adalah WNI berumur minimal 18 Tahun dan mempunyai akun Jari PMI (terverifikasi sebagai peserta Kartu Jari PMI, maupun yang menjadi daftar blacklist yaitu TNI, Polri, ASN, Direktur BUMN, Perangkat desa dll).</p>', order: 4 },
+      { title: 'Jika saya sudah memiliki akun Jari PMI, bagaimana saya bisa mendaftar pelatihan di Jari PMI?', content: '<p>Peserta silahkan datang ke laman Jari PMI <a href="www.jaripmi.com">www.jaripmi.com</a>, memilih pelatihan yang diinginkan, kemudian MPPKP akan memberikan kode voucher pelatihan tersebut melalui email yang didaftarkan. Anda bisa mengecek email secara reguler untuk melihat apakah kode voucher sudah dikirimkan dalam 1x24 jam.</p><p>Peserta yang telah mendapatkan kode voucher dari pelatihan yang dipilih kemudian bisa langsung menuju laman/website pelatihan tersebut dan mengisi kode voucher berdasarkan petunjuk yang diberikan oleh masing-masing lembaga penyelenggara pelatihan dalam email yang diberikan oleh MPPKP.</p>', order: 5 },
+      { title: 'Apakah daftar blacklist Kartu Jari PMI bisa mendaftar Jari PMI?', content: '<p>Bisa namun tetap harus membuat akun Jari PMI terlebih dahulu di <a href="www.jaripmi.com" target="_blank">www.jaripmi.com</a>.</p>', order: 6 },
+      { title: 'Apakah ada kuota penerima bagi pendaftar event Jari PMI?', content: '<p>Tidak ada batasan jumlah pendaftar. Akan tetapi ada kuota pelatihan yang diberikan oleh Lembaga Pelatihan. Selama pelatihan yang kamu pilih masih tersedia, kamu masih bisa mengikuti pelatihan di event Jari PMI.</p>', order: 7 },
+      { title: 'Siapa yang akan melaksanakan event Jari PMI?', content: '<p>Event Jari PMI dilaksanakan oleh Jari PMI dengan bekerjasama dengan berbagai lembaga penyedia pelatihan yang bergabung di dalam Event Jari PMI.</p>', order: 8 },
+      { title: 'Apa saja produk yang bisa saya ikuti dalam Jari PMI?', content: '<p>Peserta bisa mengikuti berbagai produk pelatihan yang tersedia pada Jari PMI yaitu: Pelatihan gratis, pelatihan murah harga Rp20 ribu, dan diskon besar 50%. Selain itu pada event Jari PMI ini, peserta dapat mengikuti webinar dengan topik-topik pilihan yang diselenggarakan oleh berbagai lembaga.</p>', order: 9 },
+    ],
+    'pendaftaran': [
+      { title: 'Apakah saya harus membuat akun di Jari PMI?', content: '<p>Ya, jika kamu belum punya akun Jari PMI, silakan mendaftar dengan mengikuti proses registrasi akun melalui <a href="www.jaripmi.com">www.jaripmi.com</a>.</p>', order: 1 },
+      { title: 'Apakah saya harus mengisi form pendaftaran Jari PMI seperti periode Jari PMI sebelumnya?', content: '<p>Sejak periode Oktober 2023 ini, kamu tidak perlu mengisi form pendaftaran Jari PMI lagi. Akan tetapi, kamu tetap harus membuat akun Jari PMI terlebih dahulu, lalu memilih pelatihan dan menunggu konfirmasi voucher dari Jari PMI sebelum bisa mengakses pelatihan yang dipilih.</p>', order: 2 },
+      { title: 'Bagaimana saya bisa mengecek status pendaftaran event Jari PMI?', content: '<p>Kamu bisa mengecek email yang didaftarkan secara reguler. Jika dalam 1x24 jam belum mendapatkan konfirmasi voucher, maka kamu belum dapat mengikuti pelatihan melalui mekanisme Jari PMI.</p>', order: 3 },
+    ],
+    'pelatihan': [
+      { title: 'Berapa jumlah pelatihan yang dapat saya pilih?', content: '<p>Peserta bisa mengakses pelatihan manapun yang diinginkan selama kuota pelatihan tersebut masih tersedia.</p>', order: 1 },
+      { title: 'Ada berapa kategori pelatihan yang tersedia dalam Jari PMI?', content: '<p>Ada tiga kategori pelatihan yang bisa peserta akses:</p><ol><li><strong>Pelatihan Gratis</strong><ol><li>Pelatihan Gratis Khusus Jari PMI: Pelatihan ini adalah pelatihan-pelatihan secara gratis oleh Lembaga Pelatihan yang hanya berlaku selama event Jari PMI ini.</li><li>Pelatihan Gratis Selamanya: Pelatihan ini adalah pelatihan-pelatihan gratis yang selalu diberikan Lembaga Pelatihan bahkan sebelum event Jari PMI berlangsung.</li></ol></li><li><strong>Pelatihan Murah Rp 20.000</strong>: Pelatihan ini adalah pelatihan-pelatihan yang ditawarkan oleh Lembaga Pelatihan yang dapat diakses oleh peserta Jari PMI dengan hanya membayar Rp 20.000 dalam laman pelatihan yang disediakan oleh LP. Peserta silakan mengakses pelatihan di laman pelatihan dengan voucher yang diberikan MPPKP melalui email.</li><li><strong>Pelatihan Diskon Besar min. 50%</strong>: Pelatihan ini adalah pelatihan-pelatihan berbayar yang telah diberikan diskon besar minimal 50% dari harga reguler. Harga bisa bervariatif setelah diskon. Peserta silakan mengakses pelatihan di laman pelatihan dengan voucher yang diberikan MPPKP melalui email.</li></ol>', order: 2 },
+      { title: 'Apakah jenis pelatihan yang ada di Kartu Jari PMI skema normal sama dengan yang ada di event Jari PMI?', content: '<p>Tidak, pelatihan berikut standar pelatihan di Jari PMI berbeda dengan pelatihan Jari PMI di skema normal. Standar pelatihan Jari PMI sesuai dengan standar yang dimiliki dan dijalankan oleh masing-masing lembaga penyelenggara pelatihan.</p>', order: 3 },
+      { title: 'Apakah saya harus membayar pelatihan untuk mengikuti pelatihan yang ditawarkan di Jari PMI?', content: '<p>Ini akan tergantung kepada pelatihan yang dipilih. Akan tersedia kategori pelatihan gratis, Pelatihan Murah, dan Pelatihan dengan diskon besar-besaran bagi para calon peserta Jari PMI. Pembelian pelatihan murah dan diskon dibayar oleh Peserta menggunakan biaya pribadi.</p>', order: 4 },
+      { title: 'Apakah ada insentif dalam bentuk uang bagi pelatihan berbayar yang saya pilih seperti pelatihan-pelatihan yang ada pada Program Kartu Jari PMI ketika saya menyelesaikan pelatihan?', content: '<p>Tidak ada insentif uang bagi peserta yang menyelesaikan pelatihan ataupun pemberian insentif bagi pelatihan berbayar yang peserta pilih pada Event Jari PMI ini.</p>', order: 5 },
+      { title: 'Bagaimana proses pembayaran untuk pelatihan berbayar yang saya pilih?', content: '<p>Peserta akan melakukan pembayaran secara langsung kepada Lembaga Pelatihan melalui laman pelatihan dari Lembaga Pelatihan.</p>', order: 6 },
+      { title: 'Dimana saja saya dapat menggunakan voucher pelatihan untuk mendapatkan pelatihan?', content: '<p>Voucher pelatihan digunakan untuk pelatihan yang dipilih akan dikirimkan via email peserta oleh Jari PMI.</p>', order: 7 },
+      { title: 'Apa saja bentuk moda pelatihan yang dapat saya pilih dengan voucher Jari PMI?', content: '<p>Pada Jari PMI ini anda akan dapat mengikuti pelatihan dengan moda pembelajaran mandiri (Self-Paced Learning) melalui LMS. Anda dapat mengatur bagaimana dan kapan belajar sesuai dengan keadaan anda.</p>', order: 8 },
+      { title: 'Apakah ada batas waktu pembelian pelatihan?', content: '<p>Batas waktu pembelian pelatihan adalah selama satu minggu atau selama event Jari PMI diselenggarakan.</p>', order: 9 },
+      { title: 'Apakah ada batas waktu dalam menyelesaikan pelatihan di Jari PMI?', content: '<ol><li>Pelatihan Gratis: Jangka waktu penyelesaian 1 bulan setelah penutupan Jari PMI periode ini.</li><li>Pelatihan Murah: Jangka waktu penyelesaian sampai dengan 3 bulan setelah penutupan Jari PMI periode ini.</li><li>Pelatihan Diskon Besar: Jangka waktu penyelesaian sampai dengan 3 bulan setelah penutupan Jari PMI periode ini.</li></ol>', order: 10 },
+      { title: 'Apakah saya masih bisa membeli pelatihan yang saya inginkan setelah periode Jari PMI selesai?', content: '<p>Kamu bisa membeli pelatihan pada laman lembaga penyedia pelatihan tersebut akan tetapi sesuai dengan harga dan aturan yang diterapkan masing-masing lembaga tersebut.</p>', order: 11 },
+      { title: 'Apakah saya dapat membeli lebih dari satu pelatihan?', content: '<p>Kamu dapat membeli lebih dari satu pelatihan untuk berbagai kategori pelatihan yang tersedia selama voucher pelatihan tersedia.</p>', order: 12 },
+      { title: 'Bagaimana jika redeem voucher saya bermasalah?', content: '<p>Kamu bisa langsung menghubungi contact center Lembaga Pelatihan yang tertera pada laman pelatihan.</p>', order: 13 },
+      { title: 'Bagaimana cara melakukan redeem voucher Jari PMI?', content: '<p>Tata cara melakukan redeem voucher sesuai dengan masing-masing cara dari Lembaga Pelatihan, tata cara redeem akan diinformasikan kepada Peserta melalui email.</p>', order: 14 },
+      { title: 'Apakah saya masih bisa mengakses pelatihan yang saya beli setelah batas waktu periode penyelesaian pelatihan?', content: '<p>Kamu masih dimungkinkan mengakses pelatihan dan itu bergantung kebijakan masing-masing lembaga pelatihan mengenai akses kepada pelatihan tersebut.</p>', order: 15 },
+      { title: 'Apakah saya akan mendapatkan sertifikat pelatihan?', content: '<p>Anda akan mendapatkan sertifikat pelatihan jika anda telah menyelesaikan pelatihan sesuai dengan ketentuan silabus pelatihan yang diatur oleh lembaga pelatihan yang anda ikuti.</p>', order: 16 },
+    ],
   }
-  console.log(`  Created ${items.length} faqs`)
-  return ids
+
+  let count = 0
+  for (const [categorySlug, faqs] of Object.entries(faqsByCategory)) {
+    const categoryId = ids.faqCategories[categorySlug]
+    for (const faq of faqs) {
+      await strapi.documents(uid).create({
+        data: {
+          ...faq,
+          faq_category: { connect: [{ documentId: categoryId }] },
+        },
+      })
+      count++
+    }
+  }
+  console.log(`  Created ${count} faqs`)
+  return {}
 }
 
 async function seedProvinces(strapi) {  console.log('Seeding provinces...')
