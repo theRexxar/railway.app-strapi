@@ -15,6 +15,7 @@
     "year_established": { "type": "integer" },
     "legal_entity": { "type": "string" },
     "city": { "type": "string" },
+    "description": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" } },
     "contacts": {
       "type": "component",
       "repeatable": true,

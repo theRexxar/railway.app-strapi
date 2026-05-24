@@ -414,6 +414,7 @@ Purna PMI success stories and business profiles.
 | year_established | integer | no | — | |
 | legal_entity | string | no | — | |
 | city | string | no | — | |
+| description | richtext (CKEditor5) | no | — | Full business story |
 | contacts | component (shared.contact) | no | yes | Multiple contact methods |
 | marketing_channels | component (shared.marketing-channel) | no | yes | Multiple sales channels |
 | province | relation (MTO) | no | — | → province |

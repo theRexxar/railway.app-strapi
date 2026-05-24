@@ -493,6 +493,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 | `year_established` | integer | no | |
 | `legal_entity` | string | no | |
 | `city` | string | no | |
+| `description` | CKEditor5 | no | Full business story / success journey |
 | `contacts` | component (`shared.contact`) | no | yes | Multiple contact methods |
 | `marketing_channels` | component (`shared.marketing-channel`) | no | yes | Multiple sales channels |
 | `province` | relation (MTO) | no | → `api::province.province` |
