@@ -131,14 +131,13 @@ export interface SharedContact extends Struct.ComponentSchema {
     label: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<
       [
-        'whatsapp',
         'instagram',
-        'facebook',
         'x',
         'tiktok',
-        'email',
-        'phone',
+        'facebook',
+        'youtube',
         'website',
+        'phone_number',
       ]
     > &
       Schema.Attribute.Required;

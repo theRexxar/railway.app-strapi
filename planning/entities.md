@@ -452,7 +452,7 @@ These components are defined separately and referenced by entities above.
 
 **`shared.link`**: `label` (string, required), `url` (string, required), `is_external` (boolean, default: false)
 
-**`shared.contact`**: `type` (enum: whatsapp/instagram/facebook/x/tiktok/email/phone/website, required), `value` (string, required), `label` (string)
+**`shared.contact`**: `type` (enum: instagram/x/tiktok/facebook/youtube/website/phone_number, required), `value` (string, required), `label` (string)
 
 **`shared.marketing-channel`**: `channel` (enum: Retail/Online/Ekspor/Marketplace/Reseller/B2B, required)
 

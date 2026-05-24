@@ -9,7 +9,7 @@
   "attributes": {
     "type": {
       "type": "enumeration",
-      "enum": ["whatsapp", "instagram", "facebook", "x", "tiktok", "email", "phone", "website"],
+      "enum": ["instagram", "x", "tiktok", "facebook", "youtube", "website", "phone_number"],
       "required": true
     },
     "value": {

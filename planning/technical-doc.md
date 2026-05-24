@@ -531,7 +531,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| `type` | enum | yes | `whatsapp`, `instagram`, `facebook`, `x`, `tiktok`, `email`, `phone`, `website` |
+| `type` | enum | yes | `instagram`, `x`, `tiktok`, `facebook`, `youtube`, `website`, `phone_number` |
 | `value` | string | yes | Phone number, URL, handle, or email |
 | `label` | string | no | Display label, e.g. "Customer Service", "Owner" |
 
