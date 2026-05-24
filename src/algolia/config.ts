@@ -5,6 +5,7 @@ interface SearchableTypeConfig {
   textField: string;
   snippetField: string;
   excerptField?: string;
+  imageField?: string;
   facets: string[];
   populate: string;
   draftAndPublish: boolean;
@@ -19,7 +20,8 @@ const searchableTypes: SearchableTypeConfig[] = [
     snippetField: 'content_snippet',
     excerptField: 'excerpt',
     facets: ['article_category', 'article_tags', 'author'],
-    populate: 'article_category,article_tags,author',
+    populate: 'article_category,article_tags,author,cover_image',
+    imageField: 'cover_image',
     draftAndPublish: true,
   },
   {
@@ -30,7 +32,8 @@ const searchableTypes: SearchableTypeConfig[] = [
     snippetField: 'description_snippet',
     excerptField: 'excerpt',
     facets: ['countries'],
-    populate: 'countries',
+    populate: 'countries,image',
+    imageField: 'image',
     draftAndPublish: true,
   },
   {
@@ -41,7 +44,8 @@ const searchableTypes: SearchableTypeConfig[] = [
     snippetField: 'description_snippet',
     excerptField: 'excerpt',
     facets: ['course_category', 'course_tags'],
-    populate: 'course_category,course_tags',
+    populate: 'course_category,course_tags,image',
+    imageField: 'image',
     draftAndPublish: true,
   },
   {
@@ -52,7 +56,8 @@ const searchableTypes: SearchableTypeConfig[] = [
     snippetField: 'body_snippet',
     excerptField: 'excerpt',
     facets: ['content_group'],
-    populate: 'content_group',
+    populate: 'content_group,image',
+    imageField: 'image',
     draftAndPublish: true,
   },
   {
@@ -63,6 +68,7 @@ const searchableTypes: SearchableTypeConfig[] = [
     snippetField: 'description_snippet',
     facets: ['region'],
     populate: '',
+    imageField: 'flag',
     draftAndPublish: false,
   },
   {
@@ -73,6 +79,7 @@ const searchableTypes: SearchableTypeConfig[] = [
     snippetField: 'description_snippet',
     facets: [],
     populate: '',
+    imageField: 'image',
     draftAndPublish: false,
   },
 ];

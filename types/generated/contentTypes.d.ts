@@ -1339,7 +1339,7 @@ export interface ApiPurnaPmiPurnaPmi extends Struct.CollectionTypeSchema {
     brand: Schema.Attribute.String;
     business_type: Schema.Attribute.String;
     city: Schema.Attribute.String;
-    contact: Schema.Attribute.String;
+    contacts: Schema.Attribute.Component<'shared.contact', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1353,8 +1353,9 @@ export interface ApiPurnaPmiPurnaPmi extends Struct.CollectionTypeSchema {
       'api::purna-pmi.purna-pmi'
     > &
       Schema.Attribute.Private;
-    marketing_channels: Schema.Attribute.Enumeration<
-      ['Retail', 'Online', 'Ekspor']
+    marketing_channels: Schema.Attribute.Component<
+      'shared.marketing-channel',
+      true
     >;
     meta_seo: Schema.Attribute.Component<'shared.seo', false>;
     name: Schema.Attribute.String & Schema.Attribute.Required;

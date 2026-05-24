@@ -34,11 +34,11 @@ JARI PMI is a product/service landing page providing information for Indonesian 
 
 > Full field definitions: see [entities.md](./entities.md)
 
-## Components (10 Total)
+## Components (12 Total)
 
 | Category | Names |
 |----------|-------|
-| shared | `shared.seo`, `shared.link` |
+| shared | `shared.seo`, `shared.link`, `shared.contact`, `shared.marketing-channel` |
 | layout | `layout.footer-column`, `layout.social-link` |
 | section | `section.hero`, `section.persona-card`, `section.step-item`, `section.feature-card`, `section.accordion-item`, `section.tab-panel` |
 
@@ -154,7 +154,7 @@ Each persona uses the same schema, stored in the `persona` collection. Section c
 
 ## Planning Documents
 
-- [entities.md](./entities.md) — Full Strapi entity definitions (2 single + 22 collection types + 10 components)
+- [entities.md](./entities.md) — Full Strapi entity definitions (2 single + 22 collection types + 12 components)
 - [pages.md](./pages.md) — Page-to-API mapping per section
 - [algolia-search.md](./algolia-search.md) — Algolia search implementation plan
 - [redis-cache.md](./redis-cache.md) — Redis cache implementation plan

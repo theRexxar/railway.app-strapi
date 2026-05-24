@@ -414,8 +414,8 @@ Purna PMI success stories and business profiles.
 | year_established | integer | no | — | |
 | legal_entity | string | no | — | |
 | city | string | no | — | |
-| contact | string | no | — | |
-| marketing_channels | enumeration | no | — | Retail, Online, Ekspor |
+| contacts | component (shared.contact) | no | yes | Multiple contact methods |
+| marketing_channels | component (shared.marketing-channel) | no | yes | Multiple sales channels |
 | province | relation (MTO) | no | — | → province |
 | image | media (single, images) | no | — | |
 | is_featured | boolean | no | — | default: false |
@@ -434,6 +434,8 @@ These components are defined separately and referenced by entities above.
 |----------|-----------|---------|
 | shared | `shared.seo` | All entities with meta_seo |
 | shared | `shared.link` | global (nav_links, external_links), footer-column (links), feature-card (link) |
+| shared | `shared.contact` | purna-pmi (contacts) |
+| shared | `shared.marketing-channel` | purna-pmi (marketing_channels) |
 | section | `section.hero` | homepage |
 | section | `section.persona-card` | homepage (persona_cards) |
 | section | `section.step-item` | tab-panel (nested), future use |
@@ -448,6 +450,10 @@ These components are defined separately and referenced by entities above.
 **`shared.seo`**: `meta_title` (string, required), `meta_description` (text, required), `meta_keywords` (string), `share_image` (media), `canonical_url` (string)
 
 **`shared.link`**: `label` (string, required), `url` (string, required), `is_external` (boolean, default: false)
+
+**`shared.contact`**: `type` (enum: whatsapp/instagram/facebook/x/tiktok/email/phone/website, required), `value` (string, required), `label` (string)
+
+**`shared.marketing-channel`**: `channel` (enum: Retail/Online/Ekspor/Marketplace/Reseller/B2B, required)
 
 **`layout.footer-column`**: `heading` (string, required), `links` (component: shared.link, repeatable)
 

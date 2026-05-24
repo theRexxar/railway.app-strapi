@@ -493,8 +493,8 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 | `year_established` | integer | no | |
 | `legal_entity` | string | no | |
 | `city` | string | no | |
-| `contact` | string | no | |
-| `marketing_channels` | enum | no | `Retail`, `Online`, `Ekspor` |
+| `contacts` | component (`shared.contact`) | no | yes | Multiple contact methods |
+| `marketing_channels` | component (`shared.marketing-channel`) | no | yes | Multiple sales channels |
 | `province` | relation (MTO) | no | → `api::province.province` |
 | `image` | media | no | |
 | `is_featured` | boolean | no | default: false |
@@ -526,21 +526,39 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 
 **Used by**: `global.nav_links`, `global.external_links`, `layout.footer-column.links`, `section.feature-card.link`
 
-### 5.3 `layout.footer-column` — Footer Column
+### 5.3 `shared.contact` — Contact Method
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `type` | enum | yes | `whatsapp`, `instagram`, `facebook`, `x`, `tiktok`, `email`, `phone`, `website` |
+| `value` | string | yes | Phone number, URL, handle, or email |
+| `label` | string | no | Display label, e.g. "Customer Service", "Owner" |
+
+**Used by**: `purna-pmi.contacts`
+
+### 5.4 `shared.marketing-channel` — Marketing Channel
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `channel` | enum | yes | `Retail`, `Online`, `Ekspor`, `Marketplace`, `Reseller`, `B2B` |
+
+**Used by**: `purna-pmi.marketing_channels`
+
+### 5.5 `layout.footer-column` — Footer Column
 
 | Field | Type | Required | Repeatable | Notes |
 |-------|------|----------|------------|-------|
 | `heading` | string | yes | — | Column heading |
 | `links` | component (`shared.link`) | no | yes | Column links |
 
-### 5.4 `layout.social-link` — Social Media Link
+### 5.6 `layout.social-link` — Social Media Link
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
 | `platform` | enum | yes | `facebook`, `twitter`, `instagram`, `youtube`, `tiktok`, `linkedin` |
 | `url` | string | yes | |
 
-### 5.5 `section.hero` — Hero Section
+### 5.7 `section.hero` — Hero Section
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
@@ -552,7 +570,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 
 **Used by**: `homepage.hero`
 
-### 5.6 `section.persona-card` — Persona Selector Card
+### 5.8 `section.persona-card` — Persona Selector Card
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
@@ -563,7 +581,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 
 **Used by**: `homepage.persona_cards`
 
-### 5.7 `section.step-item` — Step/Instruction Item
+### 5.9 `section.step-item` — Step/Instruction Item
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
@@ -574,7 +592,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 
 **Status**: Defined, not yet referenced by any content type.
 
-### 5.8 `section.accordion-item` — Accordion Item
+### 5.10 `section.accordion-item` — Accordion Item
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
@@ -583,7 +601,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 
 **Status**: Defined, not yet referenced by any content type.
 
-### 5.9 `section.tab-panel` — Tab Panel
+### 5.11 `section.tab-panel` — Tab Panel
 
 | Field | Type | Required | Repeatable | Notes |
 |-------|------|----------|------------|-------|
@@ -595,7 +613,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 
 **Status**: Defined, not yet referenced by any content type.
 
-### 5.10 `section.feature-card` — Feature Card
+### 5.12 `section.feature-card` — Feature Card
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|

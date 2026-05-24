@@ -30,11 +30,11 @@ function resolveSeedTables(selected: string[]): string[] {
   const resolved = new Set<string>();
   function add(table: string) {
     if (resolved.has(table)) return;
-    resolved.add(table);
     const config = TABLE_MAP[table];
     if (config) {
       for (const dep of config.deps) add(dep);
     }
+    resolved.add(table);
   }
   for (const t of selected) {
     if (!TABLE_MAP[t]) {
@@ -60,16 +60,12 @@ export async function seed(strapi) {
     const client = strapi.config.get('database.connection.client');
     const db = strapi.db;
 
-    for (const table of resolved) {
+    for (const table of [...resolved].reverse()) {
       const uid = TABLE_MAP[table].uid;
       try {
-        if (client === 'postgres' || client === 'pg') {
-          await db.connection.raw(`DELETE FROM "${uid.split('::')[1].replace(/\./g, '_') || uid}"`);
-        } else {
-          const docs = await strapi.documents(uid).findMany({ limit: 10000 });
-          for (const d of docs) {
-            await strapi.documents(uid).delete(d.documentId);
-          }
+        const docs = await strapi.documents(uid).findMany({ limit: 10000 });
+        for (const d of docs) {
+          await strapi.documents(uid).delete(d.documentId);
         }
       } catch {
         // Skip if delete fails (table may not exist yet)
@@ -134,7 +130,7 @@ export async function seed(strapi) {
   ids.courseLearningMethods = await seedCourseLearningMethods(strapi)
   ids.authors = await seedAuthors(strapi)
   ids.personas = await seedPersonas(strapi)
-  ids.faqCategories = await seedFaqCategories(strapi)
+  ids['faq-categories'] = await seedFaqCategories(strapi)
   ids.countries = await seedCountries(strapi)
   ids.faqs = await seedFaqs(strapi, ids)
   ids.provinces = await seedProvinces(strapi)
@@ -652,7 +648,7 @@ async function seedFaqs(strapi, ids) {
 
   let count = 0
   for (const [categorySlug, faqs] of Object.entries(faqsByCategory)) {
-    const categoryId = ids.faqCategories[categorySlug]
+    const categoryId = ids['faq-categories'][categorySlug]
     for (const faq of faqs) {
       await strapi.documents(uid).create({
         data: {
@@ -701,8 +697,8 @@ async function seedPurnaPmis(strapi, ids) {
       year_established: 2006,
       legal_entity: 'CV. Saripati Laer',
       city: 'Cilegon',
-      marketing_channels: ['Retail', 'Online', 'Ekspor'],
-      contact: '081960615933',
+      marketing_channels: [{ channel: 'Retail' }, { channel: 'Online' }, { channel: 'Ekspor' }],
+      contacts: [{ type: 'whatsapp', value: '081960615933', label: 'Bapak Turidjo Hadi' }, { type: 'instagram', value: '@saripatilaer', label: 'Saripati Laer Official' }],
       province: ids.provinces['banten'],
       is_featured: true,
       order: 1,
@@ -720,8 +716,8 @@ async function seedPurnaPmis(strapi, ids) {
       year_established: 2012,
       legal_entity: 'UD. Suhendra Furniture',
       city: 'Bandar Lampung',
-      marketing_channels: ['Retail', 'Online'],
-      contact: '081234567890',
+      marketing_channels: [{ channel: 'Retail' }, { channel: 'Online' }],
+      contacts: [{ type: 'whatsapp', value: '081234567890', label: 'Bapak Ahmad Suhendra' }],
       province: ids.provinces['lampung'],
       is_featured: true,
       order: 2,

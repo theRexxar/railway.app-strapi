@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_shared_contacts",
+  "info": {
+    "displayName": "Contact",
+    "icon": "phone",
+    "description": "Contact method for Purna PMI businesses"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": ["whatsapp", "instagram", "facebook", "x", "tiktok", "email", "phone", "website"],
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "label": {
+      "type": "string"
+    }
+  }
+}

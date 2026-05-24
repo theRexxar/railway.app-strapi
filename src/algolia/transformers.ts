@@ -71,5 +71,19 @@ export function transformToAlgoliaRecord(
     record.is_featured = entry.is_featured;
   }
 
+  if (config.imageField) {
+    const image = entry[config.imageField];
+    if (image) {
+      if (typeof image === 'string' && image.startsWith('http')) {
+        record.image_url = image;
+      } else if (typeof image === 'object' && image.url) {
+        record.image_url = image.url;
+        if (image.width) record.image_width = image.width;
+        if (image.height) record.image_height = image.height;
+        if (image.alternativeText) record.image_alt = image.alternativeText;
+      }
+    }
+  }
+
   return record;
 }

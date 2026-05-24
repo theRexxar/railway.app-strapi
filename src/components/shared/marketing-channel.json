@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_marketing_channels",
+  "info": {
+    "displayName": "Marketing Channel",
+    "icon": "shopping-cart",
+    "description": "Marketing/sales channel for Purna PMI businesses"
+  },
+  "options": {},
+  "attributes": {
+    "channel": {
+      "type": "enumeration",
+      "enum": ["Retail", "Online", "Ekspor", "Marketplace", "Reseller", "B2B"],
+      "required": true
+    }
+  }
+}

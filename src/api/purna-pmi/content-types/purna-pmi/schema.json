@@ -15,11 +15,15 @@
     "year_established": { "type": "integer" },
     "legal_entity": { "type": "string" },
     "city": { "type": "string" },
-    "contact": { "type": "string" },
+    "contacts": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.contact"
+    },
     "marketing_channels": {
-      "type": "enumeration",
-      "enum": ["Retail", "Online", "Ekspor"],
-      "required": false
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.marketing-channel"
     },
     "province": { "type": "relation", "relation": "manyToOne", "target": "api::province.province" },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },

@@ -120,6 +120,32 @@ export interface SectionTabPanel extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedContact extends Struct.ComponentSchema {
+  collectionName: 'components_shared_contacts';
+  info: {
+    description: 'Contact method for Purna PMI businesses';
+    displayName: 'Contact';
+    icon: 'phone';
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+    type: Schema.Attribute.Enumeration<
+      [
+        'whatsapp',
+        'instagram',
+        'facebook',
+        'x',
+        'tiktok',
+        'email',
+        'phone',
+        'website',
+      ]
+    > &
+      Schema.Attribute.Required;
+    value: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedLink extends Struct.ComponentSchema {
   collectionName: 'components_shared_links';
   info: {
@@ -131,6 +157,21 @@ export interface SharedLink extends Struct.ComponentSchema {
     is_external: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     label: Schema.Attribute.String & Schema.Attribute.Required;
     url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedMarketingChannel extends Struct.ComponentSchema {
+  collectionName: 'components_shared_marketing_channels';
+  info: {
+    description: 'Marketing/sales channel for Purna PMI businesses';
+    displayName: 'Marketing Channel';
+    icon: 'shopping-cart';
+  };
+  attributes: {
+    channel: Schema.Attribute.Enumeration<
+      ['Retail', 'Online', 'Ekspor', 'Marketplace', 'Reseller', 'B2B']
+    > &
+      Schema.Attribute.Required;
   };
 }
 
@@ -161,7 +202,9 @@ declare module '@strapi/strapi' {
       'section.persona-card': SectionPersonaCard;
       'section.step-item': SectionStepItem;
       'section.tab-panel': SectionTabPanel;
+      'shared.contact': SharedContact;
       'shared.link': SharedLink;
+      'shared.marketing-channel': SharedMarketingChannel;
       'shared.seo': SharedSeo;
     }
   }
