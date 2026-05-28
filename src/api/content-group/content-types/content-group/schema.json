@@ -12,7 +12,7 @@
     "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
     "service_infos": { "type": "relation", "relation": "manyToMany", "target": "api::service-info.service-info" },
     "personas": { "type": "relation", "relation": "manyToMany", "target": "api::persona.persona" },
-    "contents": { "type": "relation", "relation": "oneToMany", "target": "api::content.content", "mappedBy": "content_group", "pluginOptions": { "content-manager": { "visible": false } } },
+    "contents": { "type": "relation", "relation": "oneToMany", "target": "api::content.content", "mappedBy": "content_group" },
     "order": { "type": "integer", "default": 0 },
     "meta_seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
   }
