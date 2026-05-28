@@ -710,6 +710,7 @@ export interface ApiContentGroupContentGroup
           preset: 'defaultHtml';
         }
       >;
+    excerpt: Schema.Attribute.Text;
     icon: Schema.Attribute.Media<'images'>;
     image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

@@ -7,6 +7,7 @@
     "title": { "type": "string", "required": true, "unique": true },
     "slug": { "type": "uid", "targetField": "title", "required": true },
     "description": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" } },
+    "excerpt": { "type": "text" },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "icon": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "countries": { "type": "relation", "relation": "manyToMany", "target": "api::country.country" },
