@@ -698,6 +698,12 @@ export interface ApiContentGroupContentGroup
     draftAndPublish: true;
   };
   attributes: {
+    contents: Schema.Attribute.Relation<'oneToMany', 'api::content.content'> &
+      Schema.Attribute.SetPluginOptions<{
+        'content-manager': {
+          visible: false;
+        };
+      }>;
     countries: Schema.Attribute.Relation<'manyToMany', 'api::country.country'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

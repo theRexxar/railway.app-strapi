@@ -11,7 +11,9 @@
       "Bash(node generate-arch-doc.js)",
       "Bash(python3 \"/Users/muhammadzuhri/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/7b63e284-258a-4bce-8dd7-51959e572606/e10d53f6-ffa3-40d1-b425-7731418e3a20/skills/docx/scripts/office/validate.py\" /tmp/jari-pmi-architecture.docx)",
       "Bash(pip install *)",
-      "Bash(pip3 install *)"
+      "Bash(pip3 install *)",
+      "Bash(ls -la /Users/muhammadzuhri/.claude/ 2>&1)",
+      "Bash(find /Users/muhammadzuhri -type d -name \"Obsidian\" -o -name \"obsidian\" 2>/dev/null | head -20)"
     ]
   }
 }
