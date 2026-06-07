@@ -237,11 +237,13 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 | `title` | string | yes | unique |
 | `slug` | uid (title) | yes | |
 | `description` | CKEditor5 | no | Group intro text |
+| `excerpt` | text | no | Short summary for cards |
 | `image` | media | no | Group cover image |
 | `icon` | media | no | Group icon |
 | `countries` | relation (M2M) | no | → `api::country.country` |
 | `service_infos` | relation (M2M) | no | → `api::service-info.service-info` |
 | `personas` | relation (M2M) | no | → `api::persona.persona` |
+| `contents` | relation (OTM) | no | ← `api::content.content` (mappedBy: content_group) |
 | `order` | integer | no | default: 0 |
 | `meta_seo` | component (`shared.seo`) | no | |
 
@@ -261,7 +263,7 @@ Custom HTML preset in `src/admin/app.tsx` with 30+ plugins:
 | `image` | media | no | Cover/icon image |
 | `icon` | media | no | Icon image |
 | `link` | string | no | Optional external URL |
-| `content_group` | relation (MTO) | no | → `api::content-group.content-group` |
+| `content_group` | relation (MTO) | no | → `api::content-group.content-group` (inversedBy: contents) |
 | `order` | integer | no | default: 0 |
 | `is_featured` | boolean | no | default: false |
 | `meta_seo` | component (`shared.seo`) | no | |
