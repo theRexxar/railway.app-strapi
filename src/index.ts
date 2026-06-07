@@ -1,7 +1,7 @@
 import type { Core } from '@strapi/strapi';
 
 export default {
-  register(/* { strapi }: { strapi: Core.Strapi } */) {
+  register({ strapi }: { strapi: Core.Strapi }) {
     const { patchCloudinaryProvider } = require('./utils/patch-cloudinary');
     patchCloudinaryProvider(strapi);
   },
