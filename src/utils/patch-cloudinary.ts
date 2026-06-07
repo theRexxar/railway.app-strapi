@@ -52,7 +52,7 @@ function patchSvgUrl(file: any) {
 function wrapUpload(originalFn: any, strapi: Core.Strapi) {
   return function (file: any, config?: any) {
     if (isPdf(file)) {
-      config = { ...config, resource_type: 'raw' };
+      config = { ...config, resource_type: 'raw', type: 'upload', access_mode: 'public' };
 
       const { valid, detail } = validatePdfBytes(file, strapi.log);
       strapi.log.info(
@@ -66,16 +66,14 @@ function wrapUpload(originalFn: any, strapi: Core.Strapi) {
       }
     }
 
-    if (originalFn) {
-      const result = originalFn(file, config);
-      if (result?.then) {
-        return result.then(() => {
-          patchSvgUrl(file);
-        });
-      }
-      patchSvgUrl(file);
+    const result = originalFn(file, config);
+    if (result?.then) {
+      return result.then(() => {
+        patchSvgUrl(file);
+      });
     }
-    return originalFn(file, config);
+    patchSvgUrl(file);
+    return result;
   };
 }
 
