@@ -12,12 +12,21 @@ function isPdf(file: any): boolean {
   return false;
 }
 
+function toBufferLike(buf: any): Buffer | null {
+  if (!buf) return null;
+  if (Buffer.isBuffer(buf)) return buf;
+  if (buf instanceof Uint8Array) return Buffer.from(buf);
+  if (buf instanceof ArrayBuffer) return Buffer.from(buf);
+  return null;
+}
+
 function validatePdfBytes(file: any, log: any): { valid: boolean; detail: string } {
   if (!file) return { valid: false, detail: 'no file' };
 
-  if (Buffer.isBuffer(file.buffer) && file.buffer.length >= 5) {
-    const head = file.buffer.slice(0, 5).toString('hex');
-    const hasMagic = file.buffer.slice(0, 5).equals(PDF_MAGIC);
+  const buf = toBufferLike(file.buffer);
+  if (buf && buf.length >= 5) {
+    const head = buf.slice(0, 5).toString('hex');
+    const hasMagic = buf.slice(0, 5).equals(PDF_MAGIC);
     if (hasMagic) {
       return { valid: true, detail: `magic bytes OK (${head})` };
     }

@@ -1,12 +1,10 @@
 import type { Core } from '@strapi/strapi';
 
 export default {
-  register({ strapi }: { strapi: Core.Strapi }) {
+  async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     const { patchCloudinaryProvider } = require('./utils/patch-cloudinary');
     patchCloudinaryProvider(strapi);
-  },
 
-  async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     const { resetContentManagerLayouts } = await import('./utils/reset-layouts');
     await resetContentManagerLayouts(strapi);
 
