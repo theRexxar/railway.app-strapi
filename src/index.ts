@@ -32,6 +32,20 @@ export default {
       }
     }
 
+    if (process.env.FIX_PDFS) {
+      const { fixCloudinaryPdfs } = await import('../scripts/fix-cloudinary-pdfs');
+      const mode = process.env.FIX_PDFS;
+      console.log(`FIX_PDFS=${mode} detected, running PDF fixer...`);
+      try {
+        await fixCloudinaryPdfs(strapi, mode);
+        console.log('\nPDF fix completed successfully!');
+        process.exit(0);
+      } catch (err) {
+        console.error('PDF fix failed:', err);
+        process.exit(1);
+      }
+    }
+
     const { isAlgoliaEnabled } = await import('./algolia/client');
     if (isAlgoliaEnabled()) {
       const { registerAlgoliaHooks } = await import('./algolia/hooks');
