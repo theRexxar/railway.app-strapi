@@ -1,5 +1,21 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface ContentGoogleSheet extends Struct.ComponentSchema {
+  collectionName: 'components_content_google_sheets';
+  info: {
+    description: 'Embed a published Google Sheet as an interactive data table';
+    displayName: 'Google Sheet';
+    icon: 'table';
+  };
+  attributes: {
+    enable_filter: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    enable_search: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    enable_sort: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    published_url: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface LayoutFooterColumn extends Struct.ComponentSchema {
   collectionName: 'components_layout_footer_columns';
   info: {
@@ -193,6 +209,7 @@ export interface SharedSeo extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'content.google-sheet': ContentGoogleSheet;
       'layout.footer-column': LayoutFooterColumn;
       'layout.social-link': LayoutSocialLink;
       'section.accordion-item': SectionAccordionItem;
