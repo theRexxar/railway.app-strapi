@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_content_google_sheets",
+  "info": {
+    "displayName": "Google Sheet",
+    "icon": "table",
+    "description": "Embed a published Google Sheet as an interactive data table"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "published_url": {
+      "type": "string",
+      "required": true
+    },
+    "enable_search": {
+      "type": "boolean",
+      "default": true
+    },
+    "enable_filter": {
+      "type": "boolean",
+      "default": true
+    },
+    "enable_sort": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

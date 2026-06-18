@@ -8,6 +8,10 @@
     "slug": { "type": "uid", "targetField": "title", "required": true },
     "excerpt": { "type": "text" },
     "body": { "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultHtml" }, "required": true },
+    "blocks": {
+      "type": "dynamiczone",
+      "components": ["content.google-sheet"]
+    },
     "image": { "type": "media", "media": true, "allowedTypes": ["images"] },
     "icon": { "type": "media", "allowedTypes": ["images"] },
     "link": { "type": "string" },
