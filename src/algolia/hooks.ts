@@ -100,7 +100,22 @@ export function registerAlgoliaHooks(strapi: Core.Strapi) {
           }
 
           if (config.draftAndPublish) {
-            strapi.log.info(`[Algolia] afterCreate: skipping D&P type ${config.type}`);
+            const documentId = getDocumentId(event);
+            if (!documentId) {
+              strapi.log.warn(`[Algolia] afterCreate: could not resolve documentId for D&P ${uid}`);
+              return;
+            }
+
+            strapi.log.info(`[Algolia] afterCreate: checking published status for ${config.type}:${documentId}`);
+            const entry = await strapi.documents(uid as any).findOne({ documentId });
+            if (entry && entry.publishedAt) {
+              strapi.log.info(`[Algolia] afterCreate: ${config.type}:${documentId} is published, indexing`);
+              await indexEntry(strapi, uid, documentId);
+            } else if (entry) {
+              strapi.log.info(`[Algolia] afterCreate: ${config.type}:${documentId} is a draft, skipping`);
+            } else {
+              strapi.log.warn(`[Algolia] afterCreate: ${config.type}:${documentId} not found`);
+            }
             return;
           }
 
