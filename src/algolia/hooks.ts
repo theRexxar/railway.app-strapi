@@ -18,10 +18,14 @@ async function indexEntry(strapi: Core.Strapi, uid: string, documentId: string) 
     }
 
     strapi.log.info(`[Algolia] Re-fetching ${config.type}:${documentId} for indexing...`);
-    const entry = await strapi.documents(uid as any).findOne({
+    const findOneParams: any = {
       documentId,
       populate: Object.keys(populate).length > 0 ? (populate as any) : '*',
-    });
+    };
+    if (config.draftAndPublish) {
+      findOneParams.status = 'published';
+    }
+    const entry = await strapi.documents(uid as any).findOne(findOneParams);
 
     if (!entry) {
       strapi.log.info(`[Algolia] Entry ${config.type}:${documentId} not found in Strapi, removing from index`);
@@ -77,6 +81,7 @@ function logEvent(strapi: Core.Strapi, label: string, event: any) {
     `result.documentId=${event.result?.documentId}, ` +
     `result.document_id=${event.result?.document_id}, ` +
     `result.id=${event.result?.id}, ` +
+    `result.publishedAt=${event.result?.publishedAt}, ` +
     `params.where=${JSON.stringify(event.params?.where)}`
   );
 }
@@ -106,15 +111,11 @@ export function registerAlgoliaHooks(strapi: Core.Strapi) {
               return;
             }
 
-            strapi.log.info(`[Algolia] afterCreate: checking published status for ${config.type}:${documentId}`);
-            const entry = await strapi.documents(uid as any).findOne({ documentId });
-            if (entry && entry.publishedAt) {
+            if (event.result?.publishedAt) {
               strapi.log.info(`[Algolia] afterCreate: ${config.type}:${documentId} is published, indexing`);
               await indexEntry(strapi, uid, documentId);
-            } else if (entry) {
-              strapi.log.info(`[Algolia] afterCreate: ${config.type}:${documentId} is a draft, skipping`);
             } else {
-              strapi.log.warn(`[Algolia] afterCreate: ${config.type}:${documentId} not found`);
+              strapi.log.info(`[Algolia] afterCreate: ${config.type}:${documentId} is a draft, skipping`);
             }
             return;
           }
@@ -150,16 +151,12 @@ export function registerAlgoliaHooks(strapi: Core.Strapi) {
               return;
             }
 
-            strapi.log.info(`[Algolia] afterUpdate: checking published status for ${config.type}:${documentId}`);
-            const entry = await strapi.documents(uid as any).findOne({ documentId });
-            if (entry && entry.publishedAt) {
+            if (event.result?.publishedAt) {
               strapi.log.info(`[Algolia] afterUpdate: ${config.type}:${documentId} is published, indexing`);
               await indexEntry(strapi, uid, documentId);
-            } else if (entry) {
+            } else {
               strapi.log.info(`[Algolia] afterUpdate: ${config.type}:${documentId} is unpublished, removing`);
               await removeObject(documentId, config.type);
-            } else {
-              strapi.log.warn(`[Algolia] afterUpdate: ${config.type}:${documentId} not found`);
             }
             return;
           }
