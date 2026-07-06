@@ -7,7 +7,7 @@ interface SearchableTypeConfig {
   excerptField?: string;
   imageField?: string;
   facets: string[];
-  populate: string;
+  populate: string | Record<string, any>;
   draftAndPublish: boolean;
 }
 
@@ -55,8 +55,24 @@ const searchableTypes: SearchableTypeConfig[] = [
     textField: 'body',
     snippetField: 'body_snippet',
     excerptField: 'excerpt',
-    facets: ['content_group'],
-    populate: 'content_group,image',
+    facets: [],
+    populate: {
+      content_group: { populate: ['countries', 'personas', 'service_infos'] },
+      image: true,
+      icon: true,
+    },
+    imageField: 'image',
+    draftAndPublish: true,
+  },
+  {
+    uid: 'api::content-group.content-group',
+    type: 'content-group',
+    titleField: 'title',
+    textField: 'description',
+    snippetField: 'description_snippet',
+    excerptField: 'excerpt',
+    facets: ['countries', 'personas', 'service_infos'],
+    populate: 'countries,personas,service_infos,image,icon',
     imageField: 'image',
     draftAndPublish: true,
   },

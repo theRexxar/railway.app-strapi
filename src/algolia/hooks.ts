@@ -2,6 +2,7 @@ import { Core } from '@strapi/strapi';
 import { getAlgoliaClient, getIndexName, isAlgoliaEnabled } from './client';
 import { getSearchableTypes, getSearchableTypeByUid } from './config';
 import { transformToAlgoliaRecord } from './transformers';
+import { buildPopulate } from './utils';
 
 const SEARCHABLE_UIDS = getSearchableTypes().map((t) => t.uid);
 
@@ -10,17 +11,10 @@ async function indexEntry(strapi: Core.Strapi, uid: string, documentId: string) 
   if (!config) return;
 
   try {
-    const populate: Record<string, boolean> = {};
-    if (config.populate) {
-      for (const field of config.populate.split(',')) {
-        populate[field.trim()] = true;
-      }
-    }
-
     strapi.log.info(`[Algolia] Re-fetching ${config.type}:${documentId} for indexing...`);
     const findOneParams: any = {
       documentId,
-      populate: Object.keys(populate).length > 0 ? (populate as any) : '*',
+      populate: buildPopulate(config.populate),
     };
     if (config.draftAndPublish) {
       findOneParams.status = 'published';

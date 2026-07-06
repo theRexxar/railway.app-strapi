@@ -2,6 +2,7 @@ import { Core } from '@strapi/strapi';
 import { getAlgoliaClient, getIndexName, isAlgoliaEnabled } from './client';
 import { getSearchableTypes } from './config';
 import { transformToAlgoliaRecord } from './transformers';
+import { buildPopulate } from './utils';
 
 export async function reindexAll(strapi: Core.Strapi) {
   if (!isAlgoliaEnabled()) {
@@ -19,29 +20,23 @@ export async function reindexAll(strapi: Core.Strapi) {
   let totalIndexed = 0;
 
   for (const config of searchableTypes) {
-    const populate: Record<string, boolean> = {};
-    if (config.populate) {
-      for (const field of config.populate.split(',')) {
-        populate[field.trim()] = true;
-      }
-    }
-
     const findManyParams: any = {
-      populate: Object.keys(populate).length > 0 ? populate : '*',
-      pageSize: 100,
+      populate: buildPopulate(config.populate),
     };
 
     if (config.draftAndPublish) {
       findManyParams.status = 'published';
     }
 
-    let page = 1;
+    const PAGE_SIZE = 100;
+    let start = 0;
     let hasMore = true;
 
     while (hasMore) {
       const entries = await strapi.documents(config.uid as any).findMany({
         ...findManyParams,
-        page,
+        start,
+        limit: PAGE_SIZE,
       });
 
       if (!entries || (Array.isArray(entries) && entries.length === 0)) {
@@ -57,13 +52,13 @@ export async function reindexAll(strapi: Core.Strapi) {
       if (records.length > 0) {
         await client.saveObjects({ indexName, objects: records });
         totalIndexed += records.length;
-        strapi.log.info(`[Algolia] Indexed ${records.length} ${config.type} records (page ${page})`);
+        strapi.log.info(`[Algolia] Indexed ${records.length} ${config.type} records (start ${start})`);
       }
 
-      if (entriesArray.length < 100) {
+      if (entriesArray.length < PAGE_SIZE) {
         hasMore = false;
       } else {
-        page++;
+        start += PAGE_SIZE;
       }
     }
   }

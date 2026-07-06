@@ -1,5 +1,5 @@
 import { SearchableTypeConfig } from './config';
-import { stripHtml, truncate, extractSlug, extractSlugs } from './utils';
+import { stripHtml, truncate, extractSlug, extractSlugs, extractImage } from './utils';
 
 interface AlgoliaRecord {
   objectID: string;
@@ -59,6 +59,27 @@ export function transformToAlgoliaRecord(
     }
   }
 
+  if (config.type === 'content' && entry.content_group) {
+    const contentGroup = entry.content_group;
+    const contentGroupRecord: Record<string, any> = {
+      id: contentGroup.id,
+      title: contentGroup.title,
+      slug: contentGroup.slug,
+    };
+
+    if (Array.isArray(contentGroup.countries)) {
+      contentGroupRecord.countries = extractSlugs(contentGroup.countries);
+    }
+    if (Array.isArray(contentGroup.personas)) {
+      contentGroupRecord.personas = extractSlugs(contentGroup.personas);
+    }
+    if (Array.isArray(contentGroup.service_infos)) {
+      contentGroupRecord.service_infos = extractSlugs(contentGroup.service_infos);
+    }
+
+    record.content_group = contentGroupRecord;
+  }
+
   if (config.type === 'country' && entry.is_featured !== undefined) {
     record.is_featured = entry.is_featured;
   }
@@ -72,16 +93,22 @@ export function transformToAlgoliaRecord(
   }
 
   if (config.imageField) {
-    const image = entry[config.imageField];
+    const image = extractImage(entry[config.imageField]);
     if (image) {
-      if (typeof image === 'string' && image.startsWith('http')) {
-        record.image_url = image;
-      } else if (typeof image === 'object' && image.url) {
-        record.image_url = image.url;
-        if (image.width) record.image_width = image.width;
-        if (image.height) record.image_height = image.height;
-        if (image.alternativeText) record.image_alt = image.alternativeText;
-      }
+      record.image_url = image.url;
+      if (image.width) record.image_width = image.width;
+      if (image.height) record.image_height = image.height;
+      if (image.alt) record.image_alt = image.alt;
+    }
+  }
+
+  if (entry.icon) {
+    const icon = extractImage(entry.icon);
+    if (icon) {
+      record.icon_url = icon.url;
+      if (icon.width) record.icon_width = icon.width;
+      if (icon.height) record.icon_height = icon.height;
+      if (icon.alt) record.icon_alt = icon.alt;
     }
   }
 
