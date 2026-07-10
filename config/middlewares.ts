@@ -1,6 +1,9 @@
 import type { Core } from '@strapi/strapi';
 
 const config: Core.Config.Middlewares = [
+  {
+    resolve: './src/middlewares/response-time',
+  },
   'strapi::logger',
   'strapi::errors',
   {
