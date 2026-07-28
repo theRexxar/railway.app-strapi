@@ -133,3 +133,4 @@ build
 .strapi-cloud.json
 files/
 backups/
+public/docs/

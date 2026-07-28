@@ -12,8 +12,8 @@ const config: Core.Config.Middlewares = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'script-src': ["'self'", "'unsafe-inline'", 'cdn.redoc.ly', 'unpkg.com'],
-          'style-src': ["'self'", "'unsafe-inline'", 'unpkg.com'],
+          'script-src': ["'self'", "'unsafe-inline'"],
+          'style-src': ["'self'", "'unsafe-inline'"],
           'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
           'media-src': ["'self'", 'blob:', 'res.cloudinary.com'],
           'frame-src': ["'self'", 'res.cloudinary.com'],
