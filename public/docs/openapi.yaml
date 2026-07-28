@@ -61,18 +61,22 @@ tags:
     description: Course tags for filtering
   - name: Curriculum
     description: Course curriculum items
+  - name: FAQ
+    description: Frequently asked questions
+  - name: FAQ Category
+    description: "FAQ grouping categories (e.g. Tentang Jari PMI, Pendaftaran, Pelatihan)"
   - name: Global
     description: "Site-wide configuration: navbar, footer, social links, default SEO"
   - name: Homepage
     description: Homepage editorial content
   - name: Learning Platform
     description: Training provider platforms
-  - name: Page
-    description: Page references for alert targeting
   - name: Persona
     description: "One entry per persona (calon-pmi, pmi-aktif, keluarga-pmi, purna-pmi)"
-  - name: Protection Info
-    description: Protection info entries for Penting Diketahui section
+  - name: Province
+    description: Province reference for filtering Purna PMI entries
+  - name: Purna PMI
+    description: Purna PMI success stories and business profiles
   - name: Service Info
     description: Service/layanan entries
   - name: Tool
@@ -479,6 +483,52 @@ paths:
       responses:
         "200":
           description: OK
+  "/faqs":
+    get:
+      tags: [FAQ]
+      summary: "List all faq entries"
+      operationId: getFaqs
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/faqs/{id}":
+    get:
+      tags: [FAQ]
+      summary: "Get a faq by documentId"
+      operationId: getFaq
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/faq-categories":
+    get:
+      tags: [FAQ Category]
+      summary: "List all faq category entries"
+      operationId: getFaq-categorys
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/faq-categories/{id}":
+    get:
+      tags: [FAQ Category]
+      summary: "Get a faq category by documentId"
+      operationId: getFaq-category
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
   "/global":
     get:
       tags: [Global]
@@ -518,29 +568,6 @@ paths:
       responses:
         "200":
           description: OK
-  "/pages":
-    get:
-      tags: [Page]
-      summary: "List all page entries"
-      operationId: getPages
-      parameters:
-        - $ref: "#/components/parameters/paginationPage"
-        - $ref: "#/components/parameters/paginationPageSize"
-        - $ref: "#/components/parameters/populate"
-      responses:
-        "200":
-          description: OK
-  "/pages/{id}":
-    get:
-      tags: [Page]
-      summary: "Get a page by documentId"
-      operationId: getPage
-      parameters:
-        - $ref: "#/components/parameters/documentId"
-        - $ref: "#/components/parameters/populate"
-      responses:
-        "200":
-          description: OK
   "/personas":
     get:
       tags: [Persona]
@@ -564,28 +591,56 @@ paths:
       responses:
         "200":
           description: OK
-  "/faqs":
+  "/provinces":
     get:
-      tags: [FAQ]
-      summary: "List all FAQ entries"
-      operationId: getFaqs
+      tags: [Province]
+      summary: "List all province entries"
+      operationId: getProvinces
       parameters:
         - $ref: "#/components/parameters/paginationPage"
         - $ref: "#/components/parameters/paginationPageSize"
         - $ref: "#/components/parameters/populate"
-        - name: "sort"
+        - name: "filters[is_featured][$eq]"
           in: query
           schema:
-            type: string
-          description: "Sort order (e.g. order:asc,createdAt:desc)"
+            type: boolean
+          description: "Filter by is_featured"
       responses:
         "200":
           description: OK
-  "/faqs/{id}":
+  "/provinces/{id}":
     get:
-      tags: [FAQ]
-      summary: "Get a FAQ by documentId"
-      operationId: getFaq
+      tags: [Province]
+      summary: "Get a province by documentId"
+      operationId: getProvince
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+        - $ref: "#/components/parameters/populate"
+      responses:
+        "200":
+          description: OK
+  "/purna-pmis":
+    get:
+      tags: [Purna PMI]
+      summary: "List all purna pmi entries"
+      operationId: getPurna-pmis
+      parameters:
+        - $ref: "#/components/parameters/paginationPage"
+        - $ref: "#/components/parameters/paginationPageSize"
+        - $ref: "#/components/parameters/populate"
+        - name: "filters[is_featured][$eq]"
+          in: query
+          schema:
+            type: boolean
+          description: "Filter by is_featured"
+      responses:
+        "200":
+          description: OK
+  "/purna-pmis/{id}":
+    get:
+      tags: [Purna PMI]
+      summary: "Get a purna pmi by documentId"
+      operationId: getPurna-pmi
       parameters:
         - $ref: "#/components/parameters/documentId"
         - $ref: "#/components/parameters/populate"
