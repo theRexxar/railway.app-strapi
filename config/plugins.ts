@@ -5,6 +5,7 @@ const config = ({
 }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
   upload: {
     config: {
+      sizeLimit: 50 * 1024 * 1024, // 50 MB
       provider: "cloudinary",
       providerOptions: {
         cloud_name: env("CLOUDINARY_NAME"),
