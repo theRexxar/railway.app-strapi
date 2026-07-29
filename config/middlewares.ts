@@ -1,6 +1,8 @@
 import type { Core } from '@strapi/strapi';
 
-const config: Core.Config.Middlewares = [
+const config = ({
+  env,
+}: Core.Config.Shared.ConfigParams): Core.Config.Middlewares => [
   {
     resolve: './src/middlewares/response-time',
   },
@@ -22,7 +24,16 @@ const config: Core.Config.Middlewares = [
       },
     },
   },
-  'strapi::cors',
+  {
+    name: 'strapi::cors',
+    config: {
+      origin: env.array('CORS_ORIGINS', [
+        'https://jaripmi.info',
+        'https://staging.jaripmi.info',
+      ]),
+      credentials: true,
+    },
+  },
   'strapi::poweredBy',
   'strapi::query',
   {
