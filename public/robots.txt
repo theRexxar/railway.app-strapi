@@ -1,3 +1,8 @@
-# To prevent search engines from seeing the site altogether, uncomment the next two lines:
-# User-Agent: *
-# Disallow: /
+User-Agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /content-type-builder/
+Disallow: /upload/
+Disallow: /users-permissions/
+Disallow: /i18n/
+Allow: /
