@@ -5,4 +5,5 @@ Disallow: /content-type-builder/
 Disallow: /upload/
 Disallow: /users-permissions/
 Disallow: /i18n/
+Disallow: /docs/
 Allow: /
