@@ -9,6 +9,10 @@ const config = ({
   'strapi::logger',
   'strapi::errors',
   {
+    name: 'global::force-published',
+    resolve: './src/middlewares/force-published',
+  },
+  {
     name: 'strapi::security',
     config: {
       contentSecurityPolicy: {
